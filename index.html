@@ -2,22 +2,24 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>MoodShelf - AI-Powered Reading Companion</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MoodShelf - AI-Powered Reading Companion</title>
 
-  <!-- Fonts & Tailwind -->
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
     href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Crimson+Pro:wght@300;400;600&display=swap"
     rel="stylesheet"
   />
+
+  <!-- Tailwind (utility classes if you want them) -->
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Markdown renderer -->
+  <!-- Markdown parser -->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
-  <!-- Firebase (compat version to be easy to drop in) -->
+  <!-- Firebase (compat SDK for simple use in plain JS/HTML) -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -82,9 +84,13 @@
       background: var(--cream);
     }
 
+    /* Animated background pattern */
     .bg-pattern {
       position: fixed;
-      inset: 0;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
       opacity: 0.03;
       background-image: repeating-linear-gradient(
           45deg,
@@ -109,6 +115,7 @@
       z-index: 1;
     }
 
+    /* Header */
     .app-header {
       background: linear-gradient(135deg, var(--burgundy), var(--deep-wine));
       color: var(--cream);
@@ -124,8 +131,16 @@
       display: flex;
       align-items: center;
       gap: 0.5rem;
+      justify-content: space-between;
     }
 
+    .header-right {
+      font-size: 0.8rem;
+      opacity: 0.9;
+      text-align: right;
+    }
+
+    /* Buttons */
     .btn {
       padding: 0.75rem 1.5rem;
       border: none;
@@ -169,6 +184,7 @@
       border: none;
     }
 
+    /* Form elements */
     .form-group {
       margin-bottom: 1.5rem;
     }
@@ -189,7 +205,7 @@
       border-radius: 8px;
       font-family: "Crimson Pro", serif;
       font-size: 16px;
-      background: white;
+      background: #ffffff;
       color: var(--charcoal);
       transition: border-color 0.3s ease;
     }
@@ -214,6 +230,7 @@
       min-height: 100px;
     }
 
+    /* Mood slider */
     .mood-slider {
       -webkit-appearance: none;
       width: 100%;
@@ -256,6 +273,7 @@
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     }
 
+    /* Mood tags */
     .mood-tags {
       display: flex;
       flex-wrap: wrap;
@@ -267,7 +285,7 @@
       padding: 0.5rem 1rem;
       border-radius: 20px;
       border: 2px solid var(--parchment);
-      background: white;
+      background: #ffffff;
       color: var(--charcoal);
       font-size: 0.95rem;
       cursor: pointer;
@@ -289,8 +307,9 @@
       border-color: var(--burgundy);
     }
 
+    /* Book card */
     .book-card {
-      background: white;
+      background: #ffffff;
       border-radius: 12px;
       padding: 1.25rem;
       margin-bottom: 1.25rem;
@@ -318,6 +337,7 @@
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     }
 
+    /* Loading */
     .loading {
       text-align: center;
       padding: 3rem 1rem;
@@ -353,6 +373,7 @@
       }
     }
 
+    /* Progress bar */
     .progress-bar {
       width: 100%;
       height: 6px;
@@ -368,8 +389,9 @@
       transition: width 0.3s ease;
     }
 
+    /* Audio player (for Web Speech, we just show controls) */
     .audio-player {
-      background: white;
+      background: #ffffff;
       border-radius: 12px;
       padding: 1.5rem;
       box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
@@ -380,6 +402,7 @@
       background: var(--parchment);
     }
 
+    /* Modal */
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -428,10 +451,11 @@
       background: var(--parchment);
     }
 
+    /* Navigation */
     .nav-bar {
       position: sticky;
       bottom: 0;
-      background: white;
+      background: #ffffff;
       border-top: 2px solid var(--parchment);
       display: flex;
       justify-content: space-around;
@@ -463,6 +487,7 @@
       color: var(--burgundy);
     }
 
+    /* Utility */
     .hidden {
       display: none !important;
     }
@@ -545,10 +570,16 @@
   <div class="bg-pattern"></div>
   <div class="app-container">
     <div class="content">
+      <!-- Header -->
       <header class="app-header" id="appHeader">
         <div class="logo">
-          <span>📚</span>
-          <span>MoodShelf</span>
+          <div style="display: flex; align-items: center; gap: 0.5rem">
+            <span>📚</span>
+            <span>MoodShelf</span>
+          </div>
+          <div class="header-right" id="authStatus">
+            <!-- Filled by JS: "Guest" or "Signed in as ..." -->
+          </div>
         </div>
         <p
           style="
@@ -561,25 +592,28 @@
         </p>
       </header>
 
-      <main id="mainContent" style="padding: 1.5rem; min-height: calc(100vh - 200px);">
-        <!-- Filled by JS -->
-      </main>
+      <!-- Main content -->
+      <main
+        id="mainContent"
+        style="padding: 1.5rem; min-height: calc(100vh - 200px)"
+      ></main>
 
-      <nav class="nav-bar" id="navBar" style="display: none;">
+      <!-- Navigation bar -->
+      <nav class="nav-bar" id="navBar" style="display: none">
         <div class="nav-item" data-view="check-in">
-          <span style="font-size: 1.5rem;">🌙</span>
+          <span style="font-size: 1.5rem">🌙</span>
           <span>Check-in</span>
         </div>
         <div class="nav-item" data-view="recommendations">
-          <span style="font-size: 1.5rem;">✨</span>
+          <span style="font-size: 1.5rem">✨</span>
           <span>Discover</span>
         </div>
         <div class="nav-item" data-view="library">
-          <span style="font-size: 1.5rem;">📖</span>
+          <span style="font-size: 1.5rem">📖</span>
           <span>My Shelf</span>
         </div>
         <div class="nav-item" data-view="settings">
-          <span style="font-size: 1.5rem;">⚙️</span>
+          <span style="font-size: 1.5rem">⚙️</span>
           <span>Settings</span>
         </div>
       </nav>
@@ -587,11 +621,11 @@
   </div>
 
   <script>
-    // --- Dark mode based on OS ---
-    if (
-      window.matchMedia &&
-      window.matchMedia("(prefers-color-scheme: dark)").matches
-    ) {
+    // === CONFIG ===
+    const BACKEND_URL = "https://moodshelf-backend.onrender.com";
+
+    // === DARK MODE ===
+    if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
       document.documentElement.classList.add("dark");
     }
     window
@@ -604,7 +638,33 @@
         }
       });
 
-    // --- Firebase init ---
+    // === STORAGE (localStorage wrapper) ===
+    const Storage = {
+      getItem(key) {
+        try {
+          return window.localStorage.getItem(key);
+        } catch (e) {
+          return null;
+        }
+      },
+      setItem(key, value) {
+        try {
+          window.localStorage.setItem(key, value);
+        } catch (e) {}
+      },
+      removeItem(key) {
+        try {
+          window.localStorage.removeItem(key);
+        } catch (e) {}
+      },
+      clear() {
+        try {
+          window.localStorage.clear();
+        } catch (e) {}
+      },
+    };
+
+    // === FIREBASE INIT ===
     const firebaseConfig = {
       apiKey: "AIzaSyCL-sdYdmc1xNnit9YsKIqtcGNXkcQocVw",
       authDomain: "moodshelfapp.firebaseapp.com",
@@ -619,36 +679,7 @@
     const auth = firebase.auth();
     const db = firebase.firestore();
 
-    // --- Local storage helper ---
-    const LocalStore = {
-      get(key, fallback = null) {
-        try {
-          const raw = localStorage.getItem(key);
-          return raw ? JSON.parse(raw) : fallback;
-        } catch (e) {
-          console.warn("LocalStore.get error", e);
-          return fallback;
-        }
-      },
-      set(key, value) {
-        try {
-          localStorage.setItem(key, JSON.stringify(value));
-        } catch (e) {
-          console.warn("LocalStore.set error", e);
-        }
-      },
-      remove(key) {
-        try {
-          localStorage.removeItem(key);
-        } catch (e) {
-          console.warn("LocalStore.remove error", e);
-        }
-      },
-    };
-
-    const BACKEND_BASE = "https://moodshelf-backend.onrender.com";
-
-    // --- App state ---
+    // === APP STATE ===
     const AppState = {
       authUser: null, // Firebase user
       user: null, // profile: age, gender, genres, goals
@@ -660,64 +691,27 @@
       currentSummary: null,
       moodHistory: [],
 
-      initFromLocal() {
-        this.user = LocalStore.get("moodshelf_user", null);
-        this.savedBooks = LocalStore.get("moodshelf_saved_books", []);
-        this.moodHistory = LocalStore.get("moodshelf_mood_history", []);
-        this.currentView = this.user ? "check-in" : "welcome";
-      },
-
-      async loadFromCloud() {
-        if (!this.authUser) return;
-        try {
-          const docRef = db.collection("users").doc(this.authUser.uid);
-          const snap = await docRef.get();
-          if (!snap.exists) return;
-
-          const data = snap.data() || {};
-          if (data.profile) {
-            this.user = data.profile;
-            LocalStore.set("moodshelf_user", this.user);
-          }
-          if (Array.isArray(data.savedBooks)) {
-            this.savedBooks = data.savedBooks;
-            LocalStore.set("moodshelf_saved_books", this.savedBooks);
-          }
-          if (Array.isArray(data.moodHistory)) {
-            this.moodHistory = data.moodHistory;
-            LocalStore.set("moodshelf_mood_history", this.moodHistory);
-          }
-        } catch (e) {
-          console.error("loadFromCloud error", e);
+      init() {
+        this.loadFromStorage();
+        if (this.user) {
+          this.currentView = "check-in";
         }
       },
 
-      async saveToCloud() {
-        if (!this.authUser) return;
-        try {
-          const docRef = db.collection("users").doc(this.authUser.uid);
-          await docRef.set(
-            {
-              profile: this.user,
-              savedBooks: this.savedBooks,
-              moodHistory: this.moodHistory,
-              updatedAt: new Date().toISOString(),
-            },
-            { merge: true }
-          );
-        } catch (e) {
-          console.error("saveToCloud error", e);
-        }
-      },
-
-      setAuthUser(user) {
-        this.authUser = user;
+      loadFromStorage() {
+        this.user = JSON.parse(Storage.getItem("moodshelf_user") || "null");
+        this.savedBooks = JSON.parse(
+          Storage.getItem("moodshelf_saved_books") || "[]"
+        );
+        this.moodHistory = JSON.parse(
+          Storage.getItem("moodshelf_mood_history") || "[]"
+        );
       },
 
       saveUser(userData) {
         this.user = userData;
-        LocalStore.set("moodshelf_user", userData);
-        this.saveToCloud();
+        Storage.setItem("moodshelf_user", JSON.stringify(userData));
+        this.syncToFirestore();
       },
 
       saveMoodCheckIn(moodData) {
@@ -726,62 +720,108 @@
           ...moodData,
           timestamp: new Date().toISOString(),
         });
-        LocalStore.set("moodshelf_mood_history", this.moodHistory);
-        this.saveToCloud();
+        Storage.setItem(
+          "moodshelf_mood_history",
+          JSON.stringify(this.moodHistory)
+        );
+        this.syncToFirestore();
       },
 
       saveBook(book) {
         if (!this.savedBooks.find((b) => b.id === book.id)) {
           this.savedBooks.push(book);
-          LocalStore.set("moodshelf_saved_books", this.savedBooks);
-          this.saveToCloud();
+          Storage.setItem(
+            "moodshelf_saved_books",
+            JSON.stringify(this.savedBooks)
+          );
+          this.syncToFirestore();
         }
       },
 
       removeBook(bookId) {
         this.savedBooks = this.savedBooks.filter((b) => b.id !== bookId);
-        LocalStore.set("moodshelf_saved_books", this.savedBooks);
-        this.saveToCloud();
+        Storage.setItem(
+          "moodshelf_saved_books",
+          JSON.stringify(this.savedBooks)
+        );
+        this.syncToFirestore();
       },
 
-      clearMoodHistory() {
-        this.moodHistory = [];
-        LocalStore.remove("moodshelf_mood_history");
-        this.saveToCloud();
-      },
-
-      resetLocal() {
+      reset() {
+        Storage.clear();
         this.user = null;
         this.savedBooks = [];
         this.moodHistory = [];
-        this.currentMoodCheckIn = null;
-        this.recommendations = [];
+        this.currentView = "welcome";
+        this.currentBook = null;
         this.currentSummary = null;
-        LocalStore.remove("moodshelf_user");
-        LocalStore.remove("moodshelf_saved_books");
-        LocalStore.remove("moodshelf_mood_history");
+        this.syncToFirestore();
       },
 
-      resetAll() {
-        this.resetLocal();
-        this.currentView = "welcome";
+      async syncToFirestore() {
+        if (!this.authUser) return;
+        try {
+          await db.collection("users").doc(this.authUser.uid).set(
+            {
+              profile: this.user,
+              savedBooks: this.savedBooks,
+              moodHistory: this.moodHistory,
+              updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+            },
+            { merge: true }
+          );
+        } catch (e) {
+          console.warn("Failed to sync to Firestore:", e.message);
+        }
+      },
+
+      async loadFromFirestoreForUser(uid) {
+        try {
+          const doc = await db.collection("users").doc(uid).get();
+          if (doc.exists) {
+            const data = doc.data();
+            if (data.profile) {
+              // Only override if we don't already have local profile
+              if (!this.user) {
+                this.user = data.profile;
+                Storage.setItem(
+                  "moodshelf_user",
+                  JSON.stringify(this.user || null)
+                );
+              }
+            }
+            if (Array.isArray(data.savedBooks)) {
+              this.savedBooks = data.savedBooks;
+              Storage.setItem(
+                "moodshelf_saved_books",
+                JSON.stringify(this.savedBooks)
+              );
+            }
+            if (Array.isArray(data.moodHistory)) {
+              this.moodHistory = data.moodHistory;
+              Storage.setItem(
+                "moodshelf_mood_history",
+                JSON.stringify(this.moodHistory)
+              );
+            }
+          }
+        } catch (e) {
+          console.warn("Failed to load from Firestore:", e.message);
+        }
       },
     };
 
-    // --- Router ---
+    // === ROUTER ===
     const Router = {
       navigate(view, data = {}) {
         AppState.currentView = view;
 
-        document
-          .querySelectorAll(".nav-item")
-          .forEach((item) => item.classList.remove("active"));
-        document
-          .querySelectorAll(`.nav-item[data-view="${view}"]`)
-          .forEach((item) => item.classList.add("active"));
+        document.querySelectorAll(".nav-item").forEach((item) => {
+          item.classList.remove("active");
+          if (item.dataset.view === view) item.classList.add("active");
+        });
 
         this.render(view, data);
-        window.scrollTo(0, 0);
       },
 
       render(view, data) {
@@ -812,6 +852,7 @@
             break;
           case "book-detail":
             mainContent.innerHTML = Views.bookDetail(data.book);
+            Views.initBookDetail(data.book);
             break;
           case "summary":
             mainContent.innerHTML = Views.summary(data.book);
@@ -819,29 +860,92 @@
             break;
           case "library":
             mainContent.innerHTML = Views.library();
+            Views.initLibrary();
             break;
           case "settings":
             mainContent.innerHTML = Views.settings();
             break;
           default:
-            mainContent.innerHTML = "<p>View not found.</p>";
+            mainContent.innerHTML = "<p>View not found</p>";
         }
+
+        window.scrollTo(0, 0);
+        Views.updateAuthStatus();
       },
     };
 
-    // --- Views ---
+    // === WEB SPEECH (TTS) ===
+    let speakingUtterance = null;
+    let isSpeaking = false;
+
+    function speakText(text) {
+      if (!("speechSynthesis" in window)) {
+        Views.showModal(
+          "Audio Not Supported",
+          "Your browser does not support text-to-speech. Try using a modern browser like Chrome or Edge."
+        );
+        return;
+      }
+
+      if (isSpeaking) {
+        window.speechSynthesis.cancel();
+        speakingUtterance = null;
+        isSpeaking = false;
+      }
+
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.rate = 1;
+      utter.pitch = 1;
+      utter.onend = () => {
+        isSpeaking = false;
+        speakingUtterance = null;
+        const btn = document.getElementById("listenBtn");
+        if (btn) btn.textContent = "🎧 Listen to Audio Summary";
+      };
+      utter.onerror = () => {
+        isSpeaking = false;
+        speakingUtterance = null;
+        const btn = document.getElementById("listenBtn");
+        if (btn) btn.textContent = "🎧 Listen to Audio Summary";
+      };
+
+      speakingUtterance = utter;
+      isSpeaking = true;
+      window.speechSynthesis.speak(utter);
+    }
+
+    function stopSpeaking() {
+      if (!("speechSynthesis" in window)) return;
+      window.speechSynthesis.cancel();
+      speakingUtterance = null;
+      isSpeaking = false;
+    }
+
+    // === VIEWS ===
     const Views = {
+      updateAuthStatus() {
+        const el = document.getElementById("authStatus");
+        if (!el) return;
+        if (AppState.authUser) {
+          el.textContent = `Signed in as ${AppState.authUser.email}`;
+        } else {
+          el.textContent = "Guest";
+        }
+      },
+
       welcome() {
         return `
           <div style="text-align: center; padding: 2rem 0;">
             <div style="font-size: 5rem; margin-bottom: 1rem; animation: fadeInUp 0.6s ease-out;">📚</div>
-            <h1 style="font-size: 2.5rem; margin-bottom: 1rem; animation: fadeInUp 0.6s ease-out 0.1s; animation-fill-mode: both;">Welcome to MoodShelf</h1>
+            <h1 style="font-size: 2.5rem; margin-bottom: 1rem; animation: fadeInUp 0.6s ease-out 0.1s; animation-fill-mode: both;">
+              Welcome to MoodShelf
+            </h1>
             <p style="font-size: 1.15rem; color: var(--burgundy); margin-bottom: 2rem; max-width: 400px; margin-left: auto; margin-right: auto; animation: fadeInUp 0.6s ease-out 0.2s; animation-fill-mode: both;">
               Discover books that meet you where you are—emotionally, mentally, and personally.
             </p>
 
             <div class="disclaimer" style="animation: fadeInUp 0.6s ease-out 0.3s; animation-fill-mode: both;">
-              <strong>📌 Important Notice:</strong><br>
+              <strong>📌 Important Notice:</strong><br />
               MoodShelf provides reading suggestions based on your mood and goals. This app is <strong>not a substitute for professional mental health care or therapy</strong>. If you're experiencing a crisis or need professional support, please contact a qualified healthcare provider.
             </div>
 
@@ -853,31 +957,26 @@
       },
 
       onboarding() {
-        const user = AppState.user || {};
         return `
           <div style="max-width: 500px; margin: 0 auto;">
             <h2 style="font-size: 2rem; margin-bottom: 1.5rem; color: var(--burgundy);">Let's Get to Know You</h2>
-
             <form id="onboardingForm" onsubmit="return false;">
               <div id="step1" class="onboarding-step">
                 <h3 style="font-size: 1.5rem; margin-bottom: 1rem;">Basic Information</h3>
-
                 <div class="form-group">
                   <label class="form-label">Your Age *</label>
-                  <input type="number" class="form-input" id="age" min="13" max="120" value="${user.age || ""}" required>
+                  <input type="number" class="form-input" id="age" min="13" max="120" required />
                 </div>
-
                 <div class="form-group">
                   <label class="form-label">Gender (Optional)</label>
                   <select class="form-select" id="gender">
-                    <option value="" ${!user.gender ? "selected" : ""}>Prefer not to say</option>
-                    <option value="female" ${user.gender === "female" ? "selected" : ""}>Female</option>
-                    <option value="male" ${user.gender === "male" ? "selected" : ""}>Male</option>
-                    <option value="non-binary" ${user.gender === "non-binary" ? "selected" : ""}>Non-binary</option>
-                    <option value="other" ${user.gender === "other" ? "selected" : ""}>Other</option>
+                    <option value="">Prefer not to say</option>
+                    <option value="female">Female</option>
+                    <option value="male">Male</option>
+                    <option value="non-binary">Non-binary</option>
+                    <option value="other">Other</option>
                   </select>
                 </div>
-
                 <button type="button" class="btn btn-primary" style="width: 100%;" onclick="Views.nextOnboardingStep(2)">
                   Continue
                 </button>
@@ -885,36 +984,19 @@
 
               <div id="step2" class="onboarding-step hidden">
                 <h3 style="font-size: 1.5rem; margin-bottom: 1rem;">Reading Preferences</h3>
-
                 <div class="form-group">
                   <label class="form-label">What genres interest you? (Select all that apply)</label>
                   <div class="checkbox-group" id="genreCheckboxes">
-                    ${[
-                      ["self-help", "Self-Help & Personal Development"],
-                      ["business", "Business & Career"],
-                      ["psychology", "Psychology"],
-                      ["fiction", "Fiction"],
-                      ["biography", "Biography & Memoir"],
-                      ["health", "Health & Wellness"],
-                      ["creativity", "Creativity & Arts"],
-                      ["philosophy", "Philosophy & Spirituality"],
-                    ]
-                      .map(([value, label]) => {
-                        const checked =
-                          user.preferredGenres &&
-                          user.preferredGenres.includes(value)
-                            ? "checked"
-                            : "";
-                        return `
-                          <label class="checkbox-item">
-                            <input type="checkbox" value="${value}" ${checked}> ${label}
-                          </label>
-                        `;
-                      })
-                      .join("")}
+                    <label class="checkbox-item"><input type="checkbox" value="self-help" /> Self-Help & Personal Development</label>
+                    <label class="checkbox-item"><input type="checkbox" value="business" /> Business & Career</label>
+                    <label class="checkbox-item"><input type="checkbox" value="psychology" /> Psychology</label>
+                    <label class="checkbox-item"><input type="checkbox" value="fiction" /> Fiction</label>
+                    <label class="checkbox-item"><input type="checkbox" value="biography" /> Biography & Memoir</label>
+                    <label class="checkbox-item"><input type="checkbox" value="health" /> Health & Wellness</label>
+                    <label class="checkbox-item"><input type="checkbox" value="creativity" /> Creativity & Arts</label>
+                    <label class="checkbox-item"><input type="checkbox" value="philosophy" /> Philosophy & Spirituality</label>
                   </div>
                 </div>
-
                 <div style="display: flex; gap: 1rem;">
                   <button type="button" class="btn btn-secondary" style="flex: 1;" onclick="Views.nextOnboardingStep(1)">
                     Back
@@ -927,36 +1009,20 @@
 
               <div id="step3" class="onboarding-step hidden">
                 <h3 style="font-size: 1.5rem; margin-bottom: 1rem;">Your Goals</h3>
-
                 <div class="form-group">
                   <label class="form-label">What would you like to work on? (Select all that apply)</label>
                   <div class="checkbox-group" id="goalsCheckboxes">
-                    ${[
-                      ["focus", "Improve focus and discipline"],
-                      ["confidence", "Boost confidence"],
-                      ["anxiety", "Reduce anxiety/stress"],
-                      ["academic", "Do better in school/studies"],
-                      ["social", "Develop social skills"],
-                      ["career", "Career and money"],
-                      ["creativity", "Creativity and passion"],
-                      ["relationships", "Improve relationships"],
-                      ["health", "Physical/mental health"],
-                    ]
-                      .map(([value, label]) => {
-                        const checked =
-                          user.goals && user.goals.includes(value)
-                            ? "checked"
-                            : "";
-                        return `
-                          <label class="checkbox-item">
-                            <input type="checkbox" value="${value}" ${checked}> ${label}
-                          </label>
-                        `;
-                      })
-                      .join("")}
+                    <label class="checkbox-item"><input type="checkbox" value="focus" /> Improve focus and discipline</label>
+                    <label class="checkbox-item"><input type="checkbox" value="confidence" /> Boost confidence</label>
+                    <label class="checkbox-item"><input type="checkbox" value="anxiety" /> Reduce anxiety/stress</label>
+                    <label class="checkbox-item"><input type="checkbox" value="academic" /> Do better in school/studies</label>
+                    <label class="checkbox-item"><input type="checkbox" value="social" /> Develop social skills</label>
+                    <label class="checkbox-item"><input type="checkbox" value="career" /> Career and money</label>
+                    <label class="checkbox-item"><input type="checkbox" value="creativity" /> Creativity and passion</label>
+                    <label class="checkbox-item"><input type="checkbox" value="relationships" /> Improve relationships</label>
+                    <label class="checkbox-item"><input type="checkbox" value="health" /> Physical/mental health</label>
                   </div>
                 </div>
-
                 <div style="display: flex; gap: 1rem;">
                   <button type="button" class="btn btn-secondary" style="flex: 1;" onclick="Views.nextOnboardingStep(2)">
                     Back
@@ -971,7 +1037,30 @@
         `;
       },
 
-      initOnboarding() {},
+      initOnboarding() {
+        // If we already have profile, prefill:
+        if (AppState.user) {
+          const { age, gender, preferredGenres, goals } = AppState.user;
+          if (age) document.getElementById("age").value = age;
+          if (gender) document.getElementById("gender").value = gender;
+          if (Array.isArray(preferredGenres)) {
+            preferredGenres.forEach((g) => {
+              const cb = document.querySelector(
+                `#genreCheckboxes input[value="${g}"]`
+              );
+              if (cb) cb.checked = true;
+            });
+          }
+          if (Array.isArray(goals)) {
+            goals.forEach((g) => {
+              const cb = document.querySelector(
+                `#goalsCheckboxes input[value="${g}"]`
+              );
+              if (cb) cb.checked = true;
+            });
+          }
+        }
+      },
 
       nextOnboardingStep(step) {
         document
@@ -984,11 +1073,9 @@
       completeOnboarding() {
         const age = document.getElementById("age").value;
         const gender = document.getElementById("gender").value;
-
         const genres = Array.from(
           document.querySelectorAll("#genreCheckboxes input:checked")
         ).map((cb) => cb.value);
-
         const goals = Array.from(
           document.querySelectorAll("#goalsCheckboxes input:checked")
         ).map((cb) => cb.value);
@@ -1023,7 +1110,7 @@
 
             <div class="form-group">
               <label class="form-label">Mood Level</label>
-              <input type="range" class="mood-slider" id="moodSlider" min="1" max="10" value="5">
+              <input type="range" class="mood-slider" id="moodSlider" min="1" max="10" value="5" />
               <div style="display: flex; justify-content: space-between; margin-top: 0.5rem; font-size: 0.85rem; opacity: 0.7;">
                 <span>Very Low</span>
                 <span id="moodValue">Neutral (5)</span>
@@ -1034,25 +1121,18 @@
             <div class="form-group mt-4">
               <label class="form-label">What are you feeling? (Select all that apply)</label>
               <div class="mood-tags" id="moodTags">
-                ${[
-                  ["anxious", "😰 Anxious"],
-                  ["motivated", "💪 Motivated"],
-                  ["lonely", "😔 Lonely"],
-                  ["burnout", "🔥 Burned Out"],
-                  ["curious", "🤔 Curious"],
-                  ["hopeful", "🌟 Hopeful"],
-                  ["sad", "😢 Sad"],
-                  ["angry", "😠 Angry"],
-                  ["bored", "😑 Bored"],
-                  ["excited", "🎉 Excited"],
-                  ["overwhelmed", "🌊 Overwhelmed"],
-                  ["peaceful", "☮️ Peaceful"],
-                ]
-                  .map(
-                    ([tag, label]) =>
-                      `<div class="mood-tag" data-tag="${tag}">${label}</div>`
-                  )
-                  .join("")}
+                <div class="mood-tag" data-tag="anxious">😰 Anxious</div>
+                <div class="mood-tag" data-tag="motivated">💪 Motivated</div>
+                <div class="mood-tag" data-tag="lonely">😔 Lonely</div>
+                <div class="mood-tag" data-tag="burnout">🔥 Burned Out</div>
+                <div class="mood-tag" data-tag="curious">🤔 Curious</div>
+                <div class="mood-tag" data-tag="hopeful">🌟 Hopeful</div>
+                <div class="mood-tag" data-tag="sad">😢 Sad</div>
+                <div class="mood-tag" data-tag="angry">😠 Angry</div>
+                <div class="mood-tag" data-tag="bored">😑 Bored</div>
+                <div class="mood-tag" data-tag="excited">🎉 Excited</div>
+                <div class="mood-tag" data-tag="overwhelmed">🌊 Overwhelmed</div>
+                <div class="mood-tag" data-tag="peaceful">☮️ Peaceful</div>
               </div>
             </div>
 
@@ -1071,7 +1151,6 @@
       initCheckIn() {
         const slider = document.getElementById("moodSlider");
         const moodValue = document.getElementById("moodValue");
-
         const moodLabels = {
           1: "Very Low (1)",
           2: "Low (2)",
@@ -1084,9 +1163,8 @@
           9: "Very High (9)",
           10: "Excellent (10)",
         };
-
         slider.addEventListener("input", (e) => {
-          moodValue.textContent = moodLabels[e.target.value];
+          moodValue.textContent = moodLabels[e.target.value] || `Mood (${e.target.value})`;
         });
 
         document.querySelectorAll(".mood-tag").forEach((tag) => {
@@ -1096,7 +1174,7 @@
         });
       },
 
-      submitCheckIn() {
+      async submitCheckIn() {
         const moodScore = parseInt(
           document.getElementById("moodSlider").value,
           10
@@ -1132,14 +1210,12 @@
             <p style="margin-bottom: 2rem; color: var(--charcoal); opacity: 0.8;">
               Based on your mood and goals, here are some books that might resonate with you right now.
             </p>
-
             <div id="recommendationsContainer">
               <div class="loading">
                 <div class="spinner"></div>
                 <p>Finding perfect books for your current mood...</p>
               </div>
             </div>
-
             <button class="btn btn-secondary" style="width: 100%; margin-top: 1rem;" onclick="Views.refreshRecommendations()">
               🔄 Get New Recommendations
             </button>
@@ -1151,7 +1227,7 @@
         if (!AppState.user || !AppState.currentMoodCheckIn) {
           Views.showModal(
             "Missing Info",
-            "Please complete your profile and a mood check-in first."
+            "Please complete onboarding and a mood check-in first."
           );
           Router.navigate("onboarding");
           return;
@@ -1172,13 +1248,10 @@
             <p>Finding perfect books for your current mood...</p>
           </div>
         `;
-
         try {
-          const res = await fetch(`${BACKEND_BASE}/api/recommendations`, {
+          const res = await fetch(`${BACKEND_URL}/api/recommendations`, {
             method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               user: AppState.user,
               mood: AppState.currentMoodCheckIn,
@@ -1186,24 +1259,21 @@
           });
 
           if (!res.ok) {
-            const errorText = await res.text();
-            throw new Error(
-              `Server error (${res.status}): ${errorText || res.statusText}`
-            );
+            const err = await res.json().catch(() => ({}));
+            throw new Error(err.details || `HTTP ${res.status}`);
           }
 
-          const data = await res.json();
-          if (!Array.isArray(data)) {
-            throw new Error("Backend did not return an array.");
+          const recommendations = await res.json();
+          if (!Array.isArray(recommendations)) {
+            throw new Error("Server did not return an array of books.");
           }
 
-          AppState.recommendations = data;
-          Views.displayRecommendations(data);
+          AppState.recommendations = recommendations;
+          Views.displayRecommendations(recommendations);
         } catch (err) {
-          console.error("fetchRecommendations error", err);
           container.innerHTML = `
             <div style="text-align: center; padding: 2rem;">
-              <p style="color: var(--burgundy);">Error: ${
+              <p style="color: var(--burgundy);">Error fetching recommendations: ${
                 err.message || err
               }</p>
               <button class="btn btn-primary mt-2" onclick="Views.fetchRecommendations()">Try Again</button>
@@ -1212,56 +1282,61 @@
         }
       },
 
-      displayRecommendations(recommendations) {
+      displayRecommendations(recs) {
         const container = document.getElementById("recommendationsContainer");
-        if (!recommendations || recommendations.length === 0) {
+        if (!recs || recs.length === 0) {
           container.innerHTML =
             "<p>No recommendations available. Please try refreshing.</p>";
           return;
         }
 
-        container.innerHTML = recommendations
-          .map((book) => {
-            const safeBook = JSON.stringify(book).replace(/'/g, "&apos;");
-            return `
-            <div class="book-card" onclick='Router.navigate("book-detail", {book: ${safeBook}})'>
-              <div style="display: flex; gap: 1rem;">
-                <img src="${
-                  book.coverUrl ||
-                  "https://via.placeholder.com/80x120?text=Book"
-                }" alt="${book.title}" class="book-cover"
-                  onerror="this.src='https://via.placeholder.com/80x120?text=Book'">
-                <div style="flex: 1;">
-                  <h3 style="font-size: 1.25rem; margin-bottom: 0.25rem; color: var(--burgundy);">
-                    ${book.title}
-                  </h3>
-                  <p style="font-size: 0.95rem; opacity: 0.7; margin-bottom: 0.5rem;">
-                    by ${book.author}
-                  </p>
-                  <p style="font-size: 0.95rem; margin-bottom: 0.5rem;">
-                    ${book.explanation || ""}
-                  </p>
-                  <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+        container.innerHTML = recs
+          .map(
+            (book, index) => `
+          <div class="book-card" data-book-index="${index}">
+            <div style="display: flex; gap: 1rem;">
+              <img src="${book.coverUrl}" alt="${book.title}" class="book-cover"
+                   onerror="this.src='https://via.placeholder.com/80x120?text=Book';" />
+              <div style="flex: 1;">
+                <h3 style="font-size: 1.25rem; margin-bottom: 0.25rem; color: var(--burgundy);">
+                  ${book.title}
+                </h3>
+                <p style="font-size: 0.95rem; opacity: 0.7; margin-bottom: 0.5rem;">by ${
+                  book.author
+                }</p>
+                <p style="font-size: 0.95rem; margin-bottom: 0.5rem;">
+                  ${book.explanation}
+                </p>
+                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                  <span style="background: var(--parchment); padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.85rem;">
+                    ${book.moodAlignment}
+                  </span>
+                  ${(book.tags || [])
+                    .slice(0, 2)
+                    .map(
+                      (tag) => `
                     <span style="background: var(--parchment); padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.85rem;">
-                      ${book.moodAlignment || ""}
+                      ${tag}
                     </span>
-                    ${(book.tags || [])
-                      .slice(0, 2)
-                      .map(
-                        (tag) => `
-                      <span style="background: var(--parchment); padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.85rem;">
-                        ${tag}
-                      </span>
-                    `
-                      )
-                      .join("")}
-                  </div>
+                  `
+                    )
+                    .join("")}
                 </div>
               </div>
             </div>
-          `;
-          })
+          </div>
+        `
+          )
           .join("");
+
+        document.querySelectorAll(".book-card").forEach((card) => {
+          card.addEventListener("click", () => {
+            const idx = parseInt(card.dataset.bookIndex, 10);
+            const book = AppState.recommendations[idx];
+            AppState.currentBook = book;
+            Router.navigate("book-detail", { book });
+          });
+        });
       },
 
       async refreshRecommendations() {
@@ -1270,28 +1345,21 @@
       },
 
       bookDetail(book) {
-        if (!book) {
-          return `<p>Book not found.</p>`;
-        }
         const isSaved = AppState.savedBooks.some((b) => b.id === book.id);
-        const safeBook = JSON.stringify(book).replace(/'/g, "&apos;");
-
         const moodTags =
           (AppState.currentMoodCheckIn &&
             AppState.currentMoodCheckIn.moodTags) ||
           [];
         return `
           <div style="max-width: 500px; margin: 0 auto;">
-            <button class="btn btn-ghost mb-2" onclick="Router.navigate('recommendations')">← Back to Recommendations</button>
+            <button class="btn btn-ghost mb-2" onclick="Router.navigate('recommendations')">
+              ← Back to Recommendations
+            </button>
 
             <div style="text-align: center; margin-bottom: 2rem;">
-              <img src="${
-                book.coverUrl ||
-                "https://via.placeholder.com/180x270?text=Book"
-              }" alt="${
-          book.title
-        }" style="width: 180px; height: 270px; object-fit: cover; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); margin-bottom: 1.5rem;"
-                onerror="this.src='https://via.placeholder.com/180x270?text=Book'">
+              <img src="${book.coverUrl}" alt="${book.title}"
+                   style="width: 180px; height: 270px; object-fit: cover; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); margin-bottom: 1.5rem;"
+                   onerror="this.src='https://via.placeholder.com/180x270?text=Book';" />
               <h2 style="font-size: 2rem; margin-bottom: 0.5rem; color: var(--burgundy);">
                 ${book.title}
               </h2>
@@ -1300,36 +1368,53 @@
               </p>
               <div style="display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap; margin-bottom: 1.5rem;">
                 <span style="background: var(--parchment); padding: 0.4rem 1rem; border-radius: 16px; font-size: 0.9rem;">
-                  ${book.genre || "Genre"}
+                  ${book.genre}
                 </span>
                 <span style="background: var(--burgundy); color: var(--cream); padding: 0.4rem 1rem; border-radius: 16px; font-size: 0.9rem;">
-                  ${book.moodAlignment || ""}
+                  ${book.moodAlignment}
                 </span>
               </div>
             </div>
 
-            <div style="background: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;">
-              <h3 style="font-size: 1.25rem; margin-bottom: 0.75rem; color: var(--burgundy);">Why This Book for You</h3>
-              <p>${book.explanation || ""}</p>
+            <div style="background: #ffffff; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;">
+              <h3 style="font-size: 1.25rem; margin-bottom: 0.75rem; color: var(--burgundy);">
+                Why This Book for You
+              </h3>
+              <p>${book.explanation}</p>
             </div>
 
             <div class="disclaimer mb-3">
-              <strong>📚 About This Book:</strong><br>
+              <strong>📚 About This Book:</strong><br />
               This book has been selected based on your current mood (${moodTags.join(
                 ", "
               )}) and your goals. The summary you'll read is AI-generated and designed to give you the core ideas in about 20 minutes.
             </div>
 
             <div style="display: flex; flex-direction: column; gap: 1rem;">
-              <button class="btn btn-primary" onclick='Router.navigate("summary", {book: ${safeBook}})'>
+              <button class="btn btn-primary" id="readSummaryBtn">
                 📖 Read 20-Minute Summary
               </button>
-              <button class="btn btn-secondary" onclick='Views.saveBookToLibrary(${safeBook})'>
+              <button class="btn btn-secondary" id="saveBookBtn">
                 ${isSaved ? "✓ Saved to Library" : "💾 Save to Library"}
               </button>
             </div>
           </div>
         `;
+      },
+
+      initBookDetail(book) {
+        const readBtn = document.getElementById("readSummaryBtn");
+        const saveBtn = document.getElementById("saveBookBtn");
+        if (readBtn) {
+          readBtn.addEventListener("click", () => {
+            Router.navigate("summary", { book });
+          });
+        }
+        if (saveBtn) {
+          saveBtn.addEventListener("click", () => {
+            Views.saveBookToLibrary(book);
+          });
+        }
       },
 
       saveBookToLibrary(book) {
@@ -1342,13 +1427,11 @@
       },
 
       summary(book) {
-        if (!book) {
-          return "<p>Book not found.</p>";
-        }
-        const safeBook = JSON.stringify(book).replace(/'/g, "&apos;");
         return `
           <div style="max-width: 600px; margin: 0 auto;">
-            <button class="btn btn-ghost mb-2" onclick='Router.navigate("book-detail", {book: ${safeBook}})'>← Back to Book</button>
+            <button class="btn btn-ghost mb-2" onclick="Router.navigate('book-detail', {book: AppState.currentBook})">
+              ← Back to Book
+            </button>
 
             <h2 style="font-size: 1.75rem; margin-bottom: 0.5rem; color: var(--burgundy);">
               ${book.title}
@@ -1358,9 +1441,11 @@
             </p>
 
             <div class="progress-bar">
-              <div class="progress-fill" id="summaryProgress" style="width: 0%;"></div>
+              <div class="progress-fill" id="summaryProgress" style="width: 10%;"></div>
             </div>
-            <p style="font-size: 0.85rem; opacity: 0.6; margin-top: 0.5rem; text-align: center;">Estimated reading time: ~20 minutes</p>
+            <p style="font-size: 0.85rem; opacity: 0.6; margin-top: 0.5rem; text-align: center;">
+              Estimated reading time: ~20 minutes
+            </p>
 
             <div id="summaryContent" style="margin-top: 2rem;">
               <div class="loading">
@@ -1370,7 +1455,7 @@
             </div>
 
             <div id="summaryActions" class="hidden" style="margin-top: 2rem; display: flex; gap: 1rem; flex-direction: column;">
-              <button class="btn btn-secondary" onclick="Views.generateAudioSummary()">
+              <button class="btn btn-secondary" id="listenBtn">
                 🎧 Listen to Audio Summary
               </button>
               <button class="btn btn-ghost" onclick="Views.markSummaryComplete()">
@@ -1384,13 +1469,14 @@
       async initSummary(book) {
         const summaryContent = document.getElementById("summaryContent");
         const progressBar = document.getElementById("summaryProgress");
+        const actions = document.getElementById("summaryActions");
+
+        progressBar.style.width = "20%";
 
         try {
-          const res = await fetch(`${BACKEND_BASE}/api/summary`, {
+          const res = await fetch(`${BACKEND_URL}/api/summary`, {
             method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               user: AppState.user,
               mood: AppState.currentMoodCheckIn,
@@ -1399,76 +1485,49 @@
           });
 
           if (!res.ok) {
-            const text = await res.text();
-            throw new Error(
-              `Server error (${res.status}): ${text || res.statusText}`
-            );
+            const err = await res.json().catch(() => ({}));
+            throw new Error(err.details || `HTTP ${res.status}`);
           }
 
           const data = await res.json();
           const summary = data.summary || "";
-
           AppState.currentSummary = summary;
-          const html = marked.parse(summary);
 
+          const html = marked.parse(summary);
           summaryContent.innerHTML = `<div class="summary-content">${html}</div>`;
           progressBar.style.width = "100%";
-          document
-            .getElementById("summaryActions")
-            .classList.remove("hidden");
+          actions.classList.remove("hidden");
+
+          const listenBtn = document.getElementById("listenBtn");
+          if (listenBtn) {
+            listenBtn.addEventListener("click", () => {
+              if (isSpeaking) {
+                stopSpeaking();
+                listenBtn.textContent = "🎧 Listen to Audio Summary";
+              } else {
+                const plainText = summary
+                  .replace(/#{1,6}\s/g, "")
+                  .replace(/\*\*/g, "")
+                  .replace(/\*/g, "")
+                  .replace(/`/g, "")
+                  .replace(/\[([^\]]+)\]\([^\)]+\)/g, "$1")
+                  .trim();
+                listenBtn.textContent = "⏹ Stop Audio";
+                speakText(plainText);
+              }
+            });
+          }
         } catch (err) {
-          console.error("initSummary error", err);
           summaryContent.innerHTML = `
             <div style="text-align: center; padding: 2rem;">
               <p style="color: var(--burgundy);">Error generating summary: ${
                 err.message || err
               }</p>
-              <button class="btn btn-primary mt-2" onclick="Views.initSummary(${JSON.stringify(
-                book
-              ).replace(/'/g, "&apos;")})">Try Again</button>
+              <button class="btn btn-primary mt-2" onclick="Router.navigate('summary', {book: AppState.currentBook})">Try Again</button>
             </div>
           `;
-          if (progressBar) progressBar.style.width = "0%";
+          progressBar.style.width = "0%";
         }
-      },
-
-      generateAudioSummary() {
-        if (!AppState.currentSummary) {
-          Views.showModal(
-            "No Summary Available",
-            "Please wait for the summary to finish generating first."
-          );
-          return;
-        }
-
-        if (!("speechSynthesis" in window)) {
-          Views.showModal(
-            "Audio Not Supported",
-            "Your browser does not support text-to-speech. Please try a modern browser like Chrome, Edge, or Safari."
-          );
-          return;
-        }
-
-        window.speechSynthesis.cancel();
-
-        const utterance = new SpeechSynthesisUtterance();
-        const plainText = AppState.currentSummary
-          .replace(/#{1,6}\s/g, "")
-          .replace(/\*\*/g, "")
-          .replace(/\*/g, "")
-          .replace(/`/g, "")
-          .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
-          .trim();
-
-        utterance.text = plainText;
-        utterance.rate = 1.0;
-        utterance.pitch = 1.0;
-
-        utterance.onerror = (e) => {
-          console.error("Speech synthesis error:", e);
-        };
-
-        window.speechSynthesis.speak(utterance);
       },
 
       markSummaryComplete() {
@@ -1479,13 +1538,17 @@
       },
 
       library() {
-        const savedBooks = AppState.savedBooks || [];
-        if (savedBooks.length === 0) {
+        const savedBooks = AppState.savedBooks;
+        if (!savedBooks || savedBooks.length === 0) {
           return `
             <div style="text-align: center; padding: 3rem 1rem;">
               <div style="font-size: 4rem; margin-bottom: 1rem;">📚</div>
-              <h2 style="font-size: 1.75rem; margin-bottom: 1rem; color: var(--burgundy);">Your Library is Empty</h2>
-              <p style="margin-bottom: 2rem; opacity: 0.8;">Save books from your recommendations to build your personal library.</p>
+              <h2 style="font-size: 1.75rem; margin-bottom: 1rem; color: var(--burgundy);">
+                Your Library is Empty
+              </h2>
+              <p style="margin-bottom: 2rem; opacity: 0.8;">
+                Save books from your recommendations to build your personal library.
+              </p>
               <button class="btn btn-primary" onclick="Router.navigate('recommendations')">
                 Discover Books
               </button>
@@ -1493,47 +1556,66 @@
           `;
         }
 
-        const items = savedBooks
-          .map((book) => {
-            const safeBook = JSON.stringify(book).replace(/'/g, "&apos;");
-            return `
-              <div class="book-card" onclick='Router.navigate("book-detail", {book: ${safeBook}})'>
-                <div style="display: flex; gap: 1rem; align-items: start;">
-                  <img src="${
-                    book.coverUrl ||
-                    "https://via.placeholder.com/80x120?text=Book"
-                  }" alt="${book.title}" class="book-cover"
-                    onerror="this.src='https://via.placeholder.com/80x120?text=Book'">
-                  <div style="flex: 1;">
-                    <h3 style="font-size: 1.25rem; margin-bottom: 0.25rem; color: var(--burgundy);">
-                      ${book.title}
-                    </h3>
-                    <p style="font-size: 0.95rem; opacity: 0.7; margin-bottom: 0.5rem;">
-                      by ${book.author}
-                    </p>
-                    <p style="font-size: 0.95rem;">
-                      ${book.explanation || ""}
-                    </p>
-                  </div>
-                  <button class="btn-ghost" onclick="event.stopPropagation(); Views.removeFromLibrary('${
-                    book.id
-                  }')" style="padding: 0.5rem; font-size: 1.25rem;">
-                    🗑️
-                  </button>
-                </div>
-              </div>
-            `;
-          })
-          .join("");
-
         return `
           <div>
-            <h2 style="font-size: 2rem; margin-bottom: 1rem; color: var(--burgundy);">My Library</h2>
+            <h2 style="font-size: 2rem; margin-bottom: 1rem; color: var(--burgundy);">
+              My Library
+            </h2>
             <p style="margin-bottom: 2rem; opacity: 0.8;">Books you've saved for later</p>
-
-            <div>${items}</div>
+            <div id="libraryList">
+              ${savedBooks
+                .map(
+                  (book, index) => `
+                <div class="book-card" data-book-index="${index}">
+                  <div style="display: flex; gap: 1rem; align-items: flex-start;">
+                    <img src="${book.coverUrl}" alt="${book.title}" class="book-cover"
+                         onerror="this.src='https://via.placeholder.com/80x120?text=Book';" />
+                    <div style="flex: 1;">
+                      <h3 style="font-size: 1.25rem; margin-bottom: 0.25rem; color: var(--burgundy);">
+                        ${book.title}
+                      </h3>
+                      <p style="font-size: 0.95rem; opacity: 0.7; margin-bottom: 0.5rem;">
+                        by ${book.author}
+                      </p>
+                      <p style="font-size: 0.95rem;">
+                        ${book.explanation}
+                      </p>
+                    </div>
+                    <button class="btn-ghost" data-remove-id="${book.id}" style="padding: 0.5rem; font-size: 1.25rem;">
+                      🗑️
+                    </button>
+                  </div>
+                </div>
+              `
+                )
+                .join("")}
+            </div>
           </div>
         `;
+      },
+
+      initLibrary() {
+        const cards = document.querySelectorAll("#libraryList .book-card");
+        cards.forEach((card) => {
+          card.addEventListener("click", (e) => {
+            // if trash clicked, ignore
+            if (e.target && e.target.dataset.removeId) return;
+            const idx = parseInt(card.dataset.bookIndex, 10);
+            const book = AppState.savedBooks[idx];
+            AppState.currentBook = book;
+            Router.navigate("book-detail", { book });
+          });
+        });
+
+        document
+          .querySelectorAll("#libraryList [data-remove-id]")
+          .forEach((btn) => {
+            btn.addEventListener("click", (e) => {
+              e.stopPropagation();
+              const id = btn.dataset.removeId;
+              Views.removeFromLibrary(id);
+            });
+          });
       },
 
       removeFromLibrary(bookId) {
@@ -1542,67 +1624,94 @@
       },
 
       settings() {
-        const user = AppState.user || {
-          age: "Not set",
-          gender: "Not specified",
-          preferredGenres: [],
-          goals: [],
-        };
+        const user = AppState.user;
         const moodHistoryCount = AppState.moodHistory.length;
         const savedCount = AppState.savedBooks.length;
-        const firebaseUser = AppState.authUser;
+        const authUser = AppState.authUser;
+
+        const profileHtml = user
+          ? `
+          <div style="background: #ffffff; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;">
+            <h3 style="font-size: 1.25rem; margin-bottom: 1rem; color: var(--burgundy);">
+              Your Profile
+            </h3>
+            <div style="margin-bottom: 0.75rem;"><strong>Age:</strong> ${
+              user.age
+            }</div>
+            <div style="margin-bottom: 0.75rem;"><strong>Gender:</strong> ${
+              user.gender || "Not specified"
+            }</div>
+            <div style="margin-bottom: 0.75rem;"><strong>Preferred Genres:</strong> ${
+              (user.preferredGenres || []).join(", ") || "Not specified"
+            }</div>
+            <div><strong>Goals:</strong> ${
+              (user.goals || []).join(", ") || "Not specified"
+            }</div>
+          </div>
+        `
+          : `
+          <div style="background: #ffffff; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;">
+            <h3 style="font-size: 1.25rem; margin-bottom: 1rem; color: var(--burgundy);">
+              Your Profile
+            </h3>
+            <p style="margin-bottom: 1rem;">
+              You haven't completed onboarding yet. This helps us personalize book recommendations.
+            </p>
+            <button class="btn btn-primary" onclick="Router.navigate('onboarding')">
+              Complete Onboarding
+            </button>
+          </div>
+        `;
+
+        const accountHtml = authUser
+          ? `
+          <div style="background: #ffffff; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;">
+            <h3 style="font-size: 1.25rem; margin-bottom: 1rem; color: var(--burgundy);">
+              Account
+            </h3>
+            <p style="margin-bottom: 0.5rem;"><strong>Signed in as:</strong> ${
+              authUser.email
+            }</p>
+            <button class="btn btn-secondary" style="margin-top: 0.5rem;" onclick="Views.signOut()">
+              Sign Out
+            </button>
+          </div>
+        `
+          : `
+          <div style="background: #ffffff; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;">
+            <h3 style="font-size: 1.25rem; margin-bottom: 1rem; color: var(--burgundy);">
+              Account
+            </h3>
+            <p style="margin-bottom: 0.75rem;">
+              Sign in to sync your library and mood history across devices.
+            </p>
+            <button class="btn btn-primary" style="width: 100%; margin-bottom: 0.75rem;" onclick="Views.signInWithGoogle()">
+              Continue with Google
+            </button>
+            <div style="margin-top: 0.75rem;">
+              <p style="font-size: 0.85rem; opacity: 0.7; margin-bottom: 0.5rem;">
+                Or sign in with email:
+              </p>
+              <input id="emailLogin" class="form-input" placeholder="Email" style="margin-bottom: 0.5rem;" />
+              <input id="passwordLogin" type="password" class="form-input" placeholder="Password" style="margin-bottom: 0.5rem;" />
+              <button class="btn btn-secondary" style="width: 100%;" onclick="Views.signInWithEmailPassword()">
+                Sign in / Register
+              </button>
+            </div>
+          </div>
+        `;
 
         return `
           <div style="max-width: 500px; margin: 0 auto;">
-            <h2 style="font-size: 2rem; margin-bottom: 2rem; color: var(--burgundy);">Settings</h2>
-
-            <div style="background: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;">
-              <h3 style="font-size: 1.25rem; margin-bottom: 1rem; color: var(--burgundy);">Account</h3>
-              ${
-                firebaseUser
-                  ? `
-                    <p style="margin-bottom: 0.5rem;">
-                      <strong>Signed in as:</strong> ${
-                        firebaseUser.email || firebaseUser.displayName
-                      }
-                    </p>
-                    <button class="btn btn-secondary" style="width: 100%; margin-bottom: 0.5rem;" onclick="Views.logout()">
-                      Log out
-                    </button>
-                  `
-                  : `
-                    <button class="btn btn-primary" style="width: 100%; margin-bottom: 0.75rem;" onclick="Views.loginWithGoogle()">
-                      Continue with Google
-                    </button>
-                    <button class="btn btn-secondary" style="width: 100%;" onclick="Views.showEmailAuthModal()">
-                      Sign up / Log in with Email
-                    </button>
-                  `
-              }
-            </div>
-
-            <div style="background: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;">
-              <h3 style="font-size: 1.25rem; margin-bottom: 1rem; color: var(--burgundy);">Your Profile</h3>
-              <div style="margin-bottom: 0.75rem;">
-                <strong>Age:</strong> ${user.age || "Not set"}
-              </div>
-              <div style="margin-bottom: 0.75rem;">
-                <strong>Gender:</strong> ${user.gender || "Not specified"}
-              </div>
-              <div style="margin-bottom: 0.75rem;">
-                <strong>Preferred Genres:</strong> ${
-                  (user.preferredGenres || []).join(", ") || "Not set"
-                }
-              </div>
-              <div>
-                <strong>Goals:</strong> ${
-                  (user.goals || []).join(", ") || "Not set"
-                }
-              </div>
-            </div>
-
-            <div style="background: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;">
-              <h3 style="font-size: 1.25rem; margin-bottom: 1rem; color: var(--burgundy);">Reading History</h3>
+            <h2 style="font-size: 2rem; margin-bottom: 2rem; color: var(--burgundy);">
+              Settings
+            </h2>
+            ${accountHtml}
+            ${profileHtml}
+            <div style="background: #ffffff; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;">
+              <h3 style="font-size: 1.25rem; margin-bottom: 1rem; color: var(--burgundy);">
+                Reading History
+              </h3>
               <p style="margin-bottom: 0.5rem;">
                 <strong>Mood check-ins:</strong> ${moodHistoryCount}
               </p>
@@ -1612,12 +1721,12 @@
             </div>
 
             <div class="disclaimer mb-3">
-              <strong>🔒 Privacy & Data:</strong><br>
-              Your account data (profile, moods, library) is stored in Firebase Firestore under your login. Local-only usage stays on this device.
+              <strong>🔒 Privacy & Data:</strong><br />
+              If you're signed in, your data is synced securely to your MoodShelf account. Otherwise, it's stored only on this device.
             </div>
 
             <div class="disclaimer mb-3">
-              <strong>⚕️ Important Reminder:</strong><br>
+              <strong>⚕️ Important Reminder:</strong><br />
               MoodShelf provides reading suggestions, not medical or psychological diagnosis. If you're experiencing serious distress, please contact a qualified mental health professional.
             </div>
 
@@ -1626,7 +1735,7 @@
             </button>
 
             <button class="btn btn-ghost" style="width: 100%; color: var(--burgundy);" onclick="Views.resetApp()">
-              Reset All Local Data & Start Over
+              Reset All Data & Start Over
             </button>
           </div>
         `;
@@ -1636,114 +1745,23 @@
         Views.showConfirmDialog(
           "Are you sure you want to clear your mood history? This action cannot be undone.",
           () => {
-            AppState.clearMoodHistory();
+            AppState.moodHistory = [];
+            Storage.removeItem("moodshelf_mood_history");
+            AppState.syncToFirestore();
             Router.navigate("settings");
-            Views.showModal(
-              "History Cleared",
-              "Your mood history has been cleared."
-            );
+            Views.showModal("History Cleared", "Your mood history has been cleared.");
           }
         );
       },
 
       resetApp() {
         Views.showConfirmDialog(
-          "Are you sure you want to reset all data on this device? This will delete your local profile, saved books, and mood history. Cloud data stays linked to your account.",
+          "Are you sure you want to reset all data? This will delete your profile, saved books, and mood history. This action cannot be undone.",
           () => {
-            AppState.resetLocal();
+            AppState.reset();
             Router.navigate("welcome");
-            Views.showModal(
-              "Reset Complete",
-              "Local data has been cleared. You can start fresh."
-            );
           }
         );
-      },
-
-      loginWithGoogle() {
-        const provider = new firebase.auth.GoogleAuthProvider();
-        auth.signInWithPopup(provider).catch((err) => {
-          Views.showModal("Login error", err.message || "Could not sign in.");
-        });
-      },
-
-      showEmailAuthModal() {
-        const modal = document.createElement("div");
-        modal.className = "modal-overlay";
-        modal.innerHTML = `
-          <div class="modal-content">
-            <h3 style="font-size: 1.5rem; margin-bottom: 1rem; color: var(--burgundy);">
-              Email Sign Up / Login
-            </h3>
-            <div class="form-group">
-              <label class="form-label">Email</label>
-              <input type="email" class="form-input" id="authEmail" placeholder="you@example.com">
-            </div>
-            <div class="form-group">
-              <label class="form-label">Password</label>
-              <input type="password" class="form-input" id="authPassword" placeholder="At least 6 characters">
-            </div>
-            <div style="display: flex; gap: 0.75rem; margin-bottom: 0.75rem;">
-              <button class="btn btn-primary" style="flex: 1;" onclick="Views.emailSignUp()">
-                Sign Up
-              </button>
-              <button class="btn btn-secondary" style="flex: 1;" onclick="Views.emailLogin()">
-                Log In
-              </button>
-            </div>
-            <button class="btn btn-ghost" style="width: 100%;" onclick="this.closest('.modal-overlay').remove()">
-              Close
-            </button>
-          </div>
-        `;
-        document.body.appendChild(modal);
-      },
-
-      emailSignUp() {
-        const email = document.getElementById("authEmail").value.trim();
-        const password = document.getElementById("authPassword").value.trim();
-        if (!email || !password) {
-          Views.showModal("Missing info", "Please enter email and password.");
-          return;
-        }
-        auth
-          .createUserWithEmailAndPassword(email, password)
-          .then(() => {
-            document
-              .querySelectorAll(".modal-overlay")
-              .forEach((m) => m.remove());
-          })
-          .catch((err) => {
-            Views.showModal("Sign up error", err.message || "Could not sign up.");
-          });
-      },
-
-      emailLogin() {
-        const email = document.getElementById("authEmail").value.trim();
-        const password = document.getElementById("authPassword").value.trim();
-        if (!email || !password) {
-          Views.showModal("Missing info", "Please enter email and password.");
-          return;
-        }
-        auth
-          .signInWithEmailAndPassword(email, password)
-          .then(() => {
-            document
-              .querySelectorAll(".modal-overlay")
-              .forEach((m) => m.remove());
-          })
-          .catch((err) => {
-            Views.showModal("Login error", err.message || "Could not log in.");
-          });
-      },
-
-      logout() {
-        auth.signOut().catch((err) => {
-          Views.showModal(
-            "Logout error",
-            err.message || "Could not log out right now."
-          );
-        });
       },
 
       showModal(title, message) {
@@ -1751,7 +1769,9 @@
         modal.className = "modal-overlay";
         modal.innerHTML = `
           <div class="modal-content">
-            <h3 style="font-size: 1.5rem; margin-bottom: 1rem; color: var(--burgundy);">${title}</h3>
+            <h3 style="font-size: 1.5rem; margin-bottom: 1rem; color: var(--burgundy);">
+              ${title}
+            </h3>
             <p style="margin-bottom: 1.5rem;">${message}</p>
             <button class="btn btn-primary" style="width: 100%;" onclick="this.closest('.modal-overlay').remove()">
               OK
@@ -1766,7 +1786,9 @@
         modal.className = "modal-overlay";
         modal.innerHTML = `
           <div class="modal-content">
-            <h3 style="font-size: 1.5rem; margin-bottom: 1rem; color: var(--burgundy);">Confirm Action</h3>
+            <h3 style="font-size: 1.5rem; margin-bottom: 1rem; color: var(--burgundy);">
+              Confirm Action
+            </h3>
             <p style="margin-bottom: 1.5rem;">${message}</p>
             <div style="display: flex; gap: 1rem;">
               <button class="btn btn-secondary" style="flex: 1;" onclick="this.closest('.modal-overlay').remove()">
@@ -1780,35 +1802,100 @@
         `;
         document.body.appendChild(modal);
       },
+
+      // === AUTH HELPERS ===
+      async signInWithGoogle() {
+        try {
+          const provider = new firebase.auth.GoogleAuthProvider();
+          const result = await auth.signInWithPopup(provider);
+          AppState.authUser = result.user;
+          await AppState.loadFromFirestoreForUser(result.user.uid);
+          Views.updateAuthStatus();
+          AppState.syncToFirestore();
+          Router.navigate(AppState.currentView);
+        } catch (e) {
+          Views.showModal("Sign-in Error", e.message || String(e));
+        }
+      },
+
+      async signInWithEmailPassword() {
+        const emailEl = document.getElementById("emailLogin");
+        const passEl = document.getElementById("passwordLogin");
+        const email = emailEl ? emailEl.value.trim() : "";
+        const password = passEl ? passEl.value : "";
+
+        if (!email || !password) {
+          Views.showModal(
+            "Missing Info",
+            "Please enter both email and password."
+          );
+          return;
+        }
+
+        try {
+          let userCredential;
+          try {
+            userCredential = await auth.signInWithEmailAndPassword(
+              email,
+              password
+            );
+          } catch (err) {
+            if (err.code === "auth/user-not-found") {
+              userCredential = await auth.createUserWithEmailAndPassword(
+                email,
+                password
+              );
+            } else {
+              throw err;
+            }
+          }
+
+          AppState.authUser = userCredential.user;
+          await AppState.loadFromFirestoreForUser(userCredential.user.uid);
+          Views.updateAuthStatus();
+          AppState.syncToFirestore();
+          Router.navigate(AppState.currentView);
+        } catch (err) {
+          Views.showModal("Sign-in Error", err.message || String(err));
+        }
+      },
+
+      async signOut() {
+        try {
+          await auth.signOut();
+          AppState.authUser = null;
+          Views.updateAuthStatus();
+          Router.navigate("settings");
+        } catch (e) {
+          Views.showModal("Sign-out Error", e.message || String(e));
+        }
+      },
     };
 
-    // --- App bootstrap ---
+    // === INIT ===
     document.addEventListener("DOMContentLoaded", () => {
-      // nav bar clicks
+      // Nav bar handlers
       document.querySelectorAll(".nav-item").forEach((item) => {
         item.addEventListener("click", () => {
           Router.navigate(item.dataset.view);
         });
       });
 
-      // load local state
-      AppState.initFromLocal();
-      Router.navigate(AppState.currentView);
-
       // Firebase auth listener
       auth.onAuthStateChanged(async (user) => {
-        AppState.setAuthUser(user || null);
+        AppState.authUser = user || null;
         if (user) {
-          // merge any local data into cloud
-          await AppState.saveToCloud();
-          // load cloud data back
-          await AppState.loadFromCloud();
-          Router.navigate(AppState.user ? "check-in" : "onboarding");
-        } else {
-          // no auth: just stay with local data
-          Router.navigate(AppState.user ? "check-in" : "welcome");
+          await AppState.loadFromFirestoreForUser(user.uid);
         }
+        Views.updateAuthStatus();
+        // Re-render current view to reflect auth state
+        Router.render(AppState.currentView, {
+          book: AppState.currentBook,
+        });
       });
+
+      AppState.init();
+      Router.navigate(AppState.currentView);
     });
   </script>
 </body>

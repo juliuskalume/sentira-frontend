@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MoodShelf - AI-Powered Reading Companion</title>
+
+    <!-- Add these two lines -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#6B2737">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Crimson+Pro:wght@300;400;600&display=swap" rel="stylesheet">
@@ -66,13 +71,9 @@
             background: var(--cream);
         }
 
-        /* Animated background pattern */
         .bg-pattern {
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            inset: 0;
             opacity: 0.03;
             background-image:
                 repeating-linear-gradient(45deg, var(--burgundy) 0px, var(--burgundy) 1px, transparent 1px, transparent 20px),
@@ -86,7 +87,6 @@
             z-index: 1;
         }
 
-        /* Header */
         .app-header {
             background: linear-gradient(135deg, var(--burgundy), var(--deep-wine));
             color: var(--cream);
@@ -104,7 +104,6 @@
             gap: 0.5rem;
         }
 
-        /* Buttons */
         .btn {
             padding: 0.75rem 1.5rem;
             border: none;
@@ -147,7 +146,6 @@
             text-decoration: underline;
         }
 
-        /* Form elements */
         .form-group {
             margin-bottom: 1.5rem;
         }
@@ -187,7 +185,6 @@
             min-height: 100px;
         }
 
-        /* Mood slider */
         .mood-slider {
             -webkit-appearance: none;
             width: 100%;
@@ -223,7 +220,6 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.2);
         }
 
-        /* Mood tags */
         .mood-tags {
             display: flex;
             flex-wrap: wrap;
@@ -257,7 +253,6 @@
             border-color: var(--burgundy);
         }
 
-        /* Book card */
         .book-card {
             background: white;
             border-radius: 12px;
@@ -287,7 +282,6 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.15);
         }
 
-        /* Loading states */
         .loading {
             text-align: center;
             padding: 3rem 1rem;
@@ -319,7 +313,6 @@
             }
         }
 
-        /* Progress bar */
         .progress-bar {
             width: 100%;
             height: 6px;
@@ -335,7 +328,6 @@
             transition: width 0.3s ease;
         }
 
-        /* Audio player */
         .audio-player {
             background: white;
             border-radius: 12px;
@@ -348,7 +340,6 @@
             background: var(--parchment);
         }
 
-        /* Modal */
         .modal-overlay {
             position: fixed;
             inset: 0;
@@ -393,7 +384,6 @@
             background: var(--parchment);
         }
 
-        /* Navigation */
         .nav-bar {
             position: sticky;
             bottom: 0;
@@ -428,14 +418,8 @@
             color: var(--burgundy);
         }
 
-        /* Utility classes */
-        .hidden {
-            display: none !important;
-        }
-
-        .text-center {
-            text-align: center;
-        }
+        .hidden { display: none !important; }
+        .text-center { text-align: center; }
 
         .mt-1 { margin-top: 0.5rem; }
         .mt-2 { margin-top: 1rem; }
@@ -450,7 +434,6 @@
         .p-3 { padding: 1.5rem; }
         .p-4 { padding: 2rem; }
 
-        /* Markdown styling in summaries */
         .summary-content h1, .summary-content h2, .summary-content h3 {
             margin-top: 1.5rem;
             margin-bottom: 0.75rem;
@@ -481,7 +464,6 @@
             font-family: monospace;
         }
 
-        /* Checkbox groups */
         .checkbox-group {
             display: flex;
             flex-direction: column;
@@ -501,7 +483,6 @@
             accent-color: var(--burgundy);
         }
 
-        /* Disclaimer */
         .disclaimer {
             background: linear-gradient(135deg, rgba(107, 39, 55, 0.1), rgba(74, 31, 41, 0.1));
             border-left: 4px solid var(--burgundy);
@@ -520,7 +501,6 @@
     <div class="bg-pattern"></div>
     <div class="app-container">
         <div class="content">
-            <!-- Header -->
             <header class="app-header" id="appHeader">
                 <div class="logo">
                     <span>📚</span>
@@ -529,12 +509,10 @@
                 <p style="font-size: 0.9rem; margin-top: 0.25rem; opacity: 0.9;">Your mood-based reading companion</p>
             </header>
 
-            <!-- Main content area -->
             <main id="mainContent" style="padding: 1.5rem; min-height: calc(100vh - 200px);">
-                <!-- Content will be injected here -->
+                <!-- Content injected by JS -->
             </main>
 
-            <!-- Navigation bar -->
             <nav class="nav-bar" id="navBar" style="display: none;">
                 <div class="nav-item" data-view="check-in">
                     <span style="font-size: 1.5rem;">🌙</span>
@@ -557,7 +535,10 @@
     </div>
 
     <script>
-        // Initialize dark mode detection
+        // === CONFIG: point to your Render backend ===
+        const BACKEND_BASE_URL = "https://moodshelf-backend.onrender.com";
+
+        // Dark mode detection
         if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
             document.documentElement.classList.add('dark');
         }
@@ -569,10 +550,9 @@
             }
         });
 
-        // Storage abstraction for iframe / simple environment (in-memory)
+        // Simple in-memory storage (kept to match your current behavior)
         const Storage = {
             data: {},
-
             init() {
                 this.data = {
                     user: null,
@@ -580,19 +560,15 @@
                     moodHistory: []
                 };
             },
-
             getItem(key) {
                 return this.data[key] ? JSON.stringify(this.data[key]) : null;
             },
-
             setItem(key, value) {
                 this.data[key] = JSON.parse(value);
             },
-
             removeItem(key) {
                 delete this.data[key];
             },
-
             clear() {
                 this.data = {
                     user: null,
@@ -601,11 +577,8 @@
                 };
             }
         };
-
-        // Initialize storage
         Storage.init();
 
-        // State management
         const AppState = {
             user: null,
             currentView: 'welcome',
@@ -665,23 +638,10 @@
             }
         };
 
-        // Router with history support
         const Router = {
-            // ⭐ UPDATED: third argument controls whether we push to history
-            navigate(view, data = {}, options = {}) {
-                const { pushHistory = true } = options;
-
-                if (pushHistory) {
-                    try {
-                        history.pushState({ view, data }, '', '');
-                    } catch (e) {
-                        // In very old browsers history might fail – fail silently
-                    }
-                }
-
+            navigate(view, data = {}) {
                 AppState.currentView = view;
 
-                // Update navigation active state
                 document.querySelectorAll('.nav-item').forEach(item => {
                     item.classList.remove('active');
                     if (item.dataset.view === view) {
@@ -689,7 +649,6 @@
                     }
                 });
 
-                // Render the view
                 this.render(view, data);
             },
 
@@ -697,14 +656,12 @@
                 const mainContent = document.getElementById('mainContent');
                 const navBar = document.getElementById('navBar');
 
-                // Show/hide nav bar based on view
                 if (['welcome', 'onboarding'].includes(view)) {
                     navBar.style.display = 'none';
                 } else {
                     navBar.style.display = 'flex';
                 }
 
-                // Render the appropriate view
                 switch(view) {
                     case 'welcome':
                         mainContent.innerHTML = Views.welcome();
@@ -738,22 +695,10 @@
                         mainContent.innerHTML = '<p>View not found</p>';
                 }
 
-                // Scroll to top
                 window.scrollTo(0, 0);
             }
         };
 
-        // ⭐ NEW: handle Android back button / browser back
-        window.addEventListener('popstate', (event) => {
-            if (event.state && event.state.view) {
-                Router.navigate(event.state.view, event.state.data || {}, { pushHistory: false });
-            } else {
-                // No state: treat as root. We show welcome but don't push new history.
-                Router.navigate('welcome', {}, { pushHistory: false });
-            }
-        });
-
-        // Views
         const Views = {
             welcome() {
                 return `
@@ -899,9 +844,7 @@
                 `;
             },
 
-            initOnboarding() {
-                // no-op now, kept for future
-            },
+            initOnboarding() {},
 
             nextOnboardingStep(step) {
                 document.querySelectorAll('.onboarding-step').forEach(s => s.classList.add('hidden'));
@@ -1031,7 +974,6 @@
                 };
 
                 AppState.saveMoodCheckIn(moodData);
-
                 Router.navigate('recommendations');
             },
 
@@ -1081,7 +1023,7 @@
                         return;
                     }
 
-                    const response = await fetch('https://moodshelf-backend.onrender.com/api/recommendations', {
+                    const response = await fetch(`${BACKEND_BASE_URL}/api/recommendations`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ user, mood })
@@ -1149,7 +1091,7 @@ ${err.message || err}
                 container.innerHTML = recommendations.map(book => `
                     <div class="book-card" onclick='Router.navigate("book-detail", {book: ${JSON.stringify(book).replace(/'/g, "&apos;")}})'>
                         <div style="display: flex; gap: 1rem;">
-                            <img src="${book.coverUrl}" alt="${book.title}" class="book-cover" onerror="this.src='https://via.placeholder.com/80x120?text=Book'">
+                            <img src="${book.coverUrl}" alt="${book.title}" class="book-cover" onerror="this.src="https://via.placeholder.com/80x120?text=Book"">
                             <div style="flex: 1;">
                                 <h3 style="font-size: 1.25rem; margin-bottom: 0.25rem; color: var(--burgundy);">${book.title}</h3>
                                 <p style="font-size: 0.95rem; opacity: 0.7; margin-bottom: 0.5rem;">by ${book.author}</p>
@@ -1244,7 +1186,6 @@ ${err.message || err}
                         </div>
 
                         <div id="summaryActions" class="hidden" style="margin-top: 2rem; display: flex; gap: 1rem; flex-direction: column;">
-                            <!-- 🔊 Button now calls generateAudioSummary with NO args -->
                             <button class="btn btn-secondary" onclick="Views.generateAudioSummary()">
                                 🎧 Listen to Audio Summary
                             </button>
@@ -1281,7 +1222,7 @@ ${err.message || err}
                     `;
                     progressFill.style.width = '25%';
 
-                    const response = await fetch('https://moodshelf-backend.onrender.com/api/summary', {
+                    const response = await fetch(`${BACKEND_BASE_URL}/api/summary`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ user, mood, book })
@@ -1359,104 +1300,138 @@ ${err.message || err}
                     progressFill.style.width = '0%';
                 }
             },
+            
+// 🔊 NEW: browser-side TTS using SpeechSynthesis, no backend /tts
+generateAudioSummary() {
+    if (!AppState.currentSummary) {
+        Views.showModal(
+            'No Summary Available',
+            'Please wait for the summary to finish generating first.'
+        );
+        return;
+    }
 
-            // Audio summary
-            async generateAudioSummary() {
-                if (!AppState.currentSummary) {
-                    Views.showModal('No Summary Available', 'Please wait for the summary to finish generating first.');
-                    return;
+    // Check browser support
+    if (!('speechSynthesis' in window)) {
+        Views.showModal(
+            'Audio Not Supported',
+            'Your browser does not support text-to-speech. Try a newer browser or device.'
+        );
+        return;
+    }
+
+    // Remove any existing modal
+    const existing = document.querySelector('.modal-overlay');
+    if (existing) existing.remove();
+
+    const modal = document.createElement('div');
+    modal.className = 'modal-overlay';
+    modal.innerHTML = `
+        <div class="modal-content">
+            <h3 style="font-size: 1.5rem; margin-bottom: 1rem; color: var(--burgundy);">
+                Audio Summary
+            </h3>
+            <p style="margin-bottom: 1rem;">
+                Your device will read this summary aloud. You can play, pause or stop anytime.
+            </p>
+
+            <div id="audioControls" style="display:flex; gap:0.5rem; margin-bottom:1rem; flex-wrap:wrap;">
+                <button class="btn btn-primary" data-action="play" style="flex:1;">▶ Play</button>
+                <button class="btn btn-secondary" data-action="pause" style="flex:1;">⏸ Pause</button>
+                <button class="btn btn-secondary" data-action="resume" style="flex:1;">▶ Resume</button>
+                <button class="btn btn-secondary" data-action="stop" style="flex:1;">⏹ Stop</button>
+            </div>
+
+            <p style="font-size:0.9rem; opacity:0.7;">
+                Tip: On iPhone, make sure your ringer is on and media volume is up.
+            </p>
+
+            <button class="btn btn-ghost mt-3" style="width: 100%;" data-action="close">
+                Close
+            </button>
+        </div>
+    `;
+    document.body.appendChild(modal);
+
+    const synth = window.speechSynthesis;
+
+    // Strip markdown to get plain text
+    const plainText = AppState.currentSummary
+        .replace(/#{1,6}\s/g, '')                 // headers
+        .replace(/\*\*/g, '')                     // bold
+        .replace(/\*/g, '')                       // italics
+        .replace(/`/g, '')                        // code
+        .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')  // links
+        .replace(/>\s?/g, '')                     // blockquotes
+        .trim();
+
+    // Split into smaller chunks so speechSynthesis doesn’t choke
+    const chunks = plainText
+        .split(/\n{2,}|\r{2,}/) // split by blank lines
+        .map(p => p.trim())
+        .filter(p => p.length > 0);
+
+    let utterances = [];
+    let currentIndex = 0;
+
+    function buildUtterances() {
+        utterances = chunks.map((chunk, idx) => {
+            const u = new SpeechSynthesisUtterance(chunk);
+            u.rate = 1;   // speed
+            u.pitch = 1;  // tone
+
+            // When one chunk finishes, speak the next automatically
+            u.onend = () => {
+                currentIndex++;
+                if (currentIndex < utterances.length && !synth.paused) {
+                    synth.speak(utterances[currentIndex]);
                 }
+            };
+            return u;
+        });
+        currentIndex = 0;
+    }
 
-                // Remove any existing modal
-                const existing = document.querySelector('.modal-overlay');
-                if (existing) existing.remove();
+    buildUtterances();
 
-                const modal = document.createElement('div');
-                modal.className = 'modal-overlay';
-                modal.innerHTML = `
-                    <div class="modal-content">
-                        <h3 style="font-size: 1.5rem; margin-bottom: 1rem; color: var(--burgundy);">Audio Summary</h3>
-                        <p style="margin-bottom: 1rem;">
-                            Creating an audio version of this summary. This may take a short moment.
-                        </p>
+    function start() {
+        // stop anything currently speaking
+        synth.cancel();
+        if (!utterances.length) return;
+        currentIndex = 0;
+        synth.speak(utterances[currentIndex]);
+    }
 
-                        <div id="audioPlayerContainer">
-                            <div class="loading">
-                                <div class="spinner"></div>
-                                <p>Generating audio...</p>
-                            </div>
-                        </div>
+    function pause() {
+        if (synth.speaking && !synth.paused) {
+            synth.pause();
+        }
+    }
 
-                        <button class="btn btn-ghost mt-3" style="width: 100%;" data-action="close">
-                            Close
-                        </button>
-                    </div>
-                `;
-                document.body.appendChild(modal);
+    function resume() {
+        if (synth.paused) {
+            synth.resume();
+        }
+    }
 
-                const container = modal.querySelector('#audioPlayerContainer');
-                const closeBtn = modal.querySelector('[data-action="close"]');
+    function stop() {
+        synth.cancel();
+    }
 
-                closeBtn.addEventListener('click', () => {
-                    modal.remove();
-                });
+    // Wire up buttons
+    const controls = modal.querySelector('#audioControls');
+    controls.querySelector('[data-action="play"]').addEventListener('click', start);
+    controls.querySelector('[data-action="pause"]').addEventListener('click', pause);
+    controls.querySelector('[data-action="resume"]').addEventListener('click', resume);
+    controls.querySelector('[data-action="stop"]').addEventListener('click', stop);
 
-                // Strip markdown to get clean text
-                const plainText = AppState.currentSummary
-                    .replace(/#{1,6}\s/g, '')                 // headers
-                    .replace(/\*\*/g, '')                     // bold
-                    .replace(/\*/g, '')                       // italics
-                    .replace(/`/g, '')                        // code
-                    .replace(/\[([^\]]+)\]\([^\)]+\)/g, '$1') // links
-                    .trim();
-
-                try {
-                    const res = await fetch('https://moodshelf-backend.onrender.com/tts', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ text: plainText })
-                    });
-
-                    if (!res.ok) {
-                        const errText = await res.text();
-                        container.innerHTML = `
-                            <p style="color: var(--burgundy); margin-bottom: 0.75rem;">
-                                Error generating audio: <strong>${res.status} ${res.statusText}</strong>
-                            </p>
-                            <pre style="text-align:left; white-space:pre-wrap; background:var(--parchment); padding:0.75rem; border-radius:8px; max-height:200px; overflow:auto;">
-${errText || '(no error body)'}
-                            </pre>
-                        `;
-                        return;
-                    }
-
-                    const blob = await res.blob();
-                    const url = URL.createObjectURL(blob);
-                    AppState.audioUrl = url;
-
-                    container.innerHTML = `
-                        <div class="audio-player">
-                            <audio controls style="width: 100%;" src="${url}">
-                                Your browser does not support the audio element.
-                            </audio>
-                            <p style="margin-top: 1rem; font-size: 0.9rem; opacity: 0.7;">
-                                Tip: On iPhone, ensure your ringer is on and volume is up.
-                            </p>
-                        </div>
-                    `;
-                } catch (err) {
-                    container.innerHTML = `
-                        <p style="color: var(--burgundy); margin-bottom: 0.75rem;">
-                            Network error while generating audio:
-                        </p>
-                        <pre style="text-align:left; white-space:pre-wrap; background:var(--parchment); padding:0.75rem; border-radius:8px; max-height:200px; overflow:auto;">
-${err.message || err}
-                        </pre>
-                    `;
-                }
-            },
-
-            markSummaryComplete() {
+    const closeBtn = modal.querySelector('[data-action="close"]');
+    closeBtn.addEventListener('click', () => {
+        stop();
+        modal.remove();
+    });
+},
+    markSummaryComplete() {
                 Views.showModal('Summary Completed! 🎉', 'Great job finishing this summary! The insights you\'ve gained are now part of your reading journey.');
             },
 
@@ -1620,7 +1595,6 @@ ${err.message || err}
             }
         };
 
-        // Initialize navigation
         document.addEventListener('DOMContentLoaded', () => {
             document.querySelectorAll('.nav-item').forEach(item => {
                 item.addEventListener('click', () => {
@@ -1629,10 +1603,22 @@ ${err.message || err}
             });
 
             AppState.init();
-
-            // ⭐ Seed initial history entry so back-button has somewhere to go
-            Router.navigate(AppState.currentView, {}, { pushHistory: true });
+            Router.navigate(AppState.currentView);
         });
+
+        // === PWA: service worker registration ===
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker
+      .register("./service-worker.js")
+      .then((reg) => {
+        console.log("Service worker registered:", reg.scope);
+      })
+      .catch((err) => {
+        console.error("Service worker registration failed:", err);
+      });
+  });
+}
     </script>
 </body>
 </html>

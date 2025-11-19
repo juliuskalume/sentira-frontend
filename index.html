@@ -550,14 +550,16 @@
             }
         });
 
-        // Simple in-memory storage
+        // Simple in-memory storage (same as before)
         const Storage = {
             data: {},
             init() {
                 this.data = {
                     user: null,
                     savedBooks: [],
-                    moodHistory: []
+                    moodHistory: [],
+                    authUser: null,
+                    authToken: null
                 };
             },
             getItem(key) {
@@ -573,7 +575,9 @@
                 this.data = {
                     user: null,
                     savedBooks: [],
-                    moodHistory: []
+                    moodHistory: [],
+                    authUser: null,
+                    authToken: null
                 };
             }
         };
@@ -589,6 +593,8 @@
             currentSummary: null,
             audioUrl: null,
             moodHistory: [],
+            authUser: null,
+            authToken: null,
 
             init() {
                 this.loadFromStorage();
@@ -601,6 +607,8 @@
                 this.user = JSON.parse(Storage.getItem("moodshelf_user") || "null");
                 this.savedBooks = JSON.parse(Storage.getItem("moodshelf_saved_books") || "[]");
                 this.moodHistory = JSON.parse(Storage.getItem("moodshelf_mood_history") || "[]");
+                this.authUser = JSON.parse(Storage.getItem("moodshelf_auth_user") || "null");
+                this.authToken = JSON.parse(Storage.getItem("moodshelf_auth_token") || "null");
             },
 
             saveUser(userData) {
@@ -629,11 +637,31 @@
                 Storage.setItem("moodshelf_saved_books", JSON.stringify(this.savedBooks));
             },
 
+            setAuth(user, token) {
+                this.authUser = user || null;
+                this.authToken = token || null;
+                Storage.setItem("moodshelf_auth_user", JSON.stringify(this.authUser));
+                Storage.setItem("moodshelf_auth_token", JSON.stringify(this.authToken));
+            },
+
+            clearAuth() {
+                this.authUser = null;
+                this.authToken = null;
+                Storage.removeItem("moodshelf_auth_user");
+                Storage.removeItem("moodshelf_auth_token");
+            },
+
+            isLoggedIn() {
+                return !!this.authToken;
+            },
+
             reset() {
                 Storage.clear();
                 this.user = null;
                 this.savedBooks = [];
                 this.moodHistory = [];
+                this.authUser = null;
+                this.authToken = null;
                 this.currentView = "welcome";
             }
         };
@@ -1160,9 +1188,23 @@ ${err.message || err}
             },
 
             saveBookToLibrary(book) {
+                // If not logged in, prompt for login so they can sync across devices
+                if (!AppState.isLoggedIn()) {
+                    Views.showLoginModal(() => {
+                        Views._actuallySaveBook(book);
+                    }, "To sync your shelf across devices, sign in. You can still use MoodShelf without an account.");
+                    return;
+                }
+
+                Views._actuallySaveBook(book);
+            },
+
+            _actuallySaveBook(book) {
                 AppState.saveBook(book);
                 Views.showModal("Book Saved!", `"${book.title}" has been added to your library.`);
                 Router.navigate("book-detail", { book });
+                // Try syncing with backend if logged in
+                Views.syncToServer();
             },
 
             summary(book) {
@@ -1324,16 +1366,15 @@ ${err.message || err}
 
             _stripMarkdown(text) {
                 return (text || "")
-                    .replace(/#{1,6}\s/g, "")                 // headers
-                    .replace(/\*\*/g, "")                     // bold
-                    .replace(/\*/g, "")                       // italics
-                    .replace(/`/g, "")                        // code
-                    .replace(/\[([^\]]+)\]\([^\)]+\)/g, "$1") // links
-                    .replace(/>\s?/g, "")                     // blockquotes
+                    .replace(/#{1,6}\s/g, "")
+                    .replace(/\*\*/g, "")
+                    .replace(/\*/g, "")
+                    .replace(/`/g, "")
+                    .replace(/\[([^\]]+)\]\([^\)]+\)/g, "$1")
+                    .replace(/>\s?/g, "")
                     .trim();
             },
 
-            // Full summary via browser TTS
             playBrowserTTS() {
                 if (!AppState.currentSummary) {
                     Views.showModal("No Summary Available", "Please wait for the summary to finish generating first.");
@@ -1369,7 +1410,6 @@ ${err.message || err}
                 );
             },
 
-            // Full summary via backend TTS with selected voice
             async generateAudioSummary() {
                 if (!AppState.currentSummary) {
                     Views.showModal("No Summary Available", "Please wait for the summary to finish generating first.");
@@ -1411,7 +1451,6 @@ ${err.message || err}
 
                 const plainText = Views._stripMarkdown(AppState.currentSummary);
 
-                // Voice selection
                 let hl = "en-us";
                 let voice = "Mary";
                 const select = document.getElementById("voiceSelect");
@@ -1523,25 +1562,67 @@ ${err.message || err}
             settings() {
                 const user = AppState.user;
                 const moodHistoryCount = AppState.moodHistory.length;
+                const loggedIn = AppState.isLoggedIn();
+                const authUser = AppState.authUser;
 
                 return `
                     <div style="max-width: 500px; margin: 0 auto;">
                         <h2 style="font-size: 2rem; margin-bottom: 2rem; color: var(--burgundy);">Settings</h2>
 
                         <div style="background: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;" class="dark:bg-gray-800">
+                            <h3 style="font-size: 1.25rem; margin-bottom: 1rem; color: var(--burgundy);">Account</h3>
+                            ${
+                                loggedIn && authUser
+                                    ? `
+                                        <p style="margin-bottom: 0.75rem;">
+                                            Signed in as <strong>${authUser.email || authUser.name || "your account"}</strong>.
+                                        </p>
+                                        <p style="margin-bottom: 1rem; opacity: 0.8;">
+                                            Your shelf and mood history can be synced across devices where you sign in.
+                                        </p>
+                                        <button class="btn btn-secondary" style="width: 100%; margin-bottom: 0.5rem;" onclick="Views.syncToServer()">
+                                            Sync Now
+                                        </button>
+                                        <button class="btn btn-ghost" style="width: 100%; color: var(--burgundy);" onclick="Views.logout()">
+                                            Sign Out
+                                        </button>
+                                    `
+                                    : `
+                                        <p style="margin-bottom: 0.75rem;">
+                                            You’re using MoodShelf on this device only.
+                                        </p>
+                                        <p style="margin-bottom: 1rem; opacity: 0.8;">
+                                            Sign in to access your books and mood history from different browsers or devices.
+                                        </p>
+                                        <button class="btn btn-secondary" style="width: 100%;" onclick="Views.showLoginModal()">
+                                            Sign In or Create Account
+                                        </button>
+                                    `
+                            }
+                        </div>
+
+                        <div style="background: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;" class="dark:bg-gray-800">
                             <h3 style="font-size: 1.25rem; margin-bottom: 1rem; color: var(--burgundy);">Your Profile</h3>
-                            <div style="margin-bottom: 0.75rem;">
-                                <strong>Age:</strong> ${user.age}
-                            </div>
-                            <div style="margin-bottom: 0.75rem;">
-                                <strong>Gender:</strong> ${user.gender || "Not specified"}
-                            </div>
-                            <div style="margin-bottom: 0.75rem;">
-                                <strong>Preferred Genres:</strong> ${user.preferredGenres.join(", ")}
-                            </div>
-                            <div>
-                                <strong>Goals:</strong> ${user.goals.join(", ")}
-                            </div>
+                            ${
+                                user
+                                    ? `
+                                        <div style="margin-bottom: 0.75rem;">
+                                            <strong>Age:</strong> ${user.age}
+                                        </div>
+                                        <div style="margin-bottom: 0.75rem;">
+                                            <strong>Gender:</strong> ${user.gender || "Not specified"}
+                                        </div>
+                                        <div style="margin-bottom: 0.75rem;">
+                                            <strong>Preferred Genres:</strong> ${user.preferredGenres.join(", ")}
+                                        </div>
+                                        <div>
+                                            <strong>Goals:</strong> ${user.goals.join(", ")}
+                                        </div>
+                                    `
+                                    : `
+                                        <p>No profile found. Complete onboarding to set up your profile.</p>
+                                    `
+                            }
                         </div>
 
                         <div style="background: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;" class="dark:bg-gray-800">
@@ -1556,7 +1637,7 @@ ${err.message || err}
 
                         <div class="disclaimer mb-3">
                             <strong>🔒 Privacy & Data:</strong><br>
-                            All your data is stored locally on your device. We don't share your mood or personal information with third parties except as necessary for AI processing to generate recommendations.
+                            Your data is kept on your device and, if you choose to sign in, can be stored with your account so you can come back to it from elsewhere.
                         </div>
 
                         <div class="disclaimer mb-3">
@@ -1575,6 +1656,61 @@ ${err.message || err}
                 `;
             },
 
+            async syncFromServer() {
+                if (!AppState.isLoggedIn()) return;
+
+                try {
+                    const res = await fetch(`${BACKEND_BASE_URL}/api/user-data`, {
+                        method: "GET",
+                        headers: {
+                            "Authorization": `Bearer ${AppState.authToken}`
+                        }
+                    });
+
+                    if (!res.ok) {
+                        console.warn("Sync from server failed:", res.status, res.statusText);
+                        return;
+                    }
+
+                    const data = await res.json();
+
+                    if (Array.isArray(data.savedBooks)) {
+                        AppState.savedBooks = data.savedBooks;
+                        Storage.setItem("moodshelf_saved_books", JSON.stringify(AppState.savedBooks));
+                    }
+                    if (Array.isArray(data.moodHistory)) {
+                        AppState.moodHistory = data.moodHistory;
+                        Storage.setItem("moodshelf_mood_history", JSON.stringify(AppState.moodHistory));
+                    }
+                } catch (err) {
+                    console.warn("Error syncing from server:", err);
+                }
+            },
+
+            async syncToServer() {
+                if (!AppState.isLoggedIn()) return;
+
+                try {
+                    const res = await fetch(`${BACKEND_BASE_URL}/api/user-data`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": `Bearer ${AppState.authToken}`
+                        },
+                        body: JSON.stringify({
+                            savedBooks: AppState.savedBooks,
+                            moodHistory: AppState.moodHistory
+                        })
+                    });
+
+                    if (!res.ok) {
+                        console.warn("Sync to server failed:", res.status, res.statusText);
+                    }
+                } catch (err) {
+                    console.warn("Error syncing to server:", err);
+                }
+            },
+
             clearMoodHistory() {
                 Views.showConfirmDialog(
                     "Are you sure you want to clear your mood history? This action cannot be undone.",
@@ -1583,6 +1719,7 @@ ${err.message || err}
                         Storage.removeItem("moodshelf_mood_history");
                         Router.navigate("settings");
                         Views.showModal("History Cleared", "Your mood history has been cleared.");
+                        Views.syncToServer();
                     }
                 );
             },
@@ -1595,6 +1732,122 @@ ${err.message || err}
                         Router.navigate("welcome");
                     }
                 );
+            },
+
+            showLoginModal(nextAction, messageText) {
+                const existing = document.querySelector(".modal-overlay");
+                if (existing) existing.remove();
+
+                const modal = document.createElement("div");
+                modal.className = "modal-overlay";
+                modal.innerHTML = `
+                    <div class="modal-content">
+                        <h3 style="font-size: 1.5rem; margin-bottom: 1rem; color: var(--burgundy);">Sign In or Create Account</h3>
+                        <p style="margin-bottom: 1rem;">
+                            ${messageText || "Use an account if you’d like to access your shelf and mood history from different browsers or devices."}
+                        </p>
+
+                        <form id="loginForm">
+                            <div class="form-group">
+                                <label class="form-label" for="loginEmail">Email</label>
+                                <input type="email" id="loginEmail" class="form-input" required placeholder="you@example.com">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="loginPassword">Password</label>
+                                <input type="password" id="loginPassword" class="form-input" required placeholder="••••••••">
+                            </div>
+                            <div id="loginError" style="color:#b91c1c; font-size:0.9rem; margin-bottom:0.75rem; display:none;"></div>
+                            <button type="submit" class="btn btn-primary" style="width: 100%; margin-bottom: 0.5rem;">
+                                Continue
+                            </button>
+                        </form>
+
+                        <button class="btn btn-ghost" style="width: 100%; margin-top: 0.5rem;" data-action="skip">
+                            Continue without an account
+                        </button>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+
+                const form = modal.querySelector("#loginForm");
+                const skipBtn = modal.querySelector('[data-action="skip"]');
+                const errorBox = modal.querySelector("#loginError");
+
+                skipBtn.addEventListener("click", () => {
+                    modal.remove();
+                    if (typeof nextAction === "function") {
+                        nextAction();
+                    }
+                });
+
+                form.addEventListener("submit", async (e) => {
+                    e.preventDefault();
+                    errorBox.style.display = "none";
+                    errorBox.textContent = "";
+
+                    const email = modal.querySelector("#loginEmail").value.trim();
+                    const password = modal.querySelector("#loginPassword").value;
+
+                    if (!email || !password) {
+                        errorBox.textContent = "Please enter both email and password.";
+                        errorBox.style.display = "block";
+                        return;
+                    }
+
+                    try {
+                        const res = await fetch(`${BACKEND_BASE_URL}/api/auth/login`, {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ email, password })
+                        });
+
+                        if (!res.ok) {
+                            const text = await res.text();
+                            errorBox.textContent = "Sign-in failed. Please check your details and try again.";
+                            errorBox.style.display = "block";
+                            console.warn("Login error:", res.status, text);
+                            return;
+                        }
+
+                        const data = await res.json();
+                        AppState.setAuth(data.user || { email }, data.token || null);
+
+                        await Views.syncFromServer();
+
+                        modal.remove();
+                        if (typeof nextAction === "function") {
+                            nextAction();
+                        } else {
+                            Views.showModal("Signed In", "Your activity can now be synced with your account on other devices, once the backend is configured for it.");
+                        }
+                    } catch (err) {
+                        errorBox.textContent = "Network error during sign-in. Please try again.";
+                        errorBox.style.display = "block";
+                        console.warn("Login network error:", err);
+                    }
+                });
+            },
+
+            async logout() {
+                if (!AppState.isLoggedIn()) {
+                    Views.showModal("Not Signed In", "You are not currently signed in.");
+                    return;
+                }
+
+                try {
+                    await fetch(`${BACKEND_BASE_URL}/api/auth/logout`, {
+                        method: "POST",
+                        headers: {
+                            "Authorization": `Bearer ${AppState.authToken}`
+                        }
+                    });
+                } catch (err) {
+                    console.warn("Logout error:", err);
+                }
+
+                AppState.clearAuth();
+                Router.navigate("settings");
+                Views.showModal("Signed Out", "You’ve been signed out on this device.");
             },
 
             showModal(title, message) {

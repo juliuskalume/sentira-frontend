@@ -14,8 +14,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Crimson+Pro:wght@300;400;600&display=swap" rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <!-- Firebase (compat for non-module script) -->
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
@@ -1800,24 +1799,44 @@ ${err.message || err}
       },
 
       showConfirmDialog(message, onConfirm) {
-        const modal = document.createElement("div");
-        modal.className = "modal-overlay";
-        modal.innerHTML = `
-          <div class="modal-content">
-            <h3 style="font-size: 1.5rem; margin-bottom: 1rem; color: var(--burgundy);">Confirm Action</h3>
-            <p style="margin-bottom: 1.5rem;">${message}</p>
-            <div style="display: flex; gap: 1rem;">
-              <button class="btn btn-secondary" style="flex: 1;" onclick="this.closest('.modal-overlay').remove()">
-                Cancel
-              </button>
-              <button class="btn btn-primary" style="flex: 1;" onclick="this.closest('.modal-overlay').remove(); (${onConfirm.toString()})();">
-                Confirm
-              </button>
-            </div>
-          </div>
-        `;
-        document.body.appendChild(modal);
-      },
+  const modal = document.createElement("div");
+  modal.className = "modal-overlay";
+  modal.innerHTML = `
+    <div class="modal-content">
+      <h3 style="font-size: 1.5rem; margin-bottom: 1rem; color: var(--burgundy);">
+        Confirm Action
+      </h3>
+      <p style="margin-bottom: 1.5rem;">${message}</p>
+      <div style="display: flex; gap: 1rem;">
+        <button class="btn btn-secondary" style="flex: 1;" data-action="cancel">
+          Cancel
+        </button>
+        <button class="btn btn-primary" style="flex: 1;" data-action="confirm">
+          Confirm
+        </button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(modal);
+
+  const cancelBtn = modal.querySelector('[data-action="cancel"]');
+  const confirmBtn = modal.querySelector('[data-action="confirm"]');
+
+  cancelBtn.addEventListener("click", () => {
+    modal.remove();
+  });
+
+  confirmBtn.addEventListener("click", () => {
+    modal.remove();
+    try {
+      if (typeof onConfirm === "function") {
+        onConfirm();
+      }
+    } catch (err) {
+      console.error("Error in confirm handler:", err);
+    }
+  });
+},
 
       closeAllModals() {
         document.querySelectorAll(".modal-overlay").forEach((m) => m.remove());

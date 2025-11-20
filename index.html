@@ -691,6 +691,21 @@
     </div>
 
     <script>
+        // footer year
+        document.addEventListener("DOMContentLoaded", () => {
+            const yearEl = document.getElementById("year");
+            if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+            document.querySelectorAll(".nav-item").forEach(item => {
+                item.addEventListener("click", () => {
+                    Router.navigate(item.dataset.view);
+                });
+            });
+
+            AppState.init();
+            Router.navigate(AppState.currentView);
+        });
+      
         // === CONFIG: backend base URL ===
         const BACKEND_BASE_URL = "https://moodshelf-backend.onrender.com";
 

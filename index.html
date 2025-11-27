@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -81,6 +82,13 @@
           box-sizing: border-box;
       }
 
+      /* Prevent images from exceeding their containers on small screens */
+      img {
+          max-width: 100%;
+          height: auto;
+          display: block;
+      }
+
       body {
           font-family: 'Crimson Pro', serif;
           background: var(--cream);
@@ -105,11 +113,40 @@
           min-height: 100vh;
           background: var(--cream);
           position: relative;
+          padding-left: 1rem;
+          padding-right: 1rem;
       }
 
       @media (min-width: 640px) {
           .app-container {
               max-width: 600px;
+              padding-left: 1.5rem;
+              padding-right: 1.5rem;
+          }
+      }
+
+      /* Wider screens (laptops / larger monitors) */
+      @media (min-width: 900px) {
+          .app-container {
+              max-width: 900px;
+              padding-left: 2rem;
+              padding-right: 2rem;
+          }
+      }
+
+      @media (min-width: 1280px) {
+          .app-container {
+              max-width: 1400px;
+              padding-left: 3rem;
+              padding-right: 3rem;
+          }
+      }
+
+      @media (min-width: 1600px) {
+          .app-container {
+              max-width: 1600px;
+              padding-left: 4rem;
+              padding-right: 4rem;
           }
       }
 
@@ -252,6 +289,7 @@
 
       .mood-slider {
           -webkit-appearance: none;
+          appearance: none;
           width: 100%;
           height: 8px;
           border-radius: 5px;
@@ -337,18 +375,16 @@
           background: white;
           border-radius: 12px;
           padding: 1rem;
-          margin-bottom: 1rem;
+          margin-bottom: 0; /* spacing controlled by container gap */
           box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+          overflow: hidden; /* prevent children from flowing outside the rounded box */
           transition: all 0.3s ease;
           cursor: pointer;
           animation: fadeInUp 0.5s ease-out;
       }
 
       @media (min-width: 640px) {
-          .book-card {
-              padding: 1.25rem;
-              margin-bottom: 1.25rem;
-          }
+          .book-card { padding: 1.25rem; }
       }
 
       .dark .book-card {
@@ -361,19 +397,123 @@
           box-shadow: 0 6px 24px rgba(107, 39, 55, 0.15);
       }
 
-      .book-cover {
-          width: 60px;
-          height: 90px;
-          object-fit: cover;
-          border-radius: 6px;
-          box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      /* Book card internal layout and description truncation */
+    .book-card-inner { display: flex; flex-direction: column; gap: 1rem; align-items: flex-start; }
+    .book-meta { flex: 1 1 auto; min-width: 0; overflow-wrap: break-word; word-wrap: break-word; word-break: normal; hyphens: none; }
+    .book-desc { font-size: 0.95rem; line-height: 1.4; margin-bottom: 0.5rem; white-space: normal; overflow-wrap: break-word; word-break: normal; hyphens: none; }
+
+      /* Clamp text to prevent extremely tall cards on larger screens */
+    .book-desc.truncate {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 6; /* default clamp */
+          line-clamp: 6;
+          max-width: 100%;
+          box-sizing: border-box;
+      }
+
+      /* Expanded state disables clamping and shows full text */
+      .book-desc.expanded {
+          display: block !important;
+          -webkit-line-clamp: unset !important;
+          line-clamp: unset !important;
+          max-height: none !important;
+          overflow: visible !important;
+      }
+
+      /* Read more button styles */
+      .read-more {
+          background: transparent;
+          border: none;
+          color: var(--burgundy);
+          text-decoration: underline;
+          cursor: pointer;
+          padding: 0.25rem 0;
+          font-size: 0.95rem;
+      }
+
+      @media (min-width: 900px) {
+          .book-card { min-height: 220px; padding: 1rem; }
+          .book-card-inner { align-items: center; }
+          .book-desc.truncate { -webkit-line-clamp: 8; line-clamp: 8; }
+      }
+
+      @media (min-width: 1280px) {
+          .book-card { min-height: 220px; }
+          .book-desc.truncate { -webkit-line-clamp: 10; line-clamp: 10; }
+      }
+
+      /* Single-column list for recommendations and library */
+      #recommendationsContainer, .books-grid {
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+      }
+
+      @media (min-width: 1600px) {
+          .book-card { min-height: 200px; }
+          .book-card-inner { align-items: flex-start; }
       }
 
       @media (min-width: 640px) {
-          .book-cover {
-              width: 80px;
-              height: 120px;
-          }
+          /* switch inner layout to row for wider screens */
+          .book-card-inner { flex-direction: row; }
+      }
+
+      /* Each card should be a horizontal row (cover + meta) within the single column list */
+      #recommendationsContainer .book-card, .books-grid .book-card {
+          display: flex;
+          flex-direction: column; /* default to column on narrow screens */
+          width: 100%;
+          align-items: flex-start;
+      }
+
+      @media (min-width: 640px) {
+          #recommendationsContainer .book-card, .books-grid .book-card { flex-direction: row; }
+      }
+
+      /* Allow inner content area to grow to fill card height so the card actions sit at the bottom if needed */
+      .book-card-inner { flex: 1 1 auto; }
+
+      .book-cover {
+          width: clamp(48px, 8vw, 140px);
+          height: auto;
+          aspect-ratio: 2 / 3;
+          object-fit: cover;
+          border-radius: 6px;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+          flex: 0 0 auto; /* don't allow the cover to shrink & push content out */
+      }
+
+      /* larger cover used in detailed book view */
+      .book-detail-cover {
+          width: 100%;
+          max-width: 150px;
+          height: auto;
+          aspect-ratio: 2 / 3;
+          object-fit: cover;
+          border-radius: 8px;
+          box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+          margin-bottom: 1.25rem;
+      }
+
+      @media (min-width: 900px) {
+          .book-detail-cover { max-width: 225px; }
+      }
+
+      /* cover width scales via clamp(), but these breakpoints fine-tune the scale ranges */
+      @media (min-width: 640px) {
+          .book-cover { width: clamp(64px, 6vw, 120px); }
+      }
+
+      @media (min-width: 900px) {
+          .book-cover { width: clamp(80px, 5.5vw, 140px); }
+      }
+
+      @media (min-width: 1280px) {
+          .book-cover { width: clamp(100px, 4.5vw, 160px); }
       }
 
       .loading {
@@ -480,6 +620,27 @@
           .modal-content {
               padding: 2rem;
           }
+      }
+
+      @media (min-width: 900px) {
+          .modal-content { max-width: 700px; }
+          .logo { font-size: 2rem; }
+          .responsive-heading { font-size: 2.25rem; }
+          .nav-bar {
+              position: relative;
+              bottom: auto;
+              box-shadow: none;
+              border-top: none;
+              justify-content: flex-end;
+              padding: 0.5rem 0;
+          }
+          .nav-item { flex: 0 1 auto; margin-left: 0.5rem; margin-right: 0.5rem; }
+      }
+
+      @media (min-width: 1280px) {
+          .modal-content { max-width: 900px; }
+          .logo { font-size: 2.25rem; }
+          .responsive-heading { font-size: 2.5rem; }
       }
 
       @keyframes slideUp {
@@ -722,9 +883,10 @@
           font-size: 0.8rem;
       }
 
-      /* Responsive grid for book cards */
+      /* Responsive list for book cards (single column) */
       .books-grid {
-          display: grid;
+          display: flex;
+          flex-direction: column;
           gap: 1rem;
       }
 
@@ -763,6 +925,17 @@
           .responsive-heading {
               font-size: 2rem;
           }
+      }
+
+      /* Center blocks with a reasonable maximum width and responsive increase on larger viewports */
+      .center-block {
+          max-width: 500px;
+          margin-left: auto;
+          margin-right: auto;
+      }
+
+      @media (min-width: 900px) {
+          .center-block { max-width: 900px; }
       }
   </style>
 </head>
@@ -859,6 +1032,28 @@
 
             AppState.init();
             Router.navigate(AppState.currentView);
+
+            // Read-more / Show-less toggle for card descriptions
+            document.addEventListener('click', (e) => {
+                const btn = e.target.closest('.read-more');
+                if (!btn) return;
+                e.stopPropagation();
+                const targetId = btn.getAttribute('data-target');
+                const desc = document.getElementById(targetId);
+                if (!desc) return;
+                const isExpanded = desc.classList.contains('expanded');
+                if (isExpanded) {
+                    desc.classList.remove('expanded');
+                    desc.classList.add('truncate');
+                    btn.textContent = 'Read more';
+                    btn.setAttribute('aria-expanded', 'false');
+                } else {
+                    desc.classList.remove('truncate');
+                    desc.classList.add('expanded');
+                    btn.textContent = 'Show less';
+                    btn.setAttribute('aria-expanded', 'true');
+                }
+            });
         });
       
         // === CONFIG: backend base URL ===
@@ -1096,7 +1291,7 @@
                     <div style="text-align: center; padding: 2rem 0;">
                         <div style="font-size: 4rem; margin-bottom: 1rem; animation: fadeInUp 0.6s ease-out;">📚</div>
                         <h1 class="responsive-heading" style="margin-bottom: 1rem; animation: fadeInUp 0.6s ease-out 0.1s; animation-fill-mode: both;">Welcome to Sentira</h1>
-                        <p class="responsive-text" style="color: var(--burgundy); margin-bottom: 2rem; max-width: 400px; margin-left: auto; margin-right: auto; animation: fadeInUp 0.6s ease-out 0.2s; animation-fill-mode: both;">
+                        <p class="responsive-text center-block" style="color: var(--burgundy); margin-bottom: 2rem; animation: fadeInUp 0.6s ease-out 0.2s; animation-fill-mode: both;">
                             Discover books that meet you where you are—emotionally, mentally, and personally.
                         </p>
 
@@ -1114,7 +1309,7 @@
 
             onboarding() {
                 return `
-                    <div style="max-width: 500px; margin: 0 auto;">
+                    <div class="center-block">
                         <h2 class="responsive-heading" style="margin-bottom: 1.5rem; color: var(--burgundy);">Let's Get to Know You</h2>
 
                         <form id="onboardingForm" onsubmit="return false;">
@@ -1271,7 +1466,7 @@
 
             checkIn() {
                 return `
-                    <div style="max-width: 500px; margin: 0 auto;">
+                    <div class="center-block">
                         <h2 class="responsive-heading" style="margin-bottom: 1rem; color: var(--burgundy);">How are you feeling today?</h2>
                         <p class="responsive-text" style="margin-bottom: 2rem; color: var(--charcoal); opacity: 0.8;">
                             Let's check in with your current mood and state of mind. This will help us find books that resonate with you right now.
@@ -1481,12 +1676,13 @@ ${err.message || err}
 
                 container.innerHTML = recommendations.map(book => `
                     <div class="book-card" onclick='Router.navigate("book-detail", {book: ${JSON.stringify(book).replace(/'/g, "&apos;")}})'>
-                        <div style="display: flex; gap: 1rem; align-items: flex-start;">
+                        <div class="book-card-inner">
                             <img src="${book.coverUrl}" alt="${book.title}" class="book-cover" onerror="this.src='https://via.placeholder.com/80x120?text=Book'">
-                            <div style="flex: 1; min-width: 0;">
+                            <div class="book-meta">
                                 <h3 style="font-size: 1.1rem; margin-bottom: 0.25rem; color: var(--burgundy); line-height: 1.3;">${book.title}</h3>
                                 <p style="font-size: 0.9rem; opacity: 0.7; margin-bottom: 0.5rem;">by ${book.author}</p>
-                                <p style="font-size: 0.9rem; margin-bottom: 0.5rem; line-height: 1.4;">${book.explanation}</p>
+                                <p id="desc-${book.id}" class="book-desc truncate">${book.explanation}</p>
+                                ${book.explanation && book.explanation.length > 180 ? `<button class="read-more btn-ghost" data-target="desc-${book.id}" aria-controls="desc-${book.id}" type="button" aria-expanded="false">Read more</button>` : ``}
                                 <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.5rem;">
                                     <span style="background: var(--parchment); padding: 0.25rem 0.5rem; border-radius: 12px; font-size: 0.8rem;">${book.moodAlignment}</span>
                                     ${book.tags.slice(0, 2).map(tag => `
@@ -1515,11 +1711,11 @@ ${err.message || err}
                 const isSaved = AppState.savedBooks.some(b => b.id === book.id);
 
                 return `
-                    <div style="max-width: 500px; margin: 0 auto;">
+                    <div class="center-block">
                         <button class="btn btn-ghost mb-2" onclick="Router.navigate('recommendations')">← Back to Recommendations</button>
 
                         <div style="text-align: center; margin-bottom: 2rem;">
-                            <img src="${book.coverUrl}" alt="${book.title}" style="width: 150px; height: 225px; object-fit: cover; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); margin-bottom: 1.5rem;" onerror="this.src='https://via.placeholder.com/150x225?text=Book'">
+                            <img src="${book.coverUrl}" alt="${book.title}" class="book-detail-cover" onerror="this.src='https://via.placeholder.com/150x225?text=Book'">
                             <h2 class="responsive-heading" style="margin-bottom: 0.5rem; color: var(--burgundy);">${book.title}</h2>
                             <p class="responsive-text" style="opacity: 0.7; margin-bottom: 1rem;">by ${book.author}</p>
                             <div style="display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap; margin-bottom: 1.5rem;">
@@ -1558,7 +1754,7 @@ ${err.message || err}
 
             summary(book) {
                 return `
-                    <div style="max-width: 600px; margin: 0 auto;">
+                    <div class="center-block">
                         <button class="btn btn-ghost mb-2" onclick='Router.navigate("book-detail", {book: ${JSON.stringify(book).replace(/'/g, "&apos;")}})'>← Back to Book</button>
 
                         <h2 class="responsive-heading" style="margin-bottom: 0.5rem; color: var(--burgundy);">${book.title}</h2>
@@ -1888,12 +2084,13 @@ ${err.message || err}
                         <div class="books-grid">
                             ${savedBooks.map(book => `
                                 <div class="book-card" onclick='Router.navigate("book-detail", {book: ${JSON.stringify(book).replace(/'/g, "&apos;")}})'>
-                                    <div style="display: flex; gap: 1rem; align-items: start;">
-                                        <img src="${book.coverUrl}" alt="${book.title}" class="book-cover" onerror="this.src='https://via.placeholder.com/80x120?text=Book'">
-                                        <div style="flex: 1; min-width: 0;">
-                                            <h3 style="font-size: 1.1rem; margin-bottom: 0.25rem; color: var(--burgundy); line-height: 1.3;">${book.title}</h3>
-                                            <p style="font-size: 0.9rem; opacity: 0.7; margin-bottom: 0.5rem;">by ${book.author}</p>
-                                            <p style="font-size: 0.9rem; line-height: 1.4;">${book.explanation}</p>
+                                    <div class="book-card-inner">
+                                            <img src="${book.coverUrl}" alt="${book.title}" class="book-cover" onerror="this.src='https://via.placeholder.com/80x120?text=Book'">
+                                            <div class="book-meta">
+                                                <h3 style="font-size: 1.1rem; margin-bottom: 0.25rem; color: var(--burgundy); line-height: 1.3;">${book.title}</h3>
+                                                <p style="font-size: 0.9rem; opacity: 0.7; margin-bottom: 0.5rem;">by ${book.author}</p>
+                                                <p id="desc-${book.id}" class="book-desc truncate">${book.explanation}</p>
+                                                ${book.explanation && book.explanation.length > 180 ? `<button class="read-more btn-ghost" data-target="desc-${book.id}" aria-controls="desc-${book.id}" type="button" aria-expanded="false">Read more</button>` : ``}
                                         </div>
                                         <button class="btn-ghost" onclick="event.stopPropagation(); Views.removeFromLibrary('${book.id}')" style="padding: 0.5rem; font-size: 1.25rem; flex-shrink: 0;">
                                             🗑️
@@ -1916,7 +2113,7 @@ ${err.message || err}
                 const moodHistoryCount = AppState.moodHistory.length;
 
                 return `
-                    <div style="max-width: 500px; margin: 0 auto;">
+                    <div class="center-block">
                         <h2 class="responsive-heading" style="margin-bottom: 2rem; color: var(--burgundy);">Settings</h2>
 
                         <div style="background: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;" class="dark:bg-gray-800">
@@ -2012,16 +2209,40 @@ ${err.message || err}
                         <h3 style="font-size: 1.5rem; margin-bottom: 1rem; color: var(--burgundy);">Confirm Action</h3>
                         <p style="margin-bottom: 1.5rem;">${message}</p>
                         <div style="display: flex; gap: 1rem;">
-                            <button class="btn btn-secondary" style="flex: 1;" onclick="this.closest('.modal-overlay').remove()">
+                            <button class="btn btn-secondary confirm-cancel" style="flex: 1;">
                                 Cancel
                             </button>
-                            <button class="btn btn-primary" style="flex: 1;" onclick="this.closest('.modal-overlay').remove(); (${onConfirm})()">
+                            <button class="btn btn-primary confirm-ok" style="flex: 1;">
                                 Confirm
                             </button>
                         </div>
                     </div>
                 `;
                 document.body.appendChild(modal);
+
+                // Attach event listeners rather than serializing the function into an inline onclick
+                const cancelBtn = modal.querySelector('.confirm-cancel');
+                const okBtn = modal.querySelector('.confirm-ok');
+
+                const cleanup = () => {
+                    if (modal && modal.parentNode) modal.parentNode.removeChild(modal);
+                };
+
+                cancelBtn.addEventListener('click', () => {
+                    cleanup();
+                });
+
+                okBtn.addEventListener('click', () => {
+                    try {
+                        if (typeof onConfirm === 'function') {
+                            onConfirm();
+                        }
+                    } catch (e) {
+                        console.error('Error executing confirm callback:', e);
+                    } finally {
+                        cleanup();
+                    }
+                });
             }
         };
 

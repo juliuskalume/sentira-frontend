@@ -49,567 +49,722 @@
   <meta name="theme-color" content="#6B2737">  
   <link rel="manifest" href="manifest.json">
 
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Crimson+Pro:wght@300;400;600&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <style>
-        :root {
-            --burgundy: #6B2737;
-            --deep-wine: #4A1F29;
-            --cream: #F5F1E8;
-            --parchment: #E8DCC4;
-            --gold: #D4AF37;
-            --sage: #8B9D83;
-            --charcoal: #2D2D34;
-        }
-
-        .dark {
-            --burgundy: #9D4E5C;
-            --deep-wine: #6B2737;
-            --cream: #1A1A1F;
-            --parchment: #252530;
-            --gold: #F4D03F;
-            --sage: #A8C5A0;
-            --charcoal: #E8DCC4;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Crimson Pro', serif;
-            background: var(--cream);
-            color: var(--charcoal);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        .dark body {
-            background: var(--cream);
-            color: var(--charcoal);
-        }
-
-        h1, h2, h3, h4 {
-            font-family: 'Playfair Display', serif;
-            font-weight: 600;
-        }
-
-        .app-container {
-            max-width: 600px;
-            margin: 0 auto;
-            min-height: 100vh;
-            background: var(--cream);
-            position: relative;
-        }
-
-        .dark .app-container {
-            background: var(--cream);
-        }
-
-        .bg-pattern {
-            position: fixed;
-            inset: 0;
-            opacity: 0.03;
-            background-image:
-                repeating-linear-gradient(45deg, var(--burgundy) 0px, var(--burgundy) 1px, transparent 1px, transparent 20px),
-                repeating-linear-gradient(-45deg, var(--burgundy) 0px, var(--burgundy) 1px, transparent 1px, transparent 20px);
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .content {
-            position: relative;
-            z-index: 1;
-        }
-
-        .app-header {
-            background: linear-gradient(135deg, var(--burgundy), var(--deep-wine));
-            color: var(--cream);
-            padding: 1.5rem;
-            box-shadow: 0 4px 20px rgba(107, 39, 55, 0.15);
-        }
-
-        .logo {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.75rem;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .btn {
-            padding: 0.75rem 1.5rem;
-            border: none;
-            border-radius: 8px;
-            font-family: 'Crimson Pro', serif;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: center;
-            display: inline-block;
-        }
-
-        .btn-primary {
-            background: var(--burgundy);
-            color: var(--cream);
-            box-shadow: 0 4px 12px rgba(107, 39, 55, 0.2);
-        }
-
-        .btn-primary:hover {
-            background: var(--deep-wine);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(107, 39, 55, 0.3);
-        }
-
-        .btn-secondary {
-            background: var(--parchment);
-            color: var(--burgundy);
-            border: 2px solid var(--burgundy);
-        }
-
-        .btn-secondary:hover {
-            background: var(--burgundy);
-            color: var(--cream);
-        }
-
-        .btn-ghost {
-            background: transparent;
-            color: var(--burgundy);
-            text-decoration: underline;
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: var(--burgundy);
-        }
-
-        .form-input, .form-select, .form-textarea {
-            width: 100%;
-            padding: 0.75rem;
-            border: 2px solid var(--parchment);
-            border-radius: 8px;
-            font-family: 'Crimson Pro', serif;
-            font-size: 16px;
-            background: white;
-            color: var(--charcoal);
-            transition: border-color 0.3s ease;
-        }
-
-        .dark .form-input, .dark .form-select, .dark .form-textarea {
-            background: var(--parchment);
-            border-color: #3a3a45;
-            color: var(--charcoal);
-        }
-
-        .form-input:focus, .form-select:focus, .form-textarea:focus {
-            outline: none;
-            border-color: var(--burgundy);
-        }
-
-        .form-textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
-
-        .mood-slider {
-            -webkit-appearance: none;
-            width: 100%;
-            height: 8px;
-            border-radius: 5px;
-            background: linear-gradient(to right, #e74c3c, #f39c12, #f1c40f, #2ecc71, #27ae60);
-            outline: none;
-            opacity: 0.9;
-            transition: opacity 0.2s;
-        }
-
-        .mood-slider:hover {
-            opacity: 1;
-        }
-
-        .mood-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            background: var(--burgundy);
-            cursor: pointer;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-        }
-
-        .mood-slider::-moz-range-thumb {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            background: var(--burgundy);
-            cursor: pointer;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-        }
-
-        .mood-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.75rem;
-            margin-top: 1rem;
-        }
-
-        .mood-tag {
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            border: 2px solid var(--parchment);
-            background: white;
-            color: var(--charcoal);
-            font-size: 0.95rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .dark .mood-tag {
-            background: var(--parchment);
-            border-color: #3a3a45;
-        }
-
-        .mood-tag:hover {
-            border-color: var(--burgundy);
-        }
-
-        .mood-tag.selected {
-            background: var(--burgundy);
-            color: var(--cream);
-            border-color: var(--burgundy);
-        }
-
-        .book-card {
-            background: white;
-            border-radius: 12px;
-            padding: 1.25rem;
-            margin-bottom: 1.25rem;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-            transition: all 0.3s ease;
-            cursor: pointer;
-            animation: fadeInUp 0.5s ease-out;
-        }
-
-        .dark .book-card {
-            background: var(--parchment);
-            box-shadow: 0 2px 12px rgba(0,0,0,0.2);
-        }
-
-        .book-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 6px 24px rgba(107, 39, 55, 0.15);
-        }
-
-        .book-cover {
-            width: 80px;
-            height: 120px;
-            object-fit: cover;
-            border-radius: 6px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-        }
-
-        .loading {
-            text-align: center;
-            padding: 3rem 1rem;
-        }
-
-        .spinner {
-            width: 48px;
-            height: 48px;
-            border: 4px solid var(--parchment);
-            border-top: 4px solid var(--burgundy);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 1rem;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 6px;
-            background: var(--parchment);
-            border-radius: 3px;
-            overflow: hidden;
-            margin: 1rem 0;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--burgundy), var(--gold));
-            transition: width 0.3s ease;
-        }
-
-        .audio-player {
-            background: white;
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-            margin: 1rem 0;
-        }
-
-        .dark .audio-player {
-            background: var(--parchment);
-        }
-
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(4px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            animation: fadeIn 0.3s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .modal-content {
-            background: var(--cream);
-            border-radius: 16px;
-            padding: 2rem;
-            max-width: 500px;
-            width: 90%;
-            max-height: 80vh;
-            overflow-y: auto;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-            animation: slideUp 0.3s ease;
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .dark .modal-content {
-            background: var(--parchment);
-        }
-
-        .nav-bar {
-            position: sticky;
-            bottom: 0;
-            background: white;
-            border-top: 2px solid var(--parchment);
-            display: flex;
-            justify-content: space-around;
-            padding: 0.75rem;
-            box-shadow: 0 -2px 12px rgba(0,0,0,0.08);
-        }
-
-        .dark .nav-bar {
-            background: var(--parchment);
-            border-top-color: #3a3a45;
-        }
-
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.25rem;
-            padding: 0.5rem;
-            cursor: pointer;
-            color: var(--charcoal);
-            opacity: 0.6;
-            transition: opacity 0.3s ease;
-            font-size: 0.85rem;
-        }
-
-        .nav-item:hover, .nav-item.active {
-            opacity: 1;
-            color: var(--burgundy);
-        }
-
-        .hidden { display: none !important; }
-        .text-center { text-align: center; }
-
-        .mt-1 { margin-top: 0.5rem; }
-        .mt-2 { margin-top: 1rem; }
-        .mt-3 { margin-top: 1.5rem; }
-        .mt-4 { margin-top: 2rem; }
-        .mb-1 { margin-bottom: 0.5rem; }
-        .mb-2 { margin-bottom: 1rem; }
-        .mb-3 { margin-bottom: 1.5rem; }
-        .mb-4 { margin-bottom: 2rem; }
-        .p-1 { padding: 0.5rem; }
-        .p-2 { padding: 1rem; }
-        .p-3 { padding: 1.5rem; }
-        .p-4 { padding: 2rem; }
-
-        .summary-content h1, .summary-content h2, .summary-content h3 {
-            margin-top: 1.5rem;
-            margin-bottom: 0.75rem;
-            color: var(--burgundy);
-        }
-
-        .summary-content p {
-            margin-bottom: 1rem;
-        }
-
-        .summary-content ul, .summary-content ol {
-            margin-left: 1.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .summary-content blockquote {
-            border-left: 4px solid var(--burgundy);
-            padding-left: 1rem;
-            margin: 1rem 0;
-            font-style: italic;
-            color: var(--burgundy);
-        }
-
-        .summary-content code {
-            background: var(--parchment);
-            padding: 0.2rem 0.4rem;
-            border-radius: 4px;
-            font-family: monospace;
-        }
-
-        .checkbox-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
-
-        .checkbox-item {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .checkbox-item input[type="checkbox"] {
-            width: 20px;
-            height: 20px;
-            cursor: pointer;
-            accent-color: var(--burgundy);
-        }
-
-        .disclaimer {
-            background: linear-gradient(135deg, rgba(107, 39, 55, 0.1), rgba(74, 31, 41, 0.1));
-            border-left: 4px solid var(--burgundy);
-            padding: 1rem;
-            border-radius: 8px;
-            margin: 1.5rem 0;
-            font-size: 0.9rem;
-        }
-
-        .dark .disclaimer {
-            background: linear-gradient(135deg, rgba(157, 78, 92, 0.15), rgba(107, 39, 55, 0.15));
-        }
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Crimson+Pro:wght@300;400;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <style>
+      :root {
+          --burgundy: #6B2737;
+          --deep-wine: #4A1F29;
+          --cream: #F5F1E8;
+          --parchment: #E8DCC4;
+          --gold: #D4AF37;
+          --sage: #8B9D83;
+          --charcoal: #2D2D34;
+      }
+
+      .dark {
+          --burgundy: #9D4E5C;
+          --deep-wine: #6B2737;
+          --cream: #1A1A1F;
+          --parchment: #252530;
+          --gold: #F4D03F;
+          --sage: #A8C5A0;
+          --charcoal: #E8DCC4;
+      }
+
+      * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+      }
+
+      body {
+          font-family: 'Crimson Pro', serif;
+          background: var(--cream);
+          color: var(--charcoal);
+          line-height: 1.6;
+          overflow-x: hidden;
+      }
+
+      .dark body {
+          background: var(--cream);
+          color: var(--charcoal);
+      }
+
+      h1, h2, h3, h4 {
+          font-family: 'Playfair Display', serif;
+          font-weight: 600;
+      }
+
+      .app-container {
+          max-width: 100%;
+          margin: 0 auto;
+          min-height: 100vh;
+          background: var(--cream);
+          position: relative;
+      }
+
+      @media (min-width: 640px) {
+          .app-container {
+              max-width: 600px;
+          }
+      }
+
+      .dark .app-container {
+          background: var(--cream);
+      }
+
+      .bg-pattern {
+          position: fixed;
+          inset: 0;
+          opacity: 0.03;
+          background-image:
+              repeating-linear-gradient(45deg, var(--burgundy) 0px, var(--burgundy) 1px, transparent 1px, transparent 20px),
+              repeating-linear-gradient(-45deg, var(--burgundy) 0px, var(--burgundy) 1px, transparent 1px, transparent 20px);
+          pointer-events: none;
+          z-index: 0;
+      }
+
+      .content {
+          position: relative;
+          z-index: 1;
+      }
+
+      .app-header {
+          background: linear-gradient(135deg, var(--burgundy), var(--deep-wine));
+          color: var(--cream);
+          padding: 1rem 1.5rem;
+          box-shadow: 0 4px 20px rgba(107, 39, 55, 0.15);
+      }
+
+      @media (min-width: 640px) {
+          .app-header {
+              padding: 1.5rem;
+          }
+      }
+
+      .logo {
+          font-family: 'Playfair Display', serif;
+          font-size: 1.5rem;
+          font-weight: 700;
+          letter-spacing: 0.5px;
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+      }
+
+      @media (min-width: 640px) {
+          .logo {
+              font-size: 1.75rem;
+          }
+      }
+
+      .btn {
+          padding: 0.75rem 1.5rem;
+          border: none;
+          border-radius: 8px;
+          font-family: 'Crimson Pro', serif;
+          font-size: 1rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          text-align: center;
+          display: inline-block;
+          width: 100%;
+      }
+
+      @media (min-width: 640px) {
+          .btn {
+              width: auto;
+          }
+      }
+
+      .btn-primary {
+          background: var(--burgundy);
+          color: var(--cream);
+          box-shadow: 0 4px 12px rgba(107, 39, 55, 0.2);
+      }
+
+      .btn-primary:hover {
+          background: var(--deep-wine);
+          transform: translateY(-2px);
+          box-shadow: 0 6px 20px rgba(107, 39, 55, 0.3);
+      }
+
+      .btn-secondary {
+          background: var(--parchment);
+          color: var(--burgundy);
+          border: 2px solid var(--burgundy);
+      }
+
+      .btn-secondary:hover {
+          background: var(--burgundy);
+          color: var(--cream);
+      }
+
+      .btn-ghost {
+          background: transparent;
+          color: var(--burgundy);
+          text-decoration: underline;
+      }
+
+      .form-group {
+          margin-bottom: 1.5rem;
+      }
+
+      .form-label {
+          display: block;
+          margin-bottom: 0.5rem;
+          font-weight: 600;
+          color: var(--burgundy);
+      }
+
+      .form-input, .form-select, .form-textarea {
+          width: 100%;
+          padding: 0.75rem;
+          border: 2px solid var(--parchment);
+          border-radius: 8px;
+          font-family: 'Crimson Pro', serif;
+          font-size: 16px;
+          background: white;
+          color: var(--charcoal);
+          transition: border-color 0.3s ease;
+      }
+
+      .dark .form-input, .dark .form-select, .dark .form-textarea {
+          background: var(--parchment);
+          border-color: #3a3a45;
+          color: var(--charcoal);
+      }
+
+      .form-input:focus, .form-select:focus, .form-textarea:focus {
+          outline: none;
+          border-color: var(--burgundy);
+      }
+
+      .form-textarea {
+          resize: vertical;
+          min-height: 100px;
+      }
+
+      .mood-slider {
+          -webkit-appearance: none;
+          width: 100%;
+          height: 8px;
+          border-radius: 5px;
+          background: linear-gradient(to right, #e74c3c, #f39c12, #f1c40f, #2ecc71, #27ae60);
+          outline: none;
+          opacity: 0.9;
+          transition: opacity 0.2s;
+      }
+
+      .mood-slider:hover {
+          opacity: 1;
+      }
+
+      .mood-slider::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          appearance: none;
+          width: 24px;
+          height: 24px;
+          border-radius: 50%;
+          background: var(--burgundy);
+          cursor: pointer;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      }
+
+      .mood-slider::-moz-range-thumb {
+          width: 24px;
+          height: 24px;
+          border-radius: 50%;
+          background: var(--burgundy);
+          cursor: pointer;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      }
+
+      .mood-tags {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.5rem;
+          margin-top: 1rem;
+      }
+
+      @media (min-width: 640px) {
+          .mood-tags {
+              gap: 0.75rem;
+          }
+      }
+
+      .mood-tag {
+          padding: 0.5rem 1rem;
+          border-radius: 20px;
+          border: 2px solid var(--parchment);
+          background: white;
+          color: var(--charcoal);
+          font-size: 0.9rem;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          flex: 1 0 auto;
+          text-align: center;
+      }
+
+      @media (min-width: 640px) {
+          .mood-tag {
+              font-size: 0.95rem;
+              flex: 0 1 auto;
+          }
+      }
+
+      .dark .mood-tag {
+          background: var(--parchment);
+          border-color: #3a3a45;
+      }
+
+      .mood-tag:hover {
+          border-color: var(--burgundy);
+      }
+
+      .mood-tag.selected {
+          background: var(--burgundy);
+          color: var(--cream);
+          border-color: var(--burgundy);
+      }
+
+      .book-card {
+          background: white;
+          border-radius: 12px;
+          padding: 1rem;
+          margin-bottom: 1rem;
+          box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+          transition: all 0.3s ease;
+          cursor: pointer;
+          animation: fadeInUp 0.5s ease-out;
+      }
+
+      @media (min-width: 640px) {
+          .book-card {
+              padding: 1.25rem;
+              margin-bottom: 1.25rem;
+          }
+      }
+
+      .dark .book-card {
+          background: var(--parchment);
+          box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+      }
+
+      .book-card:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 6px 24px rgba(107, 39, 55, 0.15);
+      }
+
+      .book-cover {
+          width: 60px;
+          height: 90px;
+          object-fit: cover;
+          border-radius: 6px;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      }
+
+      @media (min-width: 640px) {
+          .book-cover {
+              width: 80px;
+              height: 120px;
+          }
+      }
+
+      .loading {
+          text-align: center;
+          padding: 2rem 1rem;
+      }
+
+      @media (min-width: 640px) {
+          .loading {
+              padding: 3rem 1rem;
+          }
+      }
+
+      .spinner {
+          width: 48px;
+          height: 48px;
+          border: 4px solid var(--parchment);
+          border-top: 4px solid var(--burgundy);
+          border-radius: 50%;
+          animation: spin 1s linear infinite;
+          margin: 0 auto 1rem;
+      }
+
+      @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+      }
+
+      @keyframes fadeInUp {
+          from {
+              opacity: 0;
+              transform: translateY(20px);
+          }
+          to {
+              opacity: 1;
+              transform: translateY(0);
+          }
+      }
+
+      .progress-bar {
+          width: 100%;
+          height: 6px;
+          background: var(--parchment);
+          border-radius: 3px;
+          overflow: hidden;
+          margin: 1rem 0;
+      }
+
+      .progress-fill {
+          height: 100%;
+          background: linear-gradient(90deg, var(--burgundy), var(--gold));
+          transition: width 0.3s ease;
+      }
+
+      .audio-player {
+          background: white;
+          border-radius: 12px;
+          padding: 1rem;
+          box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+          margin: 1rem 0;
+      }
+
+      @media (min-width: 640px) {
+          .audio-player {
+              padding: 1.5rem;
+          }
+      }
+
+      .dark .audio-player {
+          background: var(--parchment);
+      }
+
+      .modal-overlay {
+          position: fixed;
+          inset: 0;
+          background: rgba(0, 0, 0, 0.6);
+          backdrop-filter: blur(4px);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 1000;
+          animation: fadeIn 0.3s ease;
+          padding: 1rem;
+      }
+
+      @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+      }
+
+      .modal-content {
+          background: var(--cream);
+          border-radius: 16px;
+          padding: 1.5rem;
+          max-width: 500px;
+          width: 100%;
+          max-height: 80vh;
+          overflow-y: auto;
+          box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+          animation: slideUp 0.3s ease;
+      }
+
+      @media (min-width: 640px) {
+          .modal-content {
+              padding: 2rem;
+          }
+      }
+
+      @keyframes slideUp {
+          from {
+              opacity: 0;
+              transform: translateY(20px);
+          }
+          to {
+              opacity: 1;
+              transform: translateY(0);
+          }
+      }
+
+      .dark .modal-content {
+          background: var(--parchment);
+      }
+
+      .nav-bar {
+          position: sticky;
+          bottom: 0;
+          background: white;
+          border-top: 2px solid var(--parchment);
+          display: flex;
+          justify-content: space-around;
+          padding: 0.5rem;
+          box-shadow: 0 -2px 12px rgba(0,0,0,0.08);
+      }
+
+      @media (min-width: 640px) {
+          .nav-bar {
+              padding: 0.75rem;
+          }
+      }
+
+      .dark .nav-bar {
+          background: var(--parchment);
+          border-top-color: #3a3a45;
+      }
+
+      .nav-item {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 0.25rem;
+          padding: 0.5rem;
+          cursor: pointer;
+          color: var(--charcoal);
+          opacity: 0.6;
+          transition: opacity 0.3s ease;
+          font-size: 0.75rem;
+          flex: 1;
+      }
+
+      @media (min-width: 640px) {
+          .nav-item {
+              font-size: 0.85rem;
+              flex: 0 1 auto;
+          }
+      }
+
+      .nav-item:hover, .nav-item.active {
+          opacity: 1;
+          color: var(--burgundy);
+      }
+
+      .hidden { display: none !important; }
+      .text-center { text-align: center; }
+
+      .mt-1 { margin-top: 0.5rem; }
+      .mt-2 { margin-top: 1rem; }
+      .mt-3 { margin-top: 1.5rem; }
+      .mt-4 { margin-top: 2rem; }
+      .mb-1 { margin-bottom: 0.5rem; }
+      .mb-2 { margin-bottom: 1rem; }
+      .mb-3 { margin-bottom: 1.5rem; }
+      .mb-4 { margin-bottom: 2rem; }
+      .p-1 { padding: 0.5rem; }
+      .p-2 { padding: 1rem; }
+      .p-3 { padding: 1.5rem; }
+      .p-4 { padding: 2rem; }
+
+      .summary-content h1, .summary-content h2, .summary-content h3 {
+          margin-top: 1.5rem;
+          margin-bottom: 0.75rem;
+          color: var(--burgundy);
+      }
+
+      .summary-content p {
+          margin-bottom: 1rem;
+      }
+
+      .summary-content ul, .summary-content ol {
+          margin-left: 1.5rem;
+          margin-bottom: 1rem;
+      }
+
+      .summary-content blockquote {
+          border-left: 4px solid var(--burgundy);
+          padding-left: 1rem;
+          margin: 1rem 0;
+          font-style: italic;
+          color: var(--burgundy);
+      }
+
+      .summary-content code {
+          background: var(--parchment);
+          padding: 0.2rem 0.4rem;
+          border-radius: 4px;
+          font-family: monospace;
+      }
+
+      .checkbox-group {
+          display: flex;
+          flex-direction: column;
+          gap: 0.75rem;
+      }
+
+      .checkbox-item {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+      }
+
+      .checkbox-item input[type="checkbox"] {
+          width: 20px;
+          height: 20px;
+          cursor: pointer;
+          accent-color: var(--burgundy);
+      }
+
+      .disclaimer {
+          background: linear-gradient(135deg, rgba(107, 39, 55, 0.1), rgba(74, 31, 41, 0.1));
+          border-left: 4px solid var(--burgundy);
+          padding: 1rem;
+          border-radius: 8px;
+          margin: 1.5rem 0;
+          font-size: 0.9rem;
+      }
+
+      .dark .disclaimer {
+          background: linear-gradient(135deg, rgba(157, 78, 92, 0.15), rgba(107, 39, 55, 0.15));
+      }
 
       .site-footer {
-    padding: 2rem 1.5rem;
-    border-top: 1px solid rgba(0,0,0,0.06);
-    font-size: 0.9rem;
-    background: var(--cream);
-}
+          padding: 1.5rem 1rem;
+          border-top: 1px solid rgba(0,0,0,0.06);
+          font-size: 0.9rem;
+          background: var(--cream);
+      }
 
-.dark .site-footer {
-    border-top-color: rgba(255,255,255,0.1);
-    background: var(--cream);
-}
+      @media (min-width: 640px) {
+          .site-footer {
+              padding: 2rem 1.5rem;
+          }
+      }
 
-.footer-inner {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 2rem;
-    justify-content: space-between;
-}
+      .dark .site-footer {
+          border-top-color: rgba(255,255,255,0.1);
+          background: var(--cream);
+      }
 
-.footer-brand {
-    max-width: 260px;
-}
+      .footer-inner {
+          display: flex;
+          flex-direction: column;
+          gap: 1.5rem;
+      }
 
-.footer-logo {
-    font-weight: 700;
-    text-decoration: none;
-    color: var(--burgundy);
-}
+      @media (min-width: 640px) {
+          .footer-inner {
+              flex-direction: row;
+              flex-wrap: wrap;
+              gap: 2rem;
+              justify-content: space-between;
+          }
+      }
 
-.footer-tagline {
-    margin-top: 0.25rem;
-    opacity: 0.8;
-}
+      .footer-brand {
+          max-width: 100%;
+      }
 
-.footer-nav {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 2rem;
-}
+      @media (min-width: 640px) {
+          .footer-brand {
+              max-width: 260px;
+          }
+      }
 
-.footer-column h3 {
-    margin-bottom: 0.5rem;
-    font-size: 0.9rem;
-    color: var(--burgundy);
-}
+      .footer-logo {
+          font-weight: 700;
+          text-decoration: none;
+          color: var(--burgundy);
+      }
 
-.footer-column ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
+      .footer-tagline {
+          margin-top: 0.25rem;
+          opacity: 0.8;
+      }
 
-.footer-column li {
-    margin-bottom: 0.25rem;
-}
+      .footer-nav {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 1.5rem;
+      }
 
-.footer-column a {
-    text-decoration: none;
-    font-size: 0.9rem;
-    opacity: 0.8;
-}
+      @media (min-width: 640px) {
+          .footer-nav {
+              gap: 2rem;
+          }
+      }
 
-.footer-column a:hover {
-    opacity: 1;
-}
+      .footer-column h3 {
+          margin-bottom: 0.5rem;
+          font-size: 0.9rem;
+          color: var(--burgundy);
+      }
 
-.footer-bottom {
-    margin-top: 1.5rem;
-    text-align: center;
-    opacity: 0.7;
-    font-size: 0.8rem;
-}
-    </style>
+      .footer-column ul {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+      }
+
+      .footer-column li {
+          margin-bottom: 0.25rem;
+      }
+
+      .footer-column a {
+          text-decoration: none;
+          font-size: 0.9rem;
+          opacity: 0.8;
+      }
+
+      .footer-column a:hover {
+          opacity: 1;
+      }
+
+      .footer-bottom {
+          margin-top: 1.5rem;
+          text-align: center;
+          opacity: 0.7;
+          font-size: 0.8rem;
+      }
+
+      /* Responsive grid for book cards */
+      .books-grid {
+          display: grid;
+          gap: 1rem;
+      }
+
+      @media (min-width: 640px) {
+          .books-grid {
+              gap: 1.25rem;
+          }
+      }
+
+      /* Mobile-first responsive adjustments */
+      .responsive-padding {
+          padding: 1rem;
+      }
+
+      @media (min-width: 640px) {
+          .responsive-padding {
+              padding: 1.5rem;
+          }
+      }
+
+      .responsive-text {
+          font-size: 1rem;
+      }
+
+      @media (min-width: 640px) {
+          .responsive-text {
+              font-size: 1.15rem;
+          }
+      }
+
+      .responsive-heading {
+          font-size: 1.5rem;
+      }
+
+      @media (min-width: 640px) {
+          .responsive-heading {
+              font-size: 2rem;
+          }
+      }
+  </style>
 </head>
 <body>
     <div class="bg-pattern"></div>
@@ -623,7 +778,7 @@
                 <p style="font-size: 0.9rem; margin-top: 0.25rem; opacity: 0.9;">Your mood-based reading companion</p>
             </header>
 
-            <main id="mainContent" style="padding: 1.5rem; min-height: calc(100vh - 200px);">
+            <main id="mainContent" class="responsive-padding" style="min-height: calc(100vh - 200px);">
                 <!-- Content injected by JS -->
             </main>
 
@@ -671,19 +826,19 @@
 
             <nav class="nav-bar" id="navBar" style="display: none;">
                 <div class="nav-item" data-view="check-in">
-                    <span style="font-size: 1.5rem;">🌙</span>
+                    <span style="font-size: 1.25rem;">🌙</span>
                     <span>Check-in</span>
                 </div>
                 <div class="nav-item" data-view="recommendations">
-                    <span style="font-size: 1.5rem;">✨</span>
+                    <span style="font-size: 1.25rem;">✨</span>
                     <span>Discover</span>
                 </div>
                 <div class="nav-item" data-view="library">
-                    <span style="font-size: 1.5rem;">📖</span>
+                    <span style="font-size: 1.25rem;">📖</span>
                     <span>My Shelf</span>
                 </div>
                 <div class="nav-item" data-view="settings">
-                    <span style="font-size: 1.5rem;">⚙️</span>
+                    <span style="font-size: 1.25rem;">⚙️</span>
                     <span>Settings</span>
                 </div>
             </nav>
@@ -721,31 +876,91 @@
             }
         });
 
-        // Simple in-memory storage
+        // Enhanced Storage with localStorage fallback
         const Storage = {
             data: {},
+            useLocalStorage: false,
+            
             init() {
+                // Check if localStorage is available
+                try {
+                    localStorage.setItem('sentira_test', 'test');
+                    localStorage.removeItem('sentira_test');
+                    this.useLocalStorage = true;
+                    console.log("Using localStorage for data persistence");
+                } catch (e) {
+                    console.log("Using in-memory storage (localStorage not available)");
+                    this.useLocalStorage = false;
+                }
+                
                 this.data = {
                     user: null,
                     savedBooks: [],
                     moodHistory: []
                 };
+                
+                // Load existing data from localStorage if available
+                if (this.useLocalStorage) {
+                    this.loadFromLocalStorage();
+                }
             },
+            
+            loadFromLocalStorage() {
+                try {
+                    this.data.user = JSON.parse(localStorage.getItem("sentira_user") || "null");
+                    this.data.savedBooks = JSON.parse(localStorage.getItem("sentira_saved_books") || "[]");
+                    this.data.moodHistory = JSON.parse(localStorage.getItem("sentira_mood_history") || "[]");
+                } catch (e) {
+                    console.error("Error loading from localStorage:", e);
+                    this.data = {
+                        user: null,
+                        savedBooks: [],
+                        moodHistory: []
+                    };
+                }
+            },
+            
             getItem(key) {
                 return this.data[key] ? JSON.stringify(this.data[key]) : null;
             },
+            
             setItem(key, value) {
                 this.data[key] = JSON.parse(value);
+                if (this.useLocalStorage) {
+                    try {
+                        localStorage.setItem(`sentira_${key}`, value);
+                    } catch (e) {
+                        console.error("Error saving to localStorage:", e);
+                    }
+                }
             },
+            
             removeItem(key) {
                 delete this.data[key];
+                if (this.useLocalStorage) {
+                    try {
+                        localStorage.removeItem(`sentira_${key}`);
+                    } catch (e) {
+                        console.error("Error removing from localStorage:", e);
+                    }
+                }
             },
+            
             clear() {
                 this.data = {
                     user: null,
                     savedBooks: [],
                     moodHistory: []
                 };
+                if (this.useLocalStorage) {
+                    try {
+                        localStorage.removeItem("sentira_user");
+                        localStorage.removeItem("sentira_saved_books");
+                        localStorage.removeItem("sentira_mood_history");
+                    } catch (e) {
+                        console.error("Error clearing localStorage:", e);
+                    }
+                }
             }
         };
         Storage.init();
@@ -769,14 +984,14 @@
             },
 
             loadFromStorage() {
-                this.user = JSON.parse(Storage.getItem("sentira_user") || "null");
-                this.savedBooks = JSON.parse(Storage.getItem("sentira_saved_books") || "[]");
-                this.moodHistory = JSON.parse(Storage.getItem("sentira_mood_history") || "[]");
+                this.user = JSON.parse(Storage.getItem("user") || "null");
+                this.savedBooks = JSON.parse(Storage.getItem("saved_books") || "[]");
+                this.moodHistory = JSON.parse(Storage.getItem("mood_history") || "[]");
             },
 
             saveUser(userData) {
                 this.user = userData;
-                Storage.setItem("sentira_user", JSON.stringify(userData));
+                Storage.setItem("user", JSON.stringify(userData));
             },
 
             saveMoodCheckIn(moodData) {
@@ -785,19 +1000,19 @@
                     ...moodData,
                     timestamp: new Date().toISOString()
                 });
-                Storage.setItem("sentira_mood_history", JSON.stringify(this.moodHistory));
+                Storage.setItem("mood_history", JSON.stringify(this.moodHistory));
             },
 
             saveBook(book) {
                 if (!this.savedBooks.find(b => b.id === book.id)) {
                     this.savedBooks.push(book);
-                    Storage.setItem("sentira_saved_books", JSON.stringify(this.savedBooks));
+                    Storage.setItem("saved_books", JSON.stringify(this.savedBooks));
                 }
             },
 
             removeBook(bookId) {
                 this.savedBooks = this.savedBooks.filter(b => b.id !== bookId);
-                Storage.setItem("sentira_saved_books", JSON.stringify(this.savedBooks));
+                Storage.setItem("saved_books", JSON.stringify(this.savedBooks));
             },
 
             reset() {
@@ -806,6 +1021,11 @@
                 this.savedBooks = [];
                 this.moodHistory = [];
                 this.currentView = "welcome";
+                this.recommendations = [];
+                this.currentMoodCheckIn = null;
+                this.currentBook = null;
+                this.currentSummary = null;
+                this.audioUrl = null;
             }
         };
 
@@ -874,9 +1094,9 @@
             welcome() {
                 return `
                     <div style="text-align: center; padding: 2rem 0;">
-                        <div style="font-size: 5rem; margin-bottom: 1rem; animation: fadeInUp 0.6s ease-out;">📚</div>
-                        <h1 style="font-size: 2.5rem; margin-bottom: 1rem; animation: fadeInUp 0.6s ease-out 0.1s; animation-fill-mode: both;">Welcome to Sentira</h1>
-                        <p style="font-size: 1.15rem; color: var(--burgundy); margin-bottom: 2rem; max-width: 400px; margin-left: auto; margin-right: auto; animation: fadeInUp 0.6s ease-out 0.2s; animation-fill-mode: both;">
+                        <div style="font-size: 4rem; margin-bottom: 1rem; animation: fadeInUp 0.6s ease-out;">📚</div>
+                        <h1 class="responsive-heading" style="margin-bottom: 1rem; animation: fadeInUp 0.6s ease-out 0.1s; animation-fill-mode: both;">Welcome to Sentira</h1>
+                        <p class="responsive-text" style="color: var(--burgundy); margin-bottom: 2rem; max-width: 400px; margin-left: auto; margin-right: auto; animation: fadeInUp 0.6s ease-out 0.2s; animation-fill-mode: both;">
                             Discover books that meet you where you are—emotionally, mentally, and personally.
                         </p>
 
@@ -895,7 +1115,7 @@
             onboarding() {
                 return `
                     <div style="max-width: 500px; margin: 0 auto;">
-                        <h2 style="font-size: 2rem; margin-bottom: 1.5rem; color: var(--burgundy);">Let's Get to Know You</h2>
+                        <h2 class="responsive-heading" style="margin-bottom: 1.5rem; color: var(--burgundy);">Let's Get to Know You</h2>
 
                         <form id="onboardingForm" onsubmit="return false;">
                             <div id="step1" class="onboarding-step">
@@ -1052,8 +1272,8 @@
             checkIn() {
                 return `
                     <div style="max-width: 500px; margin: 0 auto;">
-                        <h2 style="font-size: 2rem; margin-bottom: 1rem; color: var(--burgundy);">How are you feeling today?</h2>
-                        <p style="margin-bottom: 2rem; color: var(--charcoal); opacity: 0.8;">
+                        <h2 class="responsive-heading" style="margin-bottom: 1rem; color: var(--burgundy);">How are you feeling today?</h2>
+                        <p class="responsive-text" style="margin-bottom: 2rem; color: var(--charcoal); opacity: 0.8;">
                             Let's check in with your current mood and state of mind. This will help us find books that resonate with you right now.
                         </p>
 
@@ -1151,8 +1371,8 @@
             recommendations() {
                 return `
                     <div>
-                        <h2 style="font-size: 2rem; margin-bottom: 1rem; color: var(--burgundy);">Books for You</h2>
-                        <p style="margin-bottom: 2rem; color: var(--charcoal); opacity: 0.8;">
+                        <h2 class="responsive-heading" style="margin-bottom: 1rem; color: var(--burgundy);">Books for You</h2>
+                        <p class="responsive-text" style="margin-bottom: 2rem; color: var(--charcoal); opacity: 0.8;">
                             Based on your mood and goals, here are some books that might resonate with you right now.
                         </p>
 
@@ -1261,16 +1481,16 @@ ${err.message || err}
 
                 container.innerHTML = recommendations.map(book => `
                     <div class="book-card" onclick='Router.navigate("book-detail", {book: ${JSON.stringify(book).replace(/'/g, "&apos;")}})'>
-                        <div style="display: flex; gap: 1rem;">
+                        <div style="display: flex; gap: 1rem; align-items: flex-start;">
                             <img src="${book.coverUrl}" alt="${book.title}" class="book-cover" onerror="this.src='https://via.placeholder.com/80x120?text=Book'">
-                            <div style="flex: 1;">
-                                <h3 style="font-size: 1.25rem; margin-bottom: 0.25rem; color: var(--burgundy);">${book.title}</h3>
-                                <p style="font-size: 0.95rem; opacity: 0.7; margin-bottom: 0.5rem;">by ${book.author}</p>
-                                <p style="font-size: 0.95rem; margin-bottom: 0.5rem;">${book.explanation}</p>
-                                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                                    <span style="background: var(--parchment); padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.85rem;">${book.moodAlignment}</span>
+                            <div style="flex: 1; min-width: 0;">
+                                <h3 style="font-size: 1.1rem; margin-bottom: 0.25rem; color: var(--burgundy); line-height: 1.3;">${book.title}</h3>
+                                <p style="font-size: 0.9rem; opacity: 0.7; margin-bottom: 0.5rem;">by ${book.author}</p>
+                                <p style="font-size: 0.9rem; margin-bottom: 0.5rem; line-height: 1.4;">${book.explanation}</p>
+                                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.5rem;">
+                                    <span style="background: var(--parchment); padding: 0.25rem 0.5rem; border-radius: 12px; font-size: 0.8rem;">${book.moodAlignment}</span>
                                     ${book.tags.slice(0, 2).map(tag => `
-                                        <span style="background: var(--parchment); padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.85rem;">${tag}</span>
+                                        <span style="background: var(--parchment); padding: 0.25rem 0.5rem; border-radius: 12px; font-size: 0.8rem;">${tag}</span>
                                     `).join("")}
                                 </div>
                             </div>
@@ -1299,9 +1519,9 @@ ${err.message || err}
                         <button class="btn btn-ghost mb-2" onclick="Router.navigate('recommendations')">← Back to Recommendations</button>
 
                         <div style="text-align: center; margin-bottom: 2rem;">
-                            <img src="${book.coverUrl}" alt="${book.title}" style="width: 180px; height: 270px; object-fit: cover; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); margin-bottom: 1.5rem;" onerror="this.src='https://via.placeholder.com/180x270?text=Book'">
-                            <h2 style="font-size: 2rem; margin-bottom: 0.5rem; color: var(--burgundy);">${book.title}</h2>
-                            <p style="font-size: 1.15rem; opacity: 0.7; margin-bottom: 1rem;">by ${book.author}</p>
+                            <img src="${book.coverUrl}" alt="${book.title}" style="width: 150px; height: 225px; object-fit: cover; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); margin-bottom: 1.5rem;" onerror="this.src='https://via.placeholder.com/150x225?text=Book'">
+                            <h2 class="responsive-heading" style="margin-bottom: 0.5rem; color: var(--burgundy);">${book.title}</h2>
+                            <p class="responsive-text" style="opacity: 0.7; margin-bottom: 1rem;">by ${book.author}</p>
                             <div style="display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap; margin-bottom: 1.5rem;">
                                 <span style="background: var(--parchment); padding: 0.4rem 1rem; border-radius: 16px; font-size: 0.9rem;">${book.genre}</span>
                                 <span style="background: var(--burgundy); color: var(--cream); padding: 0.4rem 1rem; border-radius: 16px; font-size: 0.9rem;">${book.moodAlignment}</span>
@@ -1341,7 +1561,7 @@ ${err.message || err}
                     <div style="max-width: 600px; margin: 0 auto;">
                         <button class="btn btn-ghost mb-2" onclick='Router.navigate("book-detail", {book: ${JSON.stringify(book).replace(/'/g, "&apos;")}})'>← Back to Book</button>
 
-                        <h2 style="font-size: 1.75rem; margin-bottom: 0.5rem; color: var(--burgundy);">${book.title}</h2>
+                        <h2 class="responsive-heading" style="margin-bottom: 0.5rem; color: var(--burgundy);">${book.title}</h2>
                         <p style="font-size: 1rem; opacity: 0.7; margin-bottom: 1.5rem;">by ${book.author}</p>
 
                         <div class="progress-bar">
@@ -1651,8 +1871,8 @@ ${err.message || err}
                     return `
                         <div style="text-align: center; padding: 3rem 1rem;">
                             <div style="font-size: 4rem; margin-bottom: 1rem;">📚</div>
-                            <h2 style="font-size: 1.75rem; margin-bottom: 1rem; color: var(--burgundy);">Your Library is Empty</h2>
-                            <p style="margin-bottom: 2rem; opacity: 0.8;">Save books from your recommendations to build your personal library.</p>
+                            <h2 class="responsive-heading" style="margin-bottom: 1rem; color: var(--burgundy);">Your Library is Empty</h2>
+                            <p class="responsive-text" style="margin-bottom: 2rem; opacity: 0.8;">Save books from your recommendations to build your personal library.</p>
                             <button class="btn btn-primary" onclick="Router.navigate('recommendations')">
                                 Discover Books
                             </button>
@@ -1662,20 +1882,20 @@ ${err.message || err}
 
                 return `
                     <div>
-                        <h2 style="font-size: 2rem; margin-bottom: 1rem; color: var(--burgundy);">My Library</h2>
-                        <p style="margin-bottom: 2rem; opacity: 0.8;">Books you've saved for later</p>
+                        <h2 class="responsive-heading" style="margin-bottom: 1rem; color: var(--burgundy);">My Library</h2>
+                        <p class="responsive-text" style="margin-bottom: 2rem; opacity: 0.8;">Books you've saved for later</p>
 
-                        <div>
+                        <div class="books-grid">
                             ${savedBooks.map(book => `
                                 <div class="book-card" onclick='Router.navigate("book-detail", {book: ${JSON.stringify(book).replace(/'/g, "&apos;")}})'>
                                     <div style="display: flex; gap: 1rem; align-items: start;">
                                         <img src="${book.coverUrl}" alt="${book.title}" class="book-cover" onerror="this.src='https://via.placeholder.com/80x120?text=Book'">
-                                        <div style="flex: 1;">
-                                            <h3 style="font-size: 1.25rem; margin-bottom: 0.25rem; color: var(--burgundy);">${book.title}</h3>
-                                            <p style="font-size: 0.95rem; opacity: 0.7; margin-bottom: 0.5rem;">by ${book.author}</p>
-                                            <p style="font-size: 0.95rem;">${book.explanation}</p>
+                                        <div style="flex: 1; min-width: 0;">
+                                            <h3 style="font-size: 1.1rem; margin-bottom: 0.25rem; color: var(--burgundy); line-height: 1.3;">${book.title}</h3>
+                                            <p style="font-size: 0.9rem; opacity: 0.7; margin-bottom: 0.5rem;">by ${book.author}</p>
+                                            <p style="font-size: 0.9rem; line-height: 1.4;">${book.explanation}</p>
                                         </div>
-                                        <button class="btn-ghost" onclick="event.stopPropagation(); Views.removeFromLibrary('${book.id}')" style="padding: 0.5rem; font-size: 1.25rem;">
+                                        <button class="btn-ghost" onclick="event.stopPropagation(); Views.removeFromLibrary('${book.id}')" style="padding: 0.5rem; font-size: 1.25rem; flex-shrink: 0;">
                                             🗑️
                                         </button>
                                     </div>
@@ -1697,7 +1917,7 @@ ${err.message || err}
 
                 return `
                     <div style="max-width: 500px; margin: 0 auto;">
-                        <h2 style="font-size: 2rem; margin-bottom: 2rem; color: var(--burgundy);">Settings</h2>
+                        <h2 class="responsive-heading" style="margin-bottom: 2rem; color: var(--burgundy);">Settings</h2>
 
                         <div style="background: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;" class="dark:bg-gray-800">
                             <h3 style="font-size: 1.25rem; margin-bottom: 1rem; color: var(--burgundy);">Your Profile</h3>
@@ -1751,7 +1971,7 @@ ${err.message || err}
                     "Are you sure you want to clear your mood history? This action cannot be undone.",
                     () => {
                         AppState.moodHistory = [];
-                        Storage.removeItem("sentira_mood_history");
+                        Storage.removeItem("mood_history");
                         Router.navigate("settings");
                         Views.showModal("History Cleared", "Your mood history has been cleared.");
                     }
@@ -1764,6 +1984,7 @@ ${err.message || err}
                     () => {
                         AppState.reset();
                         Router.navigate("welcome");
+                        Views.showModal("App Reset", "All your data has been cleared. You can start fresh with a new profile.");
                     }
                 );
             },

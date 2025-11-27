@@ -372,15 +372,15 @@
       }
 
       .book-card {
-          background: white;
-          border-radius: 12px;
-          padding: 1rem;
-          margin-bottom: 0; /* spacing controlled by container gap */
-          box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-          overflow: ellipsis; /* prevent children from flowing outside the rounded box */
-          transition: all 0.3s ease;
-          cursor: pointer;
-          animation: fadeInUp 0.5s ease-out;
+    background: white;
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 0;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    overflow: hidden; /* actually clips content to the rounded box */
+    transition: all 0.3s ease;
+    cursor: pointer;
+    animation: fadeInUp 0.5s ease-out;
       }
 
       @media (min-width: 640px) {
@@ -404,16 +404,16 @@
 
       /* Clamp text to prevent extremely tall cards on larger screens */
     .book-desc.truncate {
-          overflow: ellipsis;
-          text-overflow: ellipsis;
-          overflow-wrap: anywhere;
-          display: -webkit-box;
-          -webkit-box-orient: vertical;
-          -webkit-line-clamp: 6; /* default clamp */
-          line-clamp: 6;
-          max-width: 100%;
-          box-sizing: border-box;
-      }
+    overflow: hidden;          /* must be hidden for ellipsis/clamp to work */
+    text-overflow: ellipsis;
+    overflow-wrap: anywhere;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 6;
+    line-clamp: 6;
+    max-width: 100%;
+    box-sizing: border-box;
+    }
 
       /* Expanded state disables clamping and shows full text */
       .book-desc.expanded {

@@ -1709,56 +1709,57 @@ ${err.message || err}
             },
 
             bookDetail(book) {
-                const savedEntry = AppState.savedBooks.find(b => b.id === book.id) || null;
-                const isSaved = !!savedEntry;
-                const isCompleted = savedEntry && savedEntry.completed;
+    const savedEntry = AppState.savedBooks.find(b => b.id === book.id) || null;
+    const isSaved = !!savedEntry;
+    const isCompleted = savedEntry && savedEntry.completed;
 
-                return `
-                    <div class="center-block list-container">
-                        <button class="btn btn-ghost mb-2" onclick="Router.navigate('recommendations')">← Back to Recommendations</button>
+    return `
+        <div class="center-block list-container">
+            <button class="btn btn-ghost mb-2" onclick="Router.navigate('recommendations')">← Back to Recommendations</button>
 
-                        <div style="text-align: center; margin-bottom: 2rem;">
-                            <img src="${book.coverUrl}" alt="${book.title}" class="book-detail-cover" onerror="this.src='https://via.placeholder.com/150x225?text=Book'">
-                            <h2 class="responsive-heading" style="margin-bottom: 0.5rem; color: var(--burgundy);">${book.title} ${isSaved && isCompleted ? `<span class="badge-completed">Completed</span>` : ``}</h2>
-                            <p class="responsive-text" style="opacity: 0.7; margin-bottom: 1rem;">by ${book.author}</p>
-                            <div style="display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap; margin-bottom: 1.5rem;">
-                                <span style="background: var(--parchment); padding: 0.4rem 1rem; border-radius: 16px; font-size: 0.9rem;">${book.genre}</span>
-                                <span style="background: var(--burgundy); color: var(--cream); padding: 0.4rem 1rem; border-radius: 16px; font-size: 0.9rem;">${book.moodAlignment}</span>
-                            </div>
-                        </div>
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <img src="${book.coverUrl}" alt="${book.title}" class="book-detail-cover" onerror="this.src='https://via.placeholder.com/150x225?text=Book'">
+                <h2 class="responsive-heading" style="margin-bottom: 0.5rem; color: var(--burgundy);">${book.title} ${isSaved && isCompleted ? `<span class="badge-completed">Completed</span>` : ``}</h2>
+                <p class="responsive-text" style="opacity: 0.7; margin-bottom: 1rem;">by ${book.author}</p>
+                <div style="display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap; margin-bottom: 1.5rem;">
+                    <span style="background: var(--parchment); padding: 0.4rem 1rem; border-radius: 16px; font-size: 0.9rem;">${book.genre}</span>
+                    <span style="background: var(--burgundy); color: var(--cream); padding: 0.4rem 1rem; border-radius: 16px; font-size: 0.9rem;">${book.moodAlignment}</span>
+                </div>
+            </div>
 
-                        <div style="background: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;" class="dark:bg-gray-800">
-                            <h3 style="font-size: 1.25rem; margin-bottom: 0.75rem; color: var(--burgundy);">Why This Book for You</h3>
-                            <p>${book.explanation}</p>
-                        </div>
+            <div style="background: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;" class="dark:bg-gray-800">
+                <h3 style="font-size: 1.25rem; margin-bottom: 0.75rem; color: var(--burgundy);">Why This Book for You</h3>
+                <p>${book.explanation}</p>
+            </div>
 
-                        <div class="disclaimer mb-3">
-                            <strong>📚 About This Book:</strong><br>
-                            This book has been selected based on your current mood (${AppState.currentMoodCheckIn && Array.isArray(AppState.currentMoodCheckIn.moodTags) ? AppState.currentMoodCheckIn.moodTags.join(", ") : "your current mood"}) and your goals. The summary you'll read is AI-generated and designed to give you the core ideas in a focused, concise way.
-                        </div>
+            <div class="disclaimer mb-3">
+                <strong>📚 About This Book:</strong><br>
+                This book has been selected based on your current mood (${AppState.currentMoodCheckIn && Array.isArray(AppState.currentMoodCheckIn.moodTags) ? AppState.currentMoodCheckIn.moodTags.join(", ") : "your current mood"}) and your goals. The summary you'll read is AI-generated and designed to give you the core ideas in a focused, concise way.
+            </div>
 
-                        <div style="display: flex; flex-direction: column; gap: 1rem;">
-                            <button class="btn btn-primary" onclick='Router.navigate("summary", {book: ${JSON.stringify(book).replace(/'/g, "&apos;")}})'>
-                                📖 Read Summary
-                            </button>
-                            <button class="btn btn-secondary" onclick="Views.saveBookToLibrary(${JSON.stringify(book).replace(/'/g, "&apos;")})">
-                                ${isSaved ? (isCompleted ? "✓ Completed" : "✓ Saved to Library") : "💾 Save to Library"}
-                            </button>
-                        </div>
-                    </div>
-                `;
-            },
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+                <button class="btn btn-primary" onclick='Router.navigate("summary", {book: ${JSON.stringify(book).replace(/'/g, "&apos;")}})'>
+                    📖 Read Summary
+                </button>
+                <button class="btn btn-secondary" onclick="Views.addBookToShelf(${JSON.stringify(book).replace(/'/g, "&apos;")})">
+                    ${isSaved ? (isCompleted ? "✓ Completed" : "✓ Added to Shelf") : "📚 Add to Shelf"}
+                </button>
+            </div>
+        </div>
+    `;
+},
 
-            saveBookToLibrary(book) {
-                AppState.saveBook(book);
-                Views.showModal("Book Saved!", `"${book.title}" has been added to your library.`);
-                // Re-render current view so the 'saved' state is reflected in the UI
-                if (AppState.currentView === 'book-detail') {
-                    Router.navigate('book-detail', { book });
-                } else {
-                    Router.navigate(AppState.currentView);
-                }
-            },
+            // Add the addBookToShelf function
+addBookToShelf(book) {
+    AppState.saveBook(book);
+    Views.showModal("Book Added!", `"${book.title}" has been added to your shelf.`);
+    // Re-render current view so the 'saved' state is reflected in the UI
+    if (AppState.currentView === 'book-detail') {
+        Router.navigate('book-detail', { book });
+    } else {
+        Router.navigate(AppState.currentView);
+    }
+},
 
             summary(book) {
                 return `
@@ -2081,54 +2082,54 @@ ${err.message || err}
             },
 
             library() {
-                const savedBooks = AppState.savedBooks;
+    const savedBooks = AppState.savedBooks;
 
-                if (savedBooks.length === 0) {
-                    return `
-                        <div style="text-align: center; padding: 3rem 1rem;">
-                            <div style="font-size: 4rem; margin-bottom: 1rem;">📚</div>
-                            <h2 class="responsive-heading" style="margin-bottom: 1rem; color: var(--burgundy);">Your Library is Empty</h2>
-                            <p class="responsive-text" style="margin-bottom: 2rem; opacity: 0.8;">Save books from your recommendations to build your personal library.</p>
-                            <button class="btn btn-primary" onclick="Router.navigate('recommendations')">
-                                Discover Books
+    if (savedBooks.length === 0) {
+        return `
+            <div style="text-align: center; padding: 3rem 1rem;">
+                <div style="font-size: 4rem; margin-bottom: 1rem;">📚</div>
+                <h2 class="responsive-heading" style="margin-bottom: 1rem; color: var(--burgundy);">Your Shelf is Empty</h2>
+                <p class="responsive-text" style="margin-bottom: 2rem; opacity: 0.8;">Add books from your recommendations to build your personal shelf.</p>
+                <button class="btn btn-primary" onclick="Router.navigate('recommendations')">
+                    Discover Books
+                </button>
+            </div>
+        `;
+    }
+
+    return `
+        <div class="center-block list-container">
+            <h2 class="responsive-heading" style="margin-bottom: 1rem; color: var(--burgundy);">My Shelf</h2>
+            <p class="responsive-text" style="margin-bottom: 2rem; opacity: 0.8;">Books you've added to your shelf</p>
+
+            <div class="books-grid">
+                ${savedBooks.map(book => `
+                    <div class="book-card" onclick='Router.navigate("book-detail", {book: ${JSON.stringify(book).replace(/'/g, "&apos;")}})'>
+                        <div class="book-card-inner">
+                                <img src="${book.coverUrl}" alt="${book.title}" class="book-cover" onerror="this.src='https://via.placeholder.com/80x120?text=Book'">
+                                <div class="book-meta">
+                                    <div style="display:flex; align-items:center; gap:0.5rem; justify-content:flex-start;">
+                                        <h3 style="font-size: 1.1rem; margin-bottom: 0.25rem; color: var(--burgundy); line-height: 1.3;">${book.title}</h3>
+                                        ${book.completed ? `<span class="badge-completed">Completed</span>` : ``}
+                                    </div>
+                                    <p style="font-size: 0.9rem; opacity: 0.7; margin-bottom: 0.5rem;">by ${book.author}</p>
+                                    <p class="book-desc">${book.explanation}</p>
+                            </div>
+                            <button class="btn-ghost" onclick="event.stopPropagation(); Views.removeFromShelf('${book.id}')" style="padding: 0.5rem; font-size: 1.25rem; flex-shrink: 0;">
+                                🗑️
                             </button>
                         </div>
-                    `;
-                }
-
-                return `
-                    <div class="center-block list-container">
-                        <h2 class="responsive-heading" style="margin-bottom: 1rem; color: var(--burgundy);">My Library</h2>
-                        <p class="responsive-text" style="margin-bottom: 2rem; opacity: 0.8;">Books you've saved for later</p>
-
-                        <div class="books-grid">
-                            ${savedBooks.map(book => `
-                                <div class="book-card" onclick='Router.navigate("book-detail", {book: ${JSON.stringify(book).replace(/'/g, "&apos;")}})'>
-                                    <div class="book-card-inner">
-                                            <img src="${book.coverUrl}" alt="${book.title}" class="book-cover" onerror="this.src='https://via.placeholder.com/80x120?text=Book'">
-                                            <div class="book-meta">
-                                                <div style="display:flex; align-items:center; gap:0.5rem; justify-content:flex-start;">
-                                                    <h3 style="font-size: 1.1rem; margin-bottom: 0.25rem; color: var(--burgundy); line-height: 1.3;">${book.title}</h3>
-                                                    ${book.completed ? `<span class="badge-completed">Completed</span>` : ``}
-                                                </div>
-                                                <p style="font-size: 0.9rem; opacity: 0.7; margin-bottom: 0.5rem;">by ${book.author}</p>
-                                                <p class="book-desc">${book.explanation}</p>
-                                        </div>
-                                        <button class="btn-ghost" onclick="event.stopPropagation(); Views.removeFromLibrary('${book.id}')" style="padding: 0.5rem; font-size: 1.25rem; flex-shrink: 0;">
-                                            🗑️
-                                        </button>
-                                    </div>
-                                </div>
-                            `).join("")}
-                        </div>
                     </div>
-                `;
-            },
+                `).join("")}
+            </div>
+        </div>
+    `;
+},
 
-            removeFromLibrary(bookId) {
-                AppState.removeBook(bookId);
-                Router.navigate("library");
-            },
+            removeFromShelf(bookId) {
+    AppState.removeBook(bookId);
+    Router.navigate("library");
+},
 
             settings() {
                 const user = AppState.user;

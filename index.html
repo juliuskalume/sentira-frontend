@@ -1050,165 +1050,170 @@
             }
         });
 
-        // Enhanced Storage with localStorage fallback
-        const Storage = {
-            data: {},
-            useLocalStorage: false,
-            
-            init() {
-                // Check if localStorage is available
-                try {
-                    localStorage.setItem('sentira_test', 'test');
-                    localStorage.removeItem('sentira_test');
-                    this.useLocalStorage = true;
-                    console.log("Using localStorage for data persistence");
-                } catch (e) {
-                    console.log("Using in-memory storage (localStorage not available)");
-                    this.useLocalStorage = false;
-                }
-                
-                this.data = {
-                    user: null,
-                    savedBooks: [],
-                    moodHistory: []
-                };
-                
-                // Load existing data from localStorage if available
-                if (this.useLocalStorage) {
-                    this.loadFromLocalStorage();
-                }
-            },
-            
-            loadFromLocalStorage() {
-                try {
-                    this.data.user = JSON.parse(localStorage.getItem("sentira_user") || "null");
-                    this.data.savedBooks = JSON.parse(localStorage.getItem("sentira_saved_books") || "[]");
-                    this.data.moodHistory = JSON.parse(localStorage.getItem("sentira_mood_history") || "[]");
-                } catch (e) {
-                    console.error("Error loading from localStorage:", e);
-                    this.data = {
-                        user: null,
-                        savedBooks: [],
-                        moodHistory: []
-                    };
-                }
-            },
-            
-            getItem(key) {
-                return this.data[key] ? JSON.stringify(this.data[key]) : null;
-            },
-            
-            setItem(key, value) {
-                this.data[key] = JSON.parse(value);
-                if (this.useLocalStorage) {
-                    try {
-                        localStorage.setItem(`sentira_${key}`, value);
-                    } catch (e) {
-                        console.error("Error saving to localStorage:", e);
-                    }
-                }
-            },
-            
-            removeItem(key) {
-                delete this.data[key];
-                if (this.useLocalStorage) {
-                    try {
-                        localStorage.removeItem(`sentira_${key}`);
-                    } catch (e) {
-                        console.error("Error removing from localStorage:", e);
-                    }
-                }
-            },
-            
-            clear() {
-                this.data = {
-                    user: null,
-                    savedBooks: [],
-                    moodHistory: []
-                };
-                if (this.useLocalStorage) {
-                    try {
-                        localStorage.removeItem("sentira_user");
-                        localStorage.removeItem("sentira_saved_books");
-                        localStorage.removeItem("sentira_mood_history");
-                    } catch (e) {
-                        console.error("Error clearing localStorage:", e);
-                    }
-                }
-            }
+        // Enhanced Storage with localStorage fallback - FIXED VERSION
+const Storage = {
+    data: {},
+    useLocalStorage: false,
+    
+    init() {
+        // Check if localStorage is available
+        try {
+            localStorage.setItem('sentira_test', 'test');
+            localStorage.removeItem('sentira_test');
+            this.useLocalStorage = true;
+            console.log("Using localStorage for data persistence");
+        } catch (e) {
+            console.log("Using in-memory storage (localStorage not available)");
+            this.useLocalStorage = false;
+        }
+        
+        this.data = {
+            user: null,
+            savedBooks: [],
+            moodHistory: []
         };
-        Storage.init();
+        
+        // Load existing data from localStorage if available
+        if (this.useLocalStorage) {
+            this.loadFromLocalStorage();
+        }
+    },
+    
+    loadFromLocalStorage() {
+        try {
+            const userData = localStorage.getItem("sentira_user");
+            const savedBooksData = localStorage.getItem("sentira_saved_books");
+            const moodHistoryData = localStorage.getItem("sentira_mood_history");
+            
+            this.data.user = userData ? JSON.parse(userData) : null;
+            this.data.savedBooks = savedBooksData ? JSON.parse(savedBooksData) : [];
+            this.data.moodHistory = moodHistoryData ? JSON.parse(moodHistoryData) : [];
+        } catch (e) {
+            console.error("Error loading from localStorage:", e);
+            // Reset to defaults if there's an error
+            this.data = {
+                user: null,
+                savedBooks: [],
+                moodHistory: []
+            };
+        }
+    },
+    
+    getItem(key) {
+        return this.data[key];
+    },
+    
+    setItem(key, value) {
+        this.data[key] = value;
+        if (this.useLocalStorage) {
+            try {
+                localStorage.setItem(`sentira_${key}`, JSON.stringify(value));
+            } catch (e) {
+                console.error("Error saving to localStorage:", e);
+            }
+        }
+    },
+    
+    removeItem(key) {
+        delete this.data[key];
+        if (this.useLocalStorage) {
+            try {
+                localStorage.removeItem(`sentira_${key}`);
+            } catch (e) {
+                console.error("Error removing from localStorage:", e);
+            }
+        }
+    },
+    
+    clear() {
+        this.data = {
+            user: null,
+            savedBooks: [],
+            moodHistory: []
+        };
+        if (this.useLocalStorage) {
+            try {
+                localStorage.removeItem("sentira_user");
+                localStorage.removeItem("sentira_saved_books");
+                localStorage.removeItem("sentira_mood_history");
+            } catch (e) {
+                console.error("Error clearing localStorage:", e);
+            }
+        }
+    }
+};
+Storage.init();
 
         const AppState = {
-            user: null,
-            currentView: "welcome",
-            currentMoodCheckIn: null,
-            recommendations: [],
-            savedBooks: [],
-            currentBook: null,
-            currentSummary: null,
-            audioUrl: null,
-            moodHistory: [],
+    user: null,
+    currentView: "welcome",
+    currentMoodCheckIn: null,
+    recommendations: [],
+    savedBooks: [],
+    currentBook: null,
+    currentSummary: null,
+    audioUrl: null,
+    moodHistory: [],
 
-            init() {
-                this.loadFromStorage();
-                if (this.user) {
-                    this.currentView = "check-in";
-                }
-            },
+    init() {
+        this.loadFromStorage();
+        if (this.user) {
+            this.currentView = "check-in";
+        }
+    },
 
-            loadFromStorage() {
-                this.user = JSON.parse(Storage.getItem("user") || "null");
-                this.savedBooks = JSON.parse(Storage.getItem("saved_books") || "[]");
-                this.moodHistory = JSON.parse(Storage.getItem("mood_history") || "[]");
-            },
+    loadFromStorage() {
+        this.user = Storage.getItem("user");
+        this.savedBooks = Storage.getItem("saved_books") || [];
+        this.moodHistory = Storage.getItem("mood_history") || [];
+    },
 
-            saveUser(userData) {
-                this.user = userData;
-                Storage.setItem("user", JSON.stringify(userData));
-            },
+    saveUser(userData) {
+        this.user = userData;
+        Storage.setItem("user", userData);
+    },
 
-            saveMoodCheckIn(moodData) {
-                this.currentMoodCheckIn = moodData;
-                this.moodHistory.push({
-                    ...moodData,
-                    timestamp: new Date().toISOString()
-                });
-                Storage.setItem("mood_history", JSON.stringify(this.moodHistory));
-            },
+    saveMoodCheckIn(moodData) {
+        this.currentMoodCheckIn = moodData;
+        this.moodHistory.push({
+            ...moodData,
+            timestamp: new Date().toISOString()
+        });
+        Storage.setItem("mood_history", this.moodHistory);
+    },
 
-            saveBook(book) {
-                const idx = this.savedBooks.findIndex(b => b.id === book.id);
-                const saved = { ...book };
-                // normalize completion flag
-                if (saved.completed === undefined) saved.completed = !!saved.completed;
-                if (idx === -1) {
-                    this.savedBooks.push(saved);
-                } else {
-                    // merge properties to preserve previous data
-                    this.savedBooks[idx] = { ...this.savedBooks[idx], ...saved };
-                }
-                Storage.setItem("saved_books", JSON.stringify(this.savedBooks));
-            },
+    saveBook(book) {
+        const idx = this.savedBooks.findIndex(b => b.id === book.id);
+        const saved = { ...book };
+        // normalize completion flag
+        if (saved.completed === undefined) saved.completed = !!saved.completed;
+        if (idx === -1) {
+            this.savedBooks.push(saved);
+        } else {
+            // merge properties to preserve previous data
+            this.savedBooks[idx] = { ...this.savedBooks[idx], ...saved };
+        }
+        Storage.setItem("saved_books", this.savedBooks);
+    },
 
-            removeBook(bookId) {
-                this.savedBooks = this.savedBooks.filter(b => b.id !== bookId);
-                Storage.setItem("saved_books", JSON.stringify(this.savedBooks));
-            },
+    removeBook(bookId) {
+        this.savedBooks = this.savedBooks.filter(b => b.id !== bookId);
+        Storage.setItem("saved_books", this.savedBooks);
+    },
 
-            reset() {
-                Storage.clear();
-                this.user = null;
-                this.savedBooks = [];
-                this.moodHistory = [];
-                this.currentView = "welcome";
-                this.recommendations = [];
-                this.currentMoodCheckIn = null;
-                this.currentBook = null;
-                this.currentSummary = null;
-                this.audioUrl = null;
-            }
-        };
+    reset() {
+        Storage.clear();
+        this.user = null;
+        this.savedBooks = [];
+        this.moodHistory = [];
+        this.currentView = "welcome";
+        this.recommendations = [];
+        this.currentMoodCheckIn = null;
+        this.currentBook = null;
+        this.currentSummary = null;
+        this.audioUrl = null;
+    }
+};
 
         const Router = {
             navigate(view, data = {}) {

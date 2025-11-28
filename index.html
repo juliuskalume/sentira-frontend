@@ -1436,31 +1436,31 @@ Storage.init();
             },
 
             completeOnboarding() {
-                const age = document.getElementById("age").value;
-                const gender = document.getElementById("gender").value;
+    const age = document.getElementById("age").value;
+    const gender = document.getElementById("gender").value;
 
-                const genres = Array.from(document.querySelectorAll("#genreCheckboxes input:checked"))
-                    .map(cb => cb.value);
+    const genres = Array.from(document.querySelectorAll("#genreCheckboxes input:checked"))
+        .map(cb => cb.value);
 
-                const goals = Array.from(document.querySelectorAll("#goalsCheckboxes input:checked"))
-                    .map(cb => cb.value);
+    const goals = Array.from(document.querySelectorAll("#goalsCheckboxes input:checked"))
+        .map(cb => cb.value);
 
-                if (!age || genres.length === 0 || goals.length === 0) {
-                    Views.showModal("Please Complete All Steps", "Please make sure to enter your age and select at least one genre and one goal.");
-                    return;
-                }
+    if (!age) {
+        Views.showModal("Missing Age", "Please enter your age to continue.");
+        return;
+    }
 
-                const userData = {
-                    age: parseInt(age),
-                    gender,
-                    preferredGenres: genres,
-                    goals,
-                    createdAt: new Date().toISOString()
-                };
+    const userData = {
+        age: parseInt(age),
+        gender,
+        preferredGenres: genres, // May be empty
+        goals,                   // May be empty
+        createdAt: new Date().toISOString()
+    };
 
-                AppState.saveUser(userData);
-                Router.navigate("check-in");
-            },
+    AppState.saveUser(userData);
+    Router.navigate("check-in");
+},
 
             checkIn() {
                 return `
@@ -1483,19 +1483,27 @@ Storage.init();
                         <div class="form-group mt-4">
                             <label class="form-label">What are you feeling? (Select all that apply)</label>
                             <div class="mood-tags" id="moodTags">
-                                <div class="mood-tag" data-tag="anxious">😰 Anxious</div>
-                                <div class="mood-tag" data-tag="motivated">💪 Motivated</div>
-                                <div class="mood-tag" data-tag="lonely">😔 Lonely</div>
-                                <div class="mood-tag" data-tag="burnout">🔥 Burned Out</div>
-                                <div class="mood-tag" data-tag="curious">🤔 Curious</div>
-                                <div class="mood-tag" data-tag="hopeful">🌟 Hopeful</div>
-                                <div class="mood-tag" data-tag="sad">😢 Sad</div>
-                                <div class="mood-tag" data-tag="angry">😠 Angry</div>
-                                <div class="mood-tag" data-tag="bored">😑 Bored</div>
-                                <div class="mood-tag" data-tag="excited">🎉 Excited</div>
-                                <div class="mood-tag" data-tag="overwhelmed">🌊 Overwhelmed</div>
-                                <div class="mood-tag" data-tag="peaceful">☮️ Peaceful</div>
-                            </div>
+    <div class="mood-tag" data-tag="happy">😊 Happy</div>
+    <div class="mood-tag" data-tag="sad">😭 Sad</div>
+    <div class="mood-tag" data-tag="excited">😁 Excited</div>
+    <div class="mood-tag" data-tag="anxious">☹️ Anxious</div>
+    <div class="mood-tag" data-tag="enchanted">🧙‍♂️ Enchanted</div>
+    <div class="mood-tag" data-tag="relaxed">🛋️ Relaxed</div>
+    <div class="mood-tag" data-tag="stressed">🏋️‍♂️ Stressed</div>
+    <div class="mood-tag" data-tag="confused">🧩 Confused</div>
+    <div class="mood-tag" data-tag="inspired">💡 Inspired</div>
+    <div class="mood-tag" data-tag="bored">😑 Bored</div>
+    <div class="mood-tag" data-tag="motivated">🧗 Motivated</div>
+    <div class="mood-tag" data-tag="nostalgic">🧑‍🤝‍🧑 Nostalgic</div>
+    <div class="mood-tag" data-tag="grateful">🙏 Grateful</div>
+    <div class="mood-tag" data-tag="curious">☁️ Curious</div>
+    <div class="mood-tag" data-tag="energetic">⚡ Energetic</div>
+    <div class="mood-tag" data-tag="lonely">💬 Lonely</div>
+    <div class="mood-tag" data-tag="tired">🌙 Tired</div>
+    <div class="mood-tag" data-tag="playful">😄 Playful</div>
+    <div class="mood-tag" data-tag="depressed">😞 Depressed</div>
+</div>
+
                         </div>
 
                         <div class="form-group mt-4">
@@ -1540,26 +1548,27 @@ Storage.init();
             },
 
             async submitCheckIn() {
-                const moodScore = parseInt(document.getElementById("moodSlider").value);
-                const selectedTags = Array.from(document.querySelectorAll(".mood-tag.selected"))
-                    .map(tag => tag.dataset.tag);
-                const freeText = document.getElementById("freeText").value.trim();
+    const moodScore = parseInt(document.getElementById("moodSlider").value);
 
-                if (selectedTags.length === 0) {
-                    Views.showModal("Select Your Mood", "Please select at least one mood tag to help us understand how you're feeling.");
-                    return;
-                }
+    const selectedTags = Array.from(
+        document.querySelectorAll(".mood-tag.selected")
+    ).map(tag => tag.dataset.tag);
 
-                const moodData = {
-                    moodScore,
-                    moodTags: selectedTags,
-                    freeText,
-                    timestamp: new Date().toISOString()
-                };
+    const freeText = document.getElementById("freeText").value.trim();
 
-                AppState.saveMoodCheckIn(moodData);
-                Router.navigate("recommendations");
-            },
+    // No more: require mood tags
+    // Completely optional check-in
+
+    const moodData = {
+        moodScore,
+        moodTags: selectedTags,   // may be empty
+        freeText,                 // may be empty
+        timestamp: new Date().toISOString()
+    };
+
+    AppState.saveMoodCheckIn(moodData);
+    Router.navigate("recommendations");
+},
 
             recommendations() {
                     return `

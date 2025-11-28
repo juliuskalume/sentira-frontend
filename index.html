@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,7 +25,7 @@
   <meta name="twitter:description" content="AI-powered mood-based reading companion. Check in with your mood and discover books that truly fit how you feel.">
   <meta name="twitter:image" content="https://sentira.vercel.app/og-image.png">
 
-  <!-- Schema.org JSON-LD -->
+  <!-- Schema.org JSON-LD: WebSite / Organization for homepage -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -42,2260 +43,2200 @@
     }
   }
   </script>
-
-  <!-- PWA / Icons -->
+  
+  <!-- PWA / Icons (adjust if you already have these) -->
   <link rel="icon" href="/icons/icon-192.png">
   <link rel="apple-touch-icon" href="/icons/icon-192.png">
-  <meta name="theme-color" content="#6B2737">
+  <meta name="theme-color" content="#6B2737">  
   <link rel="manifest" href="manifest.json">
 
-  <!-- Fonts / JS libs -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Crimson+Pro:wght@300;400;600&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-
   <style>
-    :root {
-      --burgundy: #6B2737;
-      --deep-wine: #4A1F29;
-      --cream: #F5F1E8;
-      --parchment: #E8DCC4;
-      --gold: #D4AF37;
-      --sage: #8B9D83;
-      --charcoal: #2D2D34;
-    }
-
-    .dark {
-      --burgundy: #9D4E5C;
-      --deep-wine: #6B2737;
-      --cream: #1A1A1F;
-      --parchment: #252530;
-      --gold: #F4D03F;
-      --sage: #A8C5A0;
-      --charcoal: #E8DCC4;
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    /* Prevent images from overflowing on small screens */
-    img {
-      max-width: 100%;
-      height: auto;
-      display: block;
-    }
-
-    body {
-      font-family: 'Crimson Pro', serif;
-      background: var(--cream);
-      color: var(--charcoal);
-      line-height: 1.6;
-      overflow-x: hidden;
-    }
-
-    .dark body {
-      background: var(--cream);
-      color: var(--charcoal);
-    }
-
-    h1, h2, h3, h4 {
-      font-family: 'Playfair Display', serif;
-      font-weight: 600;
-    }
-
-    .app-container {
-      max-width: 100%;
-      margin: 0 auto;
-      min-height: 100vh;
-      background: var(--cream);
-      position: relative;
-      padding-left: 1rem;
-      padding-right: 1rem;
-    }
-
-    @media (min-width: 640px) {
-      .app-container {
-        max-width: 600px;
-        padding-left: 1.5rem;
-        padding-right: 1.5rem;
+      :root {
+          --burgundy: #6B2737;
+          --deep-wine: #4A1F29;
+          --cream: #F5F1E8;
+          --parchment: #E8DCC4;
+          --gold: #D4AF37;
+          --sage: #8B9D83;
+          --charcoal: #2D2D34;
       }
-    }
 
-    @media (min-width: 900px) {
-      .app-container {
-        max-width: 900px;
-        padding-left: 2rem;
-        padding-right: 2rem;
+      .dark {
+          --burgundy: #9D4E5C;
+          --deep-wine: #6B2737;
+          --cream: #1A1A1F;
+          --parchment: #252530;
+          --gold: #F4D03F;
+          --sage: #A8C5A0;
+          --charcoal: #E8DCC4;
       }
-    }
 
-    @media (min-width: 1280px) {
-      .app-container {
-        max-width: 1400px;
-        padding-left: 3rem;
-        padding-right: 3rem;
+      * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
       }
-    }
 
-    @media (min-width: 1600px) {
-      .app-container {
-        max-width: 1600px;
-        padding-left: 4rem;
-        padding-right: 4rem;
+      /* Prevent images from exceeding their containers on small screens */
+      img {
+          max-width: 100%;
+          height: auto;
+          display: block;
       }
-    }
 
-    .dark .app-container {
-      background: var(--cream);
-    }
+      body {
+          font-family: 'Crimson Pro', serif;
+          background: var(--cream);
+          color: var(--charcoal);
+          line-height: 1.6;
+          overflow-x: hidden;
+      }
 
-    .bg-pattern {
-      position: fixed;
-      inset: 0;
-      opacity: 0.03;
-      background-image:
-        repeating-linear-gradient(45deg, var(--burgundy) 0px, var(--burgundy) 1px, transparent 1px, transparent 20px),
-        repeating-linear-gradient(-45deg, var(--burgundy) 0px, var(--burgundy) 1px, transparent 1px, transparent 20px);
-      pointer-events: none;
-      z-index: 0;
-    }
+      .dark body {
+          background: var(--cream);
+          color: var(--charcoal);
+      }
 
-    .content {
-      position: relative;
-      z-index: 1;
-    }
+      h1, h2, h3, h4 {
+          font-family: 'Playfair Display', serif;
+          font-weight: 600;
+      }
 
-    .app-header {
-      background: linear-gradient(135deg, var(--burgundy), var(--deep-wine));
-      color: var(--cream);
-      padding: 1rem 1.5rem;
-      box-shadow: 0 4px 20px rgba(107, 39, 55, 0.15);
-    }
+      .app-container {
+          max-width: 100%;
+          margin: 0 auto;
+          min-height: 100vh;
+          background: var(--cream);
+          position: relative;
+          padding-left: 1rem;
+          padding-right: 1rem;
+      }
 
-    @media (min-width: 640px) {
+      @media (min-width: 640px) {
+          .app-container {
+              max-width: 600px;
+              padding-left: 1.5rem;
+              padding-right: 1.5rem;
+          }
+      }
+
+      /* Wider screens (laptops / larger monitors) */
+      @media (min-width: 900px) {
+          .app-container {
+              max-width: 900px;
+              padding-left: 2rem;
+              padding-right: 2rem;
+          }
+      }
+
+      @media (min-width: 1280px) {
+          .app-container {
+              max-width: 1400px;
+              padding-left: 3rem;
+              padding-right: 3rem;
+          }
+      }
+
+      @media (min-width: 1600px) {
+          .app-container {
+              max-width: 1600px;
+              padding-left: 4rem;
+              padding-right: 4rem;
+          }
+      }
+
+      .dark .app-container {
+          background: var(--cream);
+      }
+
+      .bg-pattern {
+          position: fixed;
+          inset: 0;
+          opacity: 0.03;
+          background-image:
+              repeating-linear-gradient(45deg, var(--burgundy) 0px, var(--burgundy) 1px, transparent 1px, transparent 20px),
+              repeating-linear-gradient(-45deg, var(--burgundy) 0px, var(--burgundy) 1px, transparent 1px, transparent 20px);
+          pointer-events: none;
+          z-index: 0;
+      }
+
+      .content {
+          position: relative;
+          z-index: 1;
+      }
+
       .app-header {
-        padding: 1.5rem;
+          background: linear-gradient(135deg, var(--burgundy), var(--deep-wine));
+          color: var(--cream);
+          padding: 1rem 1.5rem;
+          box-shadow: 0 4px 20px rgba(107, 39, 55, 0.15);
       }
-    }
 
-    .logo {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.5rem;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
+      @media (min-width: 640px) {
+          .app-header {
+              padding: 1.5rem;
+          }
+      }
 
-    @media (min-width: 640px) {
       .logo {
-        font-size: 1.75rem;
+          font-family: 'Playfair Display', serif;
+          font-size: 1.5rem;
+          font-weight: 700;
+          letter-spacing: 0.5px;
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
       }
-    }
 
-    .btn {
-      padding: 0.75rem 1.5rem;
-      border: none;
-      border-radius: 8px;
-      font-family: 'Crimson Pro', serif;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      text-align: center;
-      display: inline-block;
-      width: 100%;
-    }
+      @media (min-width: 640px) {
+          .logo {
+              font-size: 1.75rem;
+          }
+      }
 
-    @media (min-width: 640px) {
       .btn {
-        width: auto;
+          padding: 0.75rem 1.5rem;
+          border: none;
+          border-radius: 8px;
+          font-family: 'Crimson Pro', serif;
+          font-size: 1rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          text-align: center;
+          display: inline-block;
+          width: 100%;
       }
-    }
 
-    .btn-primary {
-      background: var(--burgundy);
-      color: var(--cream);
-      box-shadow: 0 4px 12px rgba(107, 39, 55, 0.2);
-    }
+      @media (min-width: 640px) {
+          .btn {
+              width: auto;
+          }
+      }
 
-    .btn-primary:hover {
-      background: var(--deep-wine);
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(107, 39, 55, 0.3);
-    }
+      .btn-primary {
+          background: var(--burgundy);
+          color: var(--cream);
+          box-shadow: 0 4px 12px rgba(107, 39, 55, 0.2);
+      }
 
-    .btn-secondary {
-      background: var(--parchment);
-      color: var(--burgundy);
-      border: 2px solid var(--burgundy);
-    }
+      .btn-primary:hover {
+          background: var(--deep-wine);
+          transform: translateY(-2px);
+          box-shadow: 0 6px 20px rgba(107, 39, 55, 0.3);
+      }
 
-    .btn-secondary:hover {
-      background: var(--burgundy);
-      color: var(--cream);
-    }
+      .btn-secondary {
+          background: var(--parchment);
+          color: var(--burgundy);
+          border: 2px solid var(--burgundy);
+      }
 
-    .btn-ghost {
-      background: transparent;
-      color: var(--burgundy);
-      text-decoration: underline;
-    }
+      .btn-secondary:hover {
+          background: var(--burgundy);
+          color: var(--cream);
+      }
 
-    .form-group {
-      margin-bottom: 1.5rem;
-    }
+      .btn-ghost {
+          background: transparent;
+          color: var(--burgundy);
+          text-decoration: underline;
+      }
 
-    .form-label {
-      display: block;
-      margin-bottom: 0.5rem;
-      font-weight: 600;
-      color: var(--burgundy);
-    }
+      .form-group {
+          margin-bottom: 1.5rem;
+      }
 
-    .form-input,
-    .form-select,
-    .form-textarea {
-      width: 100%;
-      padding: 0.75rem;
-      border: 2px solid var(--parchment);
-      border-radius: 8px;
-      font-family: 'Crimson Pro', serif;
-      font-size: 16px;
-      background: white;
-      color: var(--charcoal);
-      transition: border-color 0.3s ease;
-    }
+      .form-label {
+          display: block;
+          margin-bottom: 0.5rem;
+          font-weight: 600;
+          color: var(--burgundy);
+      }
 
-    .dark .form-input,
-    .dark .form-select,
-    .dark .form-textarea {
-      background: var(--parchment);
-      border-color: #3a3a45;
-      color: var(--charcoal);
-    }
+      .form-input, .form-select, .form-textarea {
+          width: 100%;
+          padding: 0.75rem;
+          border: 2px solid var(--parchment);
+          border-radius: 8px;
+          font-family: 'Crimson Pro', serif;
+          font-size: 16px;
+          background: white;
+          color: var(--charcoal);
+          transition: border-color 0.3s ease;
+      }
 
-    .form-input:focus,
-    .form-select:focus,
-    .form-textarea:focus {
-      outline: none;
-      border-color: var(--burgundy);
-    }
+      .dark .form-input, .dark .form-select, .dark .form-textarea {
+          background: var(--parchment);
+          border-color: #3a3a45;
+          color: var(--charcoal);
+      }
 
-    .form-textarea {
-      resize: vertical;
-      min-height: 100px;
-    }
+      .form-input:focus, .form-select:focus, .form-textarea:focus {
+          outline: none;
+          border-color: var(--burgundy);
+      }
 
-    .mood-slider {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 100%;
-      height: 8px;
-      border-radius: 5px;
-      background: linear-gradient(to right, #e74c3c, #f39c12, #f1c40f, #2ecc71, #27ae60);
-      outline: none;
-      opacity: 0.9;
-      transition: opacity 0.2s;
-    }
+      .form-textarea {
+          resize: vertical;
+          min-height: 100px;
+      }
 
-    .mood-slider:hover {
-      opacity: 1;
-    }
+      .mood-slider {
+          -webkit-appearance: none;
+          appearance: none;
+          width: 100%;
+          height: 8px;
+          border-radius: 5px;
+          background: linear-gradient(to right, #e74c3c, #f39c12, #f1c40f, #2ecc71, #27ae60);
+          outline: none;
+          opacity: 0.9;
+          transition: opacity 0.2s;
+      }
 
-    .mood-slider::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      background: var(--burgundy);
-      cursor: pointer;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-    }
+      .mood-slider:hover {
+          opacity: 1;
+      }
 
-    .mood-slider::-moz-range-thumb {
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      background: var(--burgundy);
-      cursor: pointer;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-    }
+      .mood-slider::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          appearance: none;
+          width: 24px;
+          height: 24px;
+          border-radius: 50%;
+          background: var(--burgundy);
+          cursor: pointer;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      }
 
-    .mood-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      margin-top: 1rem;
-    }
+      .mood-slider::-moz-range-thumb {
+          width: 24px;
+          height: 24px;
+          border-radius: 50%;
+          background: var(--burgundy);
+          cursor: pointer;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      }
 
-    @media (min-width: 640px) {
       .mood-tags {
-        gap: 0.75rem;
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.5rem;
+          margin-top: 1rem;
       }
-    }
 
-    .mood-tag {
-      padding: 0.5rem 1rem;
-      border-radius: 20px;
-      border: 2px solid var(--parchment);
-      background: white;
-      color: var(--charcoal);
-      font-size: 0.9rem;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      flex: 1 0 auto;
-      text-align: center;
-    }
+      @media (min-width: 640px) {
+          .mood-tags {
+              gap: 0.75rem;
+          }
+      }
 
-    @media (min-width: 640px) {
       .mood-tag {
-        font-size: 0.95rem;
-        flex: 0 1 auto;
+          padding: 0.5rem 1rem;
+          border-radius: 20px;
+          border: 2px solid var(--parchment);
+          background: white;
+          color: var(--charcoal);
+          font-size: 0.9rem;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          flex: 1 0 auto;
+          text-align: center;
       }
-    }
 
-    .dark .mood-tag {
-      background: var(--parchment);
-      border-color: #3a3a45;
-    }
+      @media (min-width: 640px) {
+          .mood-tag {
+              font-size: 0.95rem;
+              flex: 0 1 auto;
+          }
+      }
 
-    .mood-tag:hover {
-      border-color: var(--burgundy);
-    }
+      .dark .mood-tag {
+          background: var(--parchment);
+          border-color: #3a3a45;
+      }
 
-    .mood-tag.selected {
-      background: var(--burgundy);
-      color: var(--cream);
-      border-color: var(--burgundy);
-    }
+      .mood-tag:hover {
+          border-color: var(--burgundy);
+      }
 
-    /* BOOK CARD */
+      .mood-tag.selected {
+          background: var(--burgundy);
+          color: var(--cream);
+          border-color: var(--burgundy);
+      }
 
-    .book-card {
-      background: white;
-      border-radius: 12px;
-      padding: 1rem;
-      margin-bottom: 0;
-      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-      overflow: hidden; /* clip to rounded box */
-      transition: all 0.3s ease;
-      cursor: pointer;
-      animation: fadeInUp 0.5s ease-out;
-    }
-
-    @media (min-width: 640px) {
       .book-card {
-        padding: 1.25rem;
+          background: white;
+          border-radius: 12px;
+          padding: clamp(0.75rem, 1.25vw, 1.25rem);
+          margin-bottom: 0; /* spacing controlled by container gap */
+          box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+          overflow: hidden; /* prevent children from flowing outside the rounded box */
+          transition: all 0.3s ease;
+          cursor: pointer;
+          animation: fadeInUp 0.5s ease-out;
+          width: 100%;
+          max-width: min(1100px, 100%);
+          margin-left: auto;
+          margin-right: auto;
       }
-    }
 
-    .dark .book-card {
-      background: var(--parchment);
-      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
-    }
-
-    .book-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 6px 24px rgba(107, 39, 55, 0.15);
-    }
-
-    /* Internal layout: flex on inner wrapper only */
-    .book-card-inner {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      align-items: flex-start;
-      flex: 1 1 auto;
-    }
-
-    @media (min-width: 640px) {
-      .book-card-inner {
-        flex-direction: row;
+      @media (min-width: 640px) {
+          .book-card { padding: 1.25rem; }
       }
-    }
 
-    .book-meta {
-      flex: 1 1 auto;
-      min-width: 0;
-      overflow-wrap: break-word;
-      word-wrap: break-word;
-      word-break: normal;
-      hyphens: none;
-    }
-
-    .book-desc {
-      font-size: 0.95rem;
-      line-height: 1.4;
-      margin-bottom: 0.5rem;
-      white-space: normal;
-      overflow-wrap: break-word;
-      word-break: normal;
-      hyphens: none;
-    }
-
-    .book-desc.truncate {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      overflow-wrap: anywhere;
-      display: -webkit-box;
-      -webkit-box-orient: vertical;
-      -webkit-line-clamp: 6;
-      line-clamp: 6;
-      max-width: 100%;
-      box-sizing: border-box;
-    }
-
-    .book-desc.expanded {
-      display: block !important;
-      -webkit-line-clamp: unset !important;
-      line-clamp: unset !important;
-      max-height: none !important;
-      overflow: visible !important;
-    }
-
-    .read-more {
-      background: transparent;
-      border: none;
-      color: var(--burgundy);
-      text-decoration: underline;
-      cursor: pointer;
-      padding: 0.25rem 0;
-      font-size: 0.95rem;
-    }
-
-    @media (min-width: 900px) {
-      .book-card {
-        min-height: 220px;
-        padding: 1rem;
+      .dark .book-card {
+          background: var(--parchment);
+          box-shadow: 0 2px 12px rgba(0,0,0,0.2);
       }
-      .book-card-inner {
-        align-items: center;
-      }
-      .book-desc.truncate {
-        -webkit-line-clamp: 8;
-        line-clamp: 8;
-      }
-    }
 
-    @media (min-width: 1280px) {
-      .book-card {
-        min-height: 220px;
+      .book-card:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 6px 24px rgba(107, 39, 55, 0.15);
       }
-      .book-desc.truncate {
-        -webkit-line-clamp: 10;
-        line-clamp: 10;
+
+      /* Book card internal layout and description truncation */
+    .book-card-inner { display: flex; flex-direction: column; gap: 1rem; align-items: flex-start; }
+    .book-meta { flex: 1 1 auto; min-width: 0; overflow-wrap: break-word; word-wrap: break-word; word-break: normal; hyphens: none; }
+    .book-meta h3 { font-size: clamp(1.05rem, 2.2vw, 1.5rem); margin-bottom: 0.35rem; white-space: normal; overflow-wrap: break-word; word-break: normal; }
+    .book-meta p { font-size: clamp(0.85rem, 1.2vw, 1rem); margin-bottom: 0.5rem; opacity: 0.8; }
+    .book-desc { font-size: 0.95rem; line-height: 1.4; margin-bottom: 0.5rem; white-space: normal; overflow-wrap: break-word; word-break: normal; hyphens: none; }
+
+      /* Clamp text to prevent extremely tall cards on larger screens */
+    /* Previously this block truncated descriptions; truncation removed so descriptions can wrap */
+
+      /* Removed read-more/expanded styles to allow full wrapping */
+
+      @media (min-width: 900px) {
+          .book-card { min-height: 220px; padding: 1rem; }
+          .book-card-inner { align-items: center; }
       }
-    }
 
-    @media (min-width: 1600px) {
-      .book-card {
-        min-height: 200px;
+      @media (min-width: 1280px) {
+          .book-card { min-height: 220px; }
       }
-      .book-card-inner {
-        align-items: flex-start;
+
+      /* Single-column list for recommendations and library */
+      #recommendationsContainer, .books-grid {
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
       }
-    }
 
-    #recommendationsContainer,
-    .books-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    @media (min-width: 640px) {
-      .books-grid {
-        gap: 1.25rem;
+      @media (min-width: 1600px) {
+          .book-card { min-height: 200px; }
+          .book-card-inner { align-items: flex-start; }
       }
-    }
 
-    .book-cover {
-      width: clamp(48px, 8vw, 140px);
-      height: auto;
-      aspect-ratio: 2 / 3;
-      object-fit: cover;
-      border-radius: 6px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-      flex: 0 0 auto;
-    }
+      @media (min-width: 640px) {
+          /* switch inner layout to row for wider screens */
+          .book-card-inner { flex-direction: row; }
+      }
 
-    .book-detail-cover {
-      width: 100%;
-      max-width: 150px;
-      height: auto;
-      aspect-ratio: 2 / 3;
-      object-fit: cover;
-      border-radius: 8px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-      margin-bottom: 1.25rem;
-    }
+      /* Each card should be a responsive row (cover + meta) within the single column list */
+      #recommendationsContainer .book-card, .books-grid .book-card {
+          display: flex;
+          flex-direction: column; /* default to column on narrow screens */
+          width: 100%;
+          align-items: flex-start;
+          gap: 0.75rem;
+      }
 
-    @media (min-width: 900px) {
+      /* When there's enough width, show cover left and meta right */
+      @media (min-width: 640px) {
+          #recommendationsContainer .book-card, .books-grid .book-card {
+              flex-direction: row;
+              gap: 1.25rem;
+              align-items: flex-start;
+          }
+      }
+
+      /* Allow inner content area to grow to fill card height so the card actions sit at the bottom if needed */
+    .book-card-inner { flex: 1 1 auto; display: flex; gap: 1rem; align-items: flex-start; }
+
+      .book-cover {
+          width: clamp(48px, 8vw, 140px);
+          max-width: 140px;
+          height: auto;
+          aspect-ratio: 2 / 3;
+          object-fit: cover;
+          border-radius: 6px;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+          flex: 0 0 auto; /* don't allow the cover to shrink & push content out */
+      }
+
+      /* larger cover used in detailed book view */
       .book-detail-cover {
-        max-width: 225px;
+          width: 100%;
+          max-width: 150px;
+          height: auto;
+          aspect-ratio: 2 / 3;
+          object-fit: cover;
+          border-radius: 8px;
+          box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+          margin-bottom: 1.25rem;
       }
-    }
 
-    @media (min-width: 640px) {
-      .book-cover {
-        width: clamp(64px, 6vw, 120px);
+      @media (min-width: 900px) {
+          .book-detail-cover { max-width: 225px; }
       }
-    }
 
-    @media (min-width: 900px) {
-      .book-cover {
-        width: clamp(80px, 5.5vw, 140px);
+      /* cover width scales via clamp(), but these breakpoints fine-tune the scale ranges */
+      @media (min-width: 640px) {
+          .book-cover { width: clamp(64px, 6vw, 120px); }
       }
-    }
 
-    @media (min-width: 1280px) {
-      .book-cover {
-        width: clamp(100px, 4.5vw, 160px);
+      @media (min-width: 900px) {
+          .book-cover { width: clamp(80px, 5.5vw, 140px); }
       }
-    }
 
-    .loading {
-      text-align: center;
-      padding: 2rem 1rem;
-    }
+      @media (min-width: 1280px) {
+          .book-cover { width: clamp(100px, 4.5vw, 160px); }
+      }
 
-    @media (min-width: 640px) {
       .loading {
-        padding: 3rem 1rem;
+          text-align: center;
+          padding: 2rem 1rem;
       }
-    }
 
-    .spinner {
-      width: 48px;
-      height: 48px;
-      border: 4px solid var(--parchment);
-      border-top: 4px solid var(--burgundy);
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      margin: 0 auto 1rem;
-    }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
+      @media (min-width: 640px) {
+          .loading {
+              padding: 3rem 1rem;
+          }
       }
-      to {
-        opacity: 1;
-        transform: translateY(0);
+
+      .spinner {
+          width: 48px;
+          height: 48px;
+          border: 4px solid var(--parchment);
+          border-top: 4px solid var(--burgundy);
+          border-radius: 50%;
+          animation: spin 1s linear infinite;
+          margin: 0 auto 1rem;
       }
-    }
 
-    .progress-bar {
-      width: 100%;
-      height: 6px;
-      background: var(--parchment);
-      border-radius: 3px;
-      overflow: hidden;
-      margin: 1rem 0;
-    }
+      @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+      }
 
-    .progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--burgundy), var(--gold));
-      transition: width 0.3s ease;
-    }
+      @keyframes fadeInUp {
+          from {
+              opacity: 0;
+              transform: translateY(20px);
+          }
+          to {
+              opacity: 1;
+              transform: translateY(0);
+          }
+      }
 
-    .audio-player {
-      background: white;
-      border-radius: 12px;
-      padding: 1rem;
-      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-      margin: 1rem 0;
-    }
+      .progress-bar {
+          width: 100%;
+          height: 6px;
+          background: var(--parchment);
+          border-radius: 3px;
+          overflow: hidden;
+          margin: 1rem 0;
+      }
 
-    @media (min-width: 640px) {
+      .progress-fill {
+          height: 100%;
+          background: linear-gradient(90deg, var(--burgundy), var(--gold));
+          transition: width 0.3s ease;
+      }
+
       .audio-player {
-        padding: 1.5rem;
+          background: white;
+          border-radius: 12px;
+          padding: 1rem;
+          box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+          margin: 1rem 0;
       }
-    }
 
-    .dark .audio-player {
-      background: var(--parchment);
-    }
+      @media (min-width: 640px) {
+          .audio-player {
+              padding: 1.5rem;
+          }
+      }
 
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.6);
-      backdrop-filter: blur(4px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-      animation: fadeIn 0.3s ease;
-      padding: 1rem;
-    }
+      .dark .audio-player {
+          background: var(--parchment);
+      }
 
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
+      .modal-overlay {
+          position: fixed;
+          inset: 0;
+          background: rgba(0, 0, 0, 0.6);
+          backdrop-filter: blur(4px);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 1000;
+          animation: fadeIn 0.3s ease;
+          padding: 1rem;
+      }
 
-    .modal-content {
-      background: var(--cream);
-      border-radius: 16px;
-      padding: 1.5rem;
-      max-width: 500px;
-      width: 100%;
-      max-height: 80vh;
-      overflow-y: auto;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-      animation: slideUp 0.3s ease;
-    }
+      @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+      }
 
-    @media (min-width: 640px) {
       .modal-content {
-        padding: 2rem;
+          background: var(--cream);
+          border-radius: 16px;
+          padding: 1.5rem;
+          max-width: 500px;
+          width: 100%;
+          max-height: 80vh;
+          overflow-y: auto;
+          box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+          animation: slideUp 0.3s ease;
       }
-    }
 
-    @media (min-width: 900px) {
-      .modal-content { max-width: 700px; }
-      .logo { font-size: 2rem; }
-      .responsive-heading { font-size: 2.25rem; }
+      @media (min-width: 640px) {
+          .modal-content {
+              padding: 2rem;
+          }
+      }
+
+      @media (min-width: 900px) {
+          .modal-content { max-width: 700px; }
+          .logo { font-size: 2rem; }
+          .responsive-heading { font-size: 2.25rem; }
+          .nav-bar {
+              position: relative;
+              bottom: auto;
+              box-shadow: none;
+              border-top: none;
+              justify-content: flex-end;
+              padding: 0.5rem 0;
+          }
+          .nav-item { flex: 0 1 auto; margin-left: 0.5rem; margin-right: 0.5rem; }
+      }
+
+      @media (min-width: 1280px) {
+          .modal-content { max-width: 900px; }
+          .logo { font-size: 2.25rem; }
+          .responsive-heading { font-size: 2.5rem; }
+      }
+
+      @keyframes slideUp {
+          from {
+              opacity: 0;
+              transform: translateY(20px);
+          }
+          to {
+              opacity: 1;
+              transform: translateY(0);
+          }
+      }
+
+      .dark .modal-content {
+          background: var(--parchment);
+      }
+
       .nav-bar {
-        position: relative;
-        bottom: auto;
-        box-shadow: none;
-        border-top: none;
-        justify-content: flex-end;
-        padding: 0.5rem 0;
+          position: sticky;
+          bottom: 0;
+          background: white;
+          border-top: 2px solid var(--parchment);
+          display: flex;
+          justify-content: space-around;
+          padding: 0.5rem;
+          box-shadow: 0 -2px 12px rgba(0,0,0,0.08);
       }
+
+      @media (min-width: 640px) {
+          .nav-bar {
+              padding: 0.75rem;
+          }
+      }
+
+      .dark .nav-bar {
+          background: var(--parchment);
+          border-top-color: #3a3a45;
+      }
+
       .nav-item {
-        flex: 0 1 auto;
-        margin-left: 0.5rem;
-        margin-right: 0.5rem;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 0.25rem;
+          padding: 0.5rem;
+          cursor: pointer;
+          color: var(--charcoal);
+          opacity: 0.6;
+          transition: opacity 0.3s ease;
+          font-size: 0.75rem;
+          flex: 1;
       }
-    }
 
-    @media (min-width: 1280px) {
-      .modal-content { max-width: 900px; }
-      .logo { font-size: 2.25rem; }
-      .responsive-heading { font-size: 2.5rem; }
-    }
-
-    @keyframes slideUp {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
+      @media (min-width: 640px) {
+          .nav-item {
+              font-size: 0.85rem;
+              flex: 0 1 auto;
+          }
       }
-      to {
-        opacity: 1;
-        transform: translateY(0);
+
+      .nav-item:hover, .nav-item.active {
+          opacity: 1;
+          color: var(--burgundy);
       }
-    }
 
-    .dark .modal-content {
-      background: var(--parchment);
-    }
+      .hidden { display: none !important; }
+      .text-center { text-align: center; }
 
-    .nav-bar {
-      position: sticky;
-      bottom: 0;
-      background: white;
-      border-top: 2px solid var(--parchment);
-      display: flex;
-      justify-content: space-around;
-      padding: 0.5rem;
-      box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.08);
-    }
+      .mt-1 { margin-top: 0.5rem; }
+      .mt-2 { margin-top: 1rem; }
+      .mt-3 { margin-top: 1.5rem; }
+      .mt-4 { margin-top: 2rem; }
+      .mb-1 { margin-bottom: 0.5rem; }
+      .mb-2 { margin-bottom: 1rem; }
+      .mb-3 { margin-bottom: 1.5rem; }
+      .mb-4 { margin-bottom: 2rem; }
+      .p-1 { padding: 0.5rem; }
+      .p-2 { padding: 1rem; }
+      .p-3 { padding: 1.5rem; }
+      .p-4 { padding: 2rem; }
 
-    @media (min-width: 640px) {
-      .nav-bar {
-        padding: 0.75rem;
+      .summary-content h1, .summary-content h2, .summary-content h3 {
+          margin-top: 1.5rem;
+          margin-bottom: 0.75rem;
+          color: var(--burgundy);
       }
-    }
 
-    .dark .nav-bar {
-      background: var(--parchment);
-      border-top-color: #3a3a45;
-    }
-
-    .nav-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.25rem;
-      padding: 0.5rem;
-      cursor: pointer;
-      color: var(--charcoal);
-      opacity: 0.6;
-      transition: opacity 0.3s ease;
-      font-size: 0.75rem;
-      flex: 1;
-    }
-
-    @media (min-width: 640px) {
-      .nav-item {
-        font-size: 0.85rem;
-        flex: 0 1 auto;
+      .summary-content p {
+          margin-bottom: 1rem;
       }
-    }
 
-    .nav-item:hover,
-    .nav-item.active {
-      opacity: 1;
-      color: var(--burgundy);
-    }
+      .summary-content ul, .summary-content ol {
+          margin-left: 1.5rem;
+          margin-bottom: 1rem;
+      }
 
-    .hidden { display: none !important; }
-    .text-center { text-align: center; }
+      .summary-content blockquote {
+          border-left: 4px solid var(--burgundy);
+          padding-left: 1rem;
+          margin: 1rem 0;
+          font-style: italic;
+          color: var(--burgundy);
+      }
 
-    .mt-1 { margin-top: 0.5rem; }
-    .mt-2 { margin-top: 1rem; }
-    .mt-3 { margin-top: 1.5rem; }
-    .mt-4 { margin-top: 2rem; }
-    .mb-1 { margin-bottom: 0.5rem; }
-    .mb-2 { margin-bottom: 1rem; }
-    .mb-3 { margin-bottom: 1.5rem; }
-    .mb-4 { margin-bottom: 2rem; }
-    .p-1 { padding: 0.5rem; }
-    .p-2 { padding: 1rem; }
-    .p-3 { padding: 1.5rem; }
-    .p-4 { padding: 2rem; }
+      .summary-content code {
+          background: var(--parchment);
+          padding: 0.2rem 0.4rem;
+          border-radius: 4px;
+          font-family: monospace;
+      }
 
-    .summary-content h1,
-    .summary-content h2,
-    .summary-content h3 {
-      margin-top: 1.5rem;
-      margin-bottom: 0.75rem;
-      color: var(--burgundy);
-    }
+      .checkbox-group {
+          display: flex;
+          flex-direction: column;
+          gap: 0.75rem;
+      }
 
-    .summary-content p {
-      margin-bottom: 1rem;
-    }
+      .checkbox-item {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+      }
 
-    .summary-content ul,
-    .summary-content ol {
-      margin-left: 1.5rem;
-      margin-bottom: 1rem;
-    }
+      .checkbox-item input[type="checkbox"] {
+          width: 20px;
+          height: 20px;
+          cursor: pointer;
+          accent-color: var(--burgundy);
+      }
 
-    .summary-content blockquote {
-      border-left: 4px solid var(--burgundy);
-      padding-left: 1rem;
-      margin: 1rem 0;
-      font-style: italic;
-      color: var(--burgundy);
-    }
+      .disclaimer {
+          background: linear-gradient(135deg, rgba(107, 39, 55, 0.1), rgba(74, 31, 41, 0.1));
+          border-left: 4px solid var(--burgundy);
+          padding: 1rem;
+          border-radius: 8px;
+          margin: 1.5rem 0;
+          font-size: 0.9rem;
+      }
 
-    .summary-content code {
-      background: var(--parchment);
-      padding: 0.2rem 0.4rem;
-      border-radius: 4px;
-      font-family: monospace;
-    }
+      .dark .disclaimer {
+          background: linear-gradient(135deg, rgba(157, 78, 92, 0.15), rgba(107, 39, 55, 0.15));
+      }
 
-    .checkbox-group {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-    }
-
-    .checkbox-item {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .checkbox-item input[type="checkbox"] {
-      width: 20px;
-      height: 20px;
-      cursor: pointer;
-      accent-color: var(--burgundy);
-    }
-
-    .disclaimer {
-      background: linear-gradient(135deg, rgba(107, 39, 55, 0.1), rgba(74, 31, 41, 0.1));
-      border-left: 4px solid var(--burgundy);
-      padding: 1rem;
-      border-radius: 8px;
-      margin: 1.5rem 0;
-      font-size: 0.9rem;
-    }
-
-    .dark .disclaimer {
-      background: linear-gradient(135deg, rgba(157, 78, 92, 0.15), rgba(107, 39, 55, 0.15));
-    }
-
-    .site-footer {
-      padding: 1.5rem 1rem;
-      border-top: 1px solid rgba(0, 0, 0, 0.06);
-      font-size: 0.9rem;
-      background: var(--cream);
-    }
-
-    @media (min-width: 640px) {
       .site-footer {
-        padding: 2rem 1.5rem;
+          padding: 1.5rem 1rem;
+          border-top: 1px solid rgba(0,0,0,0.06);
+          font-size: 0.9rem;
+          background: var(--cream);
       }
-    }
 
-    .dark .site-footer {
-      border-top-color: rgba(255, 255, 255, 0.1);
-      background: var(--cream);
-    }
+      @media (min-width: 640px) {
+          .site-footer {
+              padding: 2rem 1.5rem;
+          }
+      }
 
-    .footer-inner {
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-    }
+      .dark .site-footer {
+          border-top-color: rgba(255,255,255,0.1);
+          background: var(--cream);
+      }
 
-    @media (min-width: 640px) {
       .footer-inner {
-        flex-direction: row;
-        flex-wrap: wrap;
-        gap: 2rem;
-        justify-content: space-between;
+          display: flex;
+          flex-direction: column;
+          gap: 1.5rem;
       }
-    }
 
-    .footer-brand {
-      max-width: 100%;
-    }
+      @media (min-width: 640px) {
+          .footer-inner {
+              flex-direction: row;
+              flex-wrap: wrap;
+              gap: 2rem;
+              justify-content: space-between;
+          }
+      }
 
-    @media (min-width: 640px) {
       .footer-brand {
-        max-width: 260px;
+          max-width: 100%;
       }
-    }
 
-    .footer-logo {
-      font-weight: 700;
-      text-decoration: none;
-      color: var(--burgundy);
-    }
+      @media (min-width: 640px) {
+          .footer-brand {
+              max-width: 260px;
+          }
+      }
 
-    .footer-tagline {
-      margin-top: 0.25rem;
-      opacity: 0.8;
-    }
+      .footer-logo {
+          font-weight: 700;
+          text-decoration: none;
+          color: var(--burgundy);
+      }
 
-    .footer-nav {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1.5rem;
-    }
+      .footer-tagline {
+          margin-top: 0.25rem;
+          opacity: 0.8;
+      }
 
-    @media (min-width: 640px) {
       .footer-nav {
-        gap: 2rem;
+          display: flex;
+          flex-wrap: wrap;
+          gap: 1.5rem;
       }
-    }
 
-    .footer-column h3 {
-      margin-bottom: 0.5rem;
-      font-size: 0.9rem;
-      color: var(--burgundy);
-    }
+      @media (min-width: 640px) {
+          .footer-nav {
+              gap: 2rem;
+          }
+      }
 
-    .footer-column ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
+      .footer-column h3 {
+          margin-bottom: 0.5rem;
+          font-size: 0.9rem;
+          color: var(--burgundy);
+      }
 
-    .footer-column li {
-      margin-bottom: 0.25rem;
-    }
+      .footer-column ul {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+      }
 
-    .footer-column a {
-      text-decoration: none;
-      font-size: 0.9rem;
-      opacity: 0.8;
-    }
+      .footer-column li {
+          margin-bottom: 0.25rem;
+      }
 
-    .footer-column a:hover {
-      opacity: 1;
-    }
+      .footer-column a {
+          text-decoration: none;
+          font-size: 0.9rem;
+          opacity: 0.8;
+      }
 
-    .footer-bottom {
-      margin-top: 1.5rem;
-      text-align: center;
-      opacity: 0.7;
-      font-size: 0.8rem;
-    }
+      .footer-column a:hover {
+          opacity: 1;
+      }
 
-    .responsive-padding {
-      padding: 1rem;
-    }
+      .footer-bottom {
+          margin-top: 1.5rem;
+          text-align: center;
+          opacity: 0.7;
+          font-size: 0.8rem;
+      }
 
-    @media (min-width: 640px) {
+      /* Responsive list for book cards (single column) */
+      .books-grid {
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+      }
+
+      @media (min-width: 640px) {
+          .books-grid {
+              gap: 1.25rem;
+          }
+      }
+
+      /* Mobile-first responsive adjustments */
       .responsive-padding {
-        padding: 1.5rem;
+          padding: 1rem;
       }
-    }
 
-    .responsive-text {
-      font-size: 1rem;
-    }
+      @media (min-width: 640px) {
+          .responsive-padding {
+              padding: 1.5rem;
+          }
+      }
 
-    @media (min-width: 640px) {
       .responsive-text {
-        font-size: 1.15rem;
+          font-size: 1rem;
       }
-    }
 
-    .responsive-heading {
-      font-size: 1.5rem;
-    }
+      @media (min-width: 640px) {
+          .responsive-text {
+              font-size: 1.15rem;
+          }
+      }
 
-    @media (min-width: 640px) {
       .responsive-heading {
-        font-size: 2rem;
+          font-size: 1.5rem;
       }
-    }
 
-    .center-block {
-      max-width: 500px;
-      margin-left: auto;
-      margin-right: auto;
-    }
+      @media (min-width: 640px) {
+          .responsive-heading {
+              font-size: 2rem;
+          }
+      }
 
-    @media (min-width: 900px) {
+      /* Center blocks with a reasonable maximum width and responsive increase on larger viewports */
       .center-block {
-        max-width: 900px;
+          max-width: 500px;
+          margin-left: auto;
+          margin-right: auto;
       }
-    }
+
+      @media (min-width: 900px) {
+          .center-block { max-width: 900px; }
+      }
+
+      /* Wider list container used on pages that show many tiles */
+      .list-container { max-width: 1100px; }
+      @media (min-width: 1280px) { .list-container { max-width: 1300px; } }
   </style>
 </head>
 <body>
-  <div class="bg-pattern"></div>
-  <div class="app-container">
-    <div class="content">
-      <header class="app-header" id="appHeader">
-        <div class="logo">
-          <span>📚</span>
-          <span>Sentira</span>
-        </div>
-        <p style="font-size: 0.9rem; margin-top: 0.25rem; opacity: 0.9;">Your mood-based reading companion</p>
-      </header>
+    <div class="bg-pattern"></div>
+    <div class="app-container">
+        <div class="content">
+            <header class="app-header" id="appHeader">
+                <div class="logo">
+                    <span>📚</span>
+                    <span>Sentira</span>
+                </div>
+                <p style="font-size: 0.9rem; margin-top: 0.25rem; opacity: 0.9;">Your mood-based reading companion</p>
+            </header>
 
-      <main id="mainContent" class="responsive-padding" style="min-height: calc(100vh - 200px);">
-        <!-- Content injected by JS -->
-      </main>
+            <main id="mainContent" class="responsive-padding" style="min-height: calc(100vh - 200px);">
+                <!-- Content injected by JS -->
+            </main>
 
-      <footer class="site-footer">
-        <div class="footer-inner">
-          <div class="footer-brand">
-            <a href="/" class="footer-logo">Sentira</a>
-            <p class="footer-tagline">Your mood-based reading companion.</p>
-          </div>
+            <!-- Site-wide footer -->
+            <footer class="site-footer">
+              <div class="footer-inner">
+                <div class="footer-brand">
+                  <a href="/" class="footer-logo">Sentira</a>
+                  <p class="footer-tagline">Your mood-based reading companion.</p>
+                </div>
 
-          <nav class="footer-nav">
-            <div class="footer-column">
-              <h3>Product</h3>
-              <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="https://sentira.vercel.app/about.html">About</a></li>
-                <li><a href="https://sentira.vercel.app/contact.html">Contact</a></li>
-              </ul>
-            </div>
+                <nav class="footer-nav">
+                  <div class="footer-column">
+                    <h3>Product</h3>
+                    <ul>
+                      <li><a href="/">Home</a></li>
+                      <li><a href="https://sentira.vercel.app/about.html">About</a></li>
+                      <li><a href="https://sentira.vercel.app/contact.html">Contact</a></li>
+                    </ul>
+                  </div>
 
-            <div class="footer-column">
-              <h3>Guides</h3>
-              <ul>
-                <li><a href="https://sentira.vercel.app/guides/mood-reading.html">Mood Reading Guide</a></li>
-                <li><a href="https://sentira.vercel.app/guides/book-recommendation-ai.html">AI Book Recommendations</a></li>
-                <li><a href="https://sentira.vercel.app/blog/mood-based-reading-routines.html">Mood-Based Reading Routine</a></li>
-              </ul>
-            </div>
+                  <div class="footer-column">
+                    <h3>Guides</h3>
+                    <ul>
+                      <li><a href="https://sentira.vercel.app/guides/mood-reading.html">Mood Reading Guide</a></li>
+                      <li><a href="https://sentira.vercel.app/guides/book-recommendation-ai.html">AI Book Recommendations</a></li>
+                      <li><a href="https://sentira.vercel.app/blog/mood-based-reading-routines.html">Mood-Based Reading Routine</a></li>
+                    </ul>
+                  </div>
 
-            <div class="footer-column">
-              <h3>Legal</h3>
-              <ul>
-                <li><a href="https://sentira.vercel.app/privacy.html">Privacy Policy</a></li>
-                <li><a href="https://sentira.vercel.app/terms.html">Terms of Service</a></li>
-              </ul>
-            </div>
-          </nav>
-        </div>
+                  <div class="footer-column">
+                    <h3>Legal</h3>
+                    <ul>
+                      <li><a href="https://sentira.vercel.app/privacy.html">Privacy Policy</a></li>
+                      <li><a href="https://sentira.vercel.app/terms.html">Terms of Service</a></li>
+                    </ul>
+                  </div>
+                </nav>
+              </div>
 
-        <div class="footer-bottom">
-          <p>&copy; <span id="year"></span> Sentira. All rights reserved.</p>
-        </div>
-      </footer>
+              <div class="footer-bottom">
+                <p>&copy; <span id="year"></span> Sentira. All rights reserved.</p>
+              </div>
+            </footer>
 
-      <nav class="nav-bar" id="navBar" style="display: none;">
-        <div class="nav-item" data-view="check-in">
-          <span style="font-size: 1.25rem;">🌙</span>
-          <span>Check-in</span>
+            <nav class="nav-bar" id="navBar" style="display: none;">
+                <div class="nav-item" data-view="check-in">
+                    <span style="font-size: 1.25rem;">🌙</span>
+                    <span>Check-in</span>
+                </div>
+                <div class="nav-item" data-view="recommendations">
+                    <span style="font-size: 1.25rem;">✨</span>
+                    <span>Discover</span>
+                </div>
+                <div class="nav-item" data-view="library">
+                    <span style="font-size: 1.25rem;">📖</span>
+                    <span>My Shelf</span>
+                </div>
+                <div class="nav-item" data-view="settings">
+                    <span style="font-size: 1.25rem;">⚙️</span>
+                    <span>Settings</span>
+                </div>
+            </nav>
         </div>
-        <div class="nav-item" data-view="recommendations">
-          <span style="font-size: 1.25rem;">✨</span>
-          <span>Discover</span>
-        </div>
-        <div class="nav-item" data-view="library">
-          <span style="font-size: 1.25rem;">📖</span>
-          <span>My Shelf</span>
-        </div>
-        <div class="nav-item" data-view="settings">
-          <span style="font-size: 1.25rem;">⚙️</span>
-          <span>Settings</span>
-        </div>
-      </nav>
     </div>
-  </div>
 
-  <script>
-    // === CONFIG: backend base URL ===
-    const BACKEND_BASE_URL = "https://sentira-backend.onrender.com";
+    <script>
+        // footer year
+        document.addEventListener("DOMContentLoaded", () => {
+            const yearEl = document.getElementById("year");
+            if (yearEl) yearEl.textContent = new Date().getFullYear();
 
-    // Dark mode detection
-    if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
-      document.documentElement.classList.add("dark");
-    }
-    window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", event => {
-      if (event.matches) {
-        document.documentElement.classList.add("dark");
-      } else {
-        document.documentElement.classList.remove("dark");
-      }
-    });
+            document.querySelectorAll(".nav-item").forEach(item => {
+                item.addEventListener("click", () => {
+                    Router.navigate(item.dataset.view);
+                });
+            });
 
-    // Enhanced Storage with localStorage fallback
-    const Storage = {
-      data: {},
-      useLocalStorage: false,
+            AppState.init();
+            Router.navigate(AppState.currentView);
 
-      init() {
-        try {
-          localStorage.setItem("sentira_test", "test");
-          localStorage.removeItem("sentira_test");
-          this.useLocalStorage = true;
-          console.log("Using localStorage for data persistence");
-        } catch (e) {
-          console.log("Using in-memory storage (localStorage not available)");
-          this.useLocalStorage = false;
-        }
-
-        this.data = {
-          user: null,
-          savedBooks: [],
-          moodHistory: []
-        };
-
-        if (this.useLocalStorage) {
-          this.loadFromLocalStorage();
-        }
-      },
-
-      loadFromLocalStorage() {
-        try {
-          this.data.user = JSON.parse(localStorage.getItem("sentira_user") || "null");
-          this.data.savedBooks = JSON.parse(localStorage.getItem("sentira_saved_books") || "[]");
-          this.data.moodHistory = JSON.parse(localStorage.getItem("sentira_mood_history") || "[]");
-        } catch (e) {
-          console.error("Error loading from localStorage:", e);
-          this.data = {
-            user: null,
-            savedBooks: [],
-            moodHistory: []
-          };
-        }
-      },
-
-      getItem(key) {
-        return this.data[key] ? JSON.stringify(this.data[key]) : null;
-      },
-
-      setItem(key, value) {
-        this.data[key] = JSON.parse(value);
-        if (this.useLocalStorage) {
-          try {
-            localStorage.setItem(`sentira_${key}`, value);
-          } catch (e) {
-            console.error("Error saving to localStorage:", e);
-          }
-        }
-      },
-
-      removeItem(key) {
-        delete this.data[key];
-        if (this.useLocalStorage) {
-          try {
-            localStorage.removeItem(`sentira_${key}`);
-          } catch (e) {
-            console.error("Error removing from localStorage:", e);
-          }
-        }
-      },
-
-      clear() {
-        this.data = {
-          user: null,
-          savedBooks: [],
-          moodHistory: []
-        };
-        if (this.useLocalStorage) {
-          try {
-            localStorage.removeItem("sentira_user");
-            localStorage.removeItem("sentira_saved_books");
-            localStorage.removeItem("sentira_mood_history");
-          } catch (e) {
-            console.error("Error clearing localStorage:", e);
-          }
-        }
-      }
-    };
-    Storage.init();
-
-    const AppState = {
-      user: null,
-      currentView: "welcome",
-      currentMoodCheckIn: null,
-      recommendations: [],
-      savedBooks: [],
-      currentBook: null,
-      currentSummary: null,
-      audioUrl: null,
-      moodHistory: [],
-
-      init() {
-        this.loadFromStorage();
-        if (this.user) {
-          this.currentView = "check-in";
-        }
-      },
-
-      loadFromStorage() {
-        this.user = JSON.parse(Storage.getItem("user") || "null");
-        this.savedBooks = JSON.parse(Storage.getItem("saved_books") || "[]");
-        this.moodHistory = JSON.parse(Storage.getItem("mood_history") || "[]");
-      },
-
-      saveUser(userData) {
-        this.user = userData;
-        Storage.setItem("user", JSON.stringify(userData));
-      },
-
-      saveMoodCheckIn(moodData) {
-        this.currentMoodCheckIn = moodData;
-        this.moodHistory.push({
-          ...moodData,
-          timestamp: new Date().toISOString()
+            // No read-more toggle is needed now; descriptions wrap to multiple lines.
         });
-        Storage.setItem("mood_history", JSON.stringify(this.moodHistory));
-      },
+      
+        // === CONFIG: backend base URL ===
+        const BACKEND_BASE_URL = "https://sentira-backend.onrender.com";
 
-      saveBook(book) {
-        if (!this.savedBooks.find(b => b.id === book.id)) {
-          this.savedBooks.push(book);
-          Storage.setItem("saved_books", JSON.stringify(this.savedBooks));
+        // Dark mode detection
+        if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
+            document.documentElement.classList.add("dark");
         }
-      },
-
-      removeBook(bookId) {
-        this.savedBooks = this.savedBooks.filter(b => b.id !== bookId);
-        Storage.setItem("saved_books", JSON.stringify(this.savedBooks));
-      },
-
-      reset() {
-        Storage.clear();
-        this.user = null;
-        this.savedBooks = [];
-        this.moodHistory = [];
-        this.currentView = "welcome";
-        this.recommendations = [];
-        this.currentMoodCheckIn = null;
-        this.currentBook = null;
-        this.currentSummary = null;
-        this.audioUrl = null;
-      }
-    };
-
-    const Router = {
-      navigate(view, data = {}) {
-        AppState.currentView = view;
-
-        document.querySelectorAll(".nav-item").forEach(item => {
-          item.classList.remove("active");
-          if (item.dataset.view === view) {
-            item.classList.add("active");
-          }
-        });
-
-        this.render(view, data);
-      },
-
-      render(view, data) {
-        const mainContent = document.getElementById("mainContent");
-        const navBar = document.getElementById("navBar");
-
-        if (["welcome", "onboarding"].includes(view)) {
-          navBar.style.display = "none";
-        } else {
-          navBar.style.display = "flex";
-        }
-
-        switch (view) {
-          case "welcome":
-            mainContent.innerHTML = Views.welcome();
-            break;
-          case "onboarding":
-            mainContent.innerHTML = Views.onboarding();
-            Views.initOnboarding();
-            break;
-          case "check-in":
-            mainContent.innerHTML = Views.checkIn();
-            Views.initCheckIn();
-            break;
-          case "recommendations":
-            mainContent.innerHTML = Views.recommendations();
-            Views.initRecommendations();
-            break;
-          case "book-detail":
-            mainContent.innerHTML = Views.bookDetail(data.book);
-            break;
-          case "summary":
-            mainContent.innerHTML = Views.summary(data.book);
-            Views.initSummary(data.book);
-            break;
-          case "library":
-            mainContent.innerHTML = Views.library();
-            break;
-          case "settings":
-            mainContent.innerHTML = Views.settings();
-            break;
-          default:
-            mainContent.innerHTML = "<p>View not found</p>";
-        }
-
-        window.scrollTo(0, 0);
-      }
-    };
-
-    const Views = {
-      welcome() {
-        return `
-          <div style="text-align: center; padding: 2rem 0;">
-            <div style="font-size: 4rem; margin-bottom: 1rem; animation: fadeInUp 0.6s ease-out;">📚</div>
-            <h1 class="responsive-heading" style="margin-bottom: 1rem; animation: fadeInUp 0.6s ease-out 0.1s; animation-fill-mode: both;">Welcome to Sentira</h1>
-            <p class="responsive-text center-block" style="color: var(--burgundy); margin-bottom: 2rem; animation: fadeInUp 0.6s ease-out 0.2s; animation-fill-mode: both;">
-              Discover books that meet you where you are—emotionally, mentally, and personally.
-            </p>
-
-            <div class="disclaimer" style="animation: fadeInUp 0.6s ease-out 0.3s; animation-fill-mode: both;">
-              <strong>📌 Important Notice:</strong><br>
-              Sentira provides reading suggestions based on your mood and goals. This app is <strong>not a substitute for professional mental health care or therapy</strong>. If you're experiencing a crisis or need professional support, please contact a qualified healthcare provider.
-            </div>
-
-            <button class="btn btn-primary" onclick="Router.navigate('onboarding')" style="animation: fadeInUp 0.6s ease-out 0.4s; animation-fill-mode: both;">
-              Get Started
-            </button>
-          </div>
-        `;
-      },
-
-      onboarding() {
-        return `
-          <div class="center-block">
-            <h2 class="responsive-heading" style="margin-bottom: 1.5rem; color: var(--burgundy);">Let's Get to Know You</h2>
-
-            <form id="onboardingForm" onsubmit="return false;">
-              <div id="step1" class="onboarding-step">
-                <h3 style="font-size: 1.5rem; margin-bottom: 1rem;">Basic Information</h3>
-
-                <div class="form-group">
-                  <label class="form-label">Your Age *</label>
-                  <input type="number" class="form-input" id="age" min="13" max="120" required>
-                </div>
-
-                <div class="form-group">
-                  <label class="form-label">Gender (Optional)</label>
-                  <select class="form-select" id="gender">
-                    <option value="">Prefer not to say</option>
-                    <option value="female">Female</option>
-                    <option value="male">Male</option>
-                    <option value="non-binary">Non-binary</option>
-                    <option value="other">Other</option>
-                  </select>
-                </div>
-
-                <button type="button" class="btn btn-primary" style="width: 100%;" onclick="Views.nextOnboardingStep(2)">
-                  Continue
-                </button>
-              </div>
-
-              <div id="step2" class="onboarding-step hidden">
-                <h3 style="font-size: 1.5rem; margin-bottom: 1rem;">Reading Preferences</h3>
-
-                <div class="form-group">
-                  <label class="form-label">What genres interest you? (Select all that apply)</label>
-                  <div class="checkbox-group" id="genreCheckboxes">
-                    <label class="checkbox-item">
-                      <input type="checkbox" value="self-help"> Self-Help & Personal Development
-                    </label>
-                    <label class="checkbox-item">
-                      <input type="checkbox" value="business"> Business & Career
-                    </label>
-                    <label class="checkbox-item">
-                      <input type="checkbox" value="psychology"> Psychology
-                    </label>
-                    <label class="checkbox-item">
-                      <input type="checkbox" value="fiction"> Fiction
-                    </label>
-                    <label class="checkbox-item">
-                      <input type="checkbox" value="biography"> Biography & Memoir
-                    </label>
-                    <label class="checkbox-item">
-                      <input type="checkbox" value="health"> Health & Wellness
-                    </label>
-                    <label class="checkbox-item">
-                      <input type="checkbox" value="creativity"> Creativity & Arts
-                    </label>
-                    <label class="checkbox-item">
-                      <input type="checkbox" value="philosophy"> Philosophy & Spirituality
-                    </label>
-                  </div>
-                </div>
-
-                <div style="display: flex; gap: 1rem;">
-                  <button type="button" class="btn btn-secondary" style="flex: 1;" onclick="Views.nextOnboardingStep(1)">
-                    Back
-                  </button>
-                  <button type="button" class="btn btn-primary" style="flex: 1;" onclick="Views.nextOnboardingStep(3)">
-                    Continue
-                  </button>
-                </div>
-              </div>
-
-              <div id="step3" class="onboarding-step hidden">
-                <h3 style="font-size: 1.5rem; margin-bottom: 1rem;">Your Goals</h3>
-
-                <div class="form-group">
-                  <label class="form-label">What would you like to work on? (Select all that apply)</label>
-                  <div class="checkbox-group" id="goalsCheckboxes">
-                    <label class="checkbox-item">
-                      <input type="checkbox" value="focus"> Improve focus and discipline
-                    </label>
-                    <label class="checkbox-item">
-                      <input type="checkbox" value="confidence"> Boost confidence
-                    </label>
-                    <label class="checkbox-item">
-                      <input type="checkbox" value="anxiety"> Reduce anxiety/stress
-                    </label>
-                    <label class="checkbox-item">
-                      <input type="checkbox" value="academic"> Do better in school/studies
-                    </label>
-                    <label class="checkbox-item">
-                      <input type="checkbox" value="social"> Develop social skills
-                    </label>
-                    <label class="checkbox-item">
-                      <input type="checkbox" value="career"> Career and money
-                    </label>
-                    <label class="checkbox-item">
-                      <input type="checkbox" value="creativity"> Creativity and passion
-                    </label>
-                    <label class="checkbox-item">
-                      <input type="checkbox" value="relationships"> Improve relationships
-                    </label>
-                    <label class="checkbox-item">
-                      <input type="checkbox" value="health"> Physical/mental health
-                    </label>
-                  </div>
-                </div>
-
-                <div style="display: flex; gap: 1rem;">
-                  <button type="button" class="btn btn-secondary" style="flex: 1;" onclick="Views.nextOnboardingStep(2)">
-                    Back
-                  </button>
-                  <button type="button" class="btn btn-primary" style="flex: 1;" onclick="Views.completeOnboarding()">
-                    Complete Setup
-                  </button>
-                </div>
-              </div>
-            </form>
-          </div>
-        `;
-      },
-
-      initOnboarding() {},
-
-      nextOnboardingStep(step) {
-        document.querySelectorAll(".onboarding-step").forEach(s => s.classList.add("hidden"));
-        document.getElementById(`step${step}`).classList.remove("hidden");
-      },
-
-      completeOnboarding() {
-        const age = document.getElementById("age").value;
-        const gender = document.getElementById("gender").value;
-
-        const genres = Array.from(document.querySelectorAll("#genreCheckboxes input:checked"))
-          .map(cb => cb.value);
-
-        const goals = Array.from(document.querySelectorAll("#goalsCheckboxes input:checked"))
-          .map(cb => cb.value);
-
-        if (!age || genres.length === 0 || goals.length === 0) {
-          Views.showModal("Please Complete All Steps", "Please make sure to enter your age and select at least one genre and one goal.");
-          return;
-        }
-
-        const userData = {
-          age: parseInt(age),
-          gender,
-          preferredGenres: genres,
-          goals,
-          createdAt: new Date().toISOString()
-        };
-
-        AppState.saveUser(userData);
-        Router.navigate("check-in");
-      },
-
-      checkIn() {
-        return `
-          <div class="center-block">
-            <h2 class="responsive-heading" style="margin-bottom: 1rem; color: var(--burgundy);">How are you feeling today?</h2>
-            <p class="responsive-text" style="margin-bottom: 2rem; color: var(--charcoal); opacity: 0.8;">
-              Let's check in with your current mood and state of mind. This will help us find books that resonate with you right now.
-            </p>
-
-            <div class="form-group">
-              <label class="form-label">Mood Level</label>
-              <input type="range" class="mood-slider" id="moodSlider" min="1" max="10" value="5">
-              <div style="display: flex; justify-content: space-between; margin-top: 0.5rem; font-size: 0.85rem; opacity: 0.7;">
-                <span>Very Low</span>
-                <span id="moodValue">Neutral (5)</span>
-                <span>Very High</span>
-              </div>
-            </div>
-
-            <div class="form-group mt-4">
-              <label class="form-label">What are you feeling? (Select all that apply)</label>
-              <div class="mood-tags" id="moodTags">
-                <div class="mood-tag" data-tag="anxious">😰 Anxious</div>
-                <div class="mood-tag" data-tag="motivated">💪 Motivated</div>
-                <div class="mood-tag" data-tag="lonely">😔 Lonely</div>
-                <div class="mood-tag" data-tag="burnout">🔥 Burned Out</div>
-                <div class="mood-tag" data-tag="curious">🤔 Curious</div>
-                <div class="mood-tag" data-tag="hopeful">🌟 Hopeful</div>
-                <div class="mood-tag" data-tag="sad">😢 Sad</div>
-                <div class="mood-tag" data-tag="angry">😠 Angry</div>
-                <div class="mood-tag" data-tag="bored">😑 Bored</div>
-                <div class="mood-tag" data-tag="excited">🎉 Excited</div>
-                <div class="mood-tag" data-tag="overwhelmed">🌊 Overwhelmed</div>
-                <div class="mood-tag" data-tag="peaceful">☮️ Peaceful</div>
-              </div>
-            </div>
-
-            <div class="form-group mt-4">
-              <label class="form-label">What's on your mind? (Optional)</label>
-              <textarea class="form-textarea" id="freeText" placeholder="Share what you're thinking or feeling..."></textarea>
-            </div>
-
-            <button class="btn btn-primary" style="width: 100%;" onclick="Views.submitCheckIn()">
-              Get Book Recommendations
-            </button>
-          </div>
-        `;
-      },
-
-      initCheckIn() {
-        const slider = document.getElementById("moodSlider");
-        const moodValue = document.getElementById("moodValue");
-
-        const moodLabels = {
-          1: "Very Low (1)",
-          2: "Low (2)",
-          3: "Somewhat Low (3)",
-          4: "Below Neutral (4)",
-          5: "Neutral (5)",
-          6: "Above Neutral (6)",
-          7: "Somewhat High (7)",
-          8: "High (8)",
-          9: "Very High (9)",
-          10: "Excellent (10)"
-        };
-
-        slider.addEventListener("input", (e) => {
-          moodValue.textContent = moodLabels[e.target.value];
-        });
-
-        const moodTags = document.querySelectorAll(".mood-tag");
-        moodTags.forEach(tag => {
-          tag.addEventListener("click", () => {
-            tag.classList.toggle("selected");
-          });
-        });
-      },
-
-      async submitCheckIn() {
-        const moodScore = parseInt(document.getElementById("moodSlider").value);
-        const selectedTags = Array.from(document.querySelectorAll(".mood-tag.selected"))
-          .map(tag => tag.dataset.tag);
-        const freeText = document.getElementById("freeText").value.trim();
-
-        if (selectedTags.length === 0) {
-          Views.showModal("Select Your Mood", "Please select at least one mood tag to help us understand how you're feeling.");
-          return;
-        }
-
-        const moodData = {
-          moodScore,
-          moodTags: selectedTags,
-          freeText,
-          timestamp: new Date().toISOString()
-        };
-
-        AppState.saveMoodCheckIn(moodData);
-        Router.navigate("recommendations");
-      },
-
-      recommendations() {
-        return `
-          <div>
-            <h2 class="responsive-heading" style="margin-bottom: 1rem; color: var(--burgundy);">Books for You</h2>
-            <p class="responsive-text" style="margin-bottom: 2rem; color: var(--charcoal); opacity: 0.8;">
-              Based on your mood and goals, here are some books that might resonate with you right now.
-            </p>
-
-            <div id="recommendationsContainer">
-              <div class="loading">
-                <div class="spinner"></div>
-                <p>Finding perfect books for your current mood...</p>
-              </div>
-            </div>
-
-            <button class="btn btn-secondary" style="width: 100%; margin-top: 1rem;" onclick="Views.refreshRecommendations()">
-              🔄 Get New Recommendations
-            </button>
-          </div>
-        `;
-      },
-
-      async initRecommendations() {
-        if (AppState.recommendations.length > 0) {
-          Views.displayRecommendations(AppState.recommendations);
-        } else {
-          await Views.fetchRecommendations();
-        }
-      },
-
-      async fetchRecommendations() {
-        const container = document.getElementById("recommendationsContainer");
-
-        try {
-          const user = AppState.user;
-          const mood = AppState.currentMoodCheckIn;
-
-          if (!user || !mood) {
-            container.innerHTML = `
-              <div style="text-align: center; padding: 2rem;">
-                <p style="color: var(--burgundy);">Missing user or mood data. Please complete onboarding and a mood check-in first.</p>
-              </div>
-            `;
-            return;
-          }
-
-          const response = await fetch(\`\${BACKEND_BASE_URL}/api/recommendations\`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ user, mood })
-          });
-
-          const text = await response.text();
-
-          if (!response.ok) {
-            container.innerHTML = `
-              <div style="text-align: center; padding: 2rem;">
-                <p style="color: var(--burgundy); margin-bottom: 0.75rem;">
-                  Error fetching recommendations: <strong>${response.status} ${response.statusText}</strong>
-                </p>
-                <pre style="text-align:left; white-space:pre-wrap; background:var(--parchment); padding:0.75rem; border-radius:8px; max-height:200px; overflow:auto;">
-${text || "(no error body)"}
-                </pre>
-                <button class="btn btn-primary mt-2" onclick="Views.fetchRecommendations()">Try Again</button>
-              </div>
-            `;
-            return;
-          }
-
-          let recommendations;
-          try {
-            recommendations = JSON.parse(text);
-          } catch (e) {
-            container.innerHTML = `
-              <div style="text-align: center; padding: 2rem;">
-                <p style="color: var(--burgundy); margin-bottom: 0.75rem;">
-                  Could not parse JSON from server.
-                </p>
-                <pre style="text-align:left; white-space:pre-wrap; background:var(--parchment); padding:0.75rem; border-radius:8px; max-height:200px; overflow:auto;">
-${text}
-                </pre>
-              </div>
-            `;
-            return;
-          }
-
-          AppState.recommendations = recommendations;
-          Views.displayRecommendations(recommendations);
-        } catch (err) {
-          container.innerHTML = `
-            <div style="text-align: center; padding: 2rem;">
-              <p style="color: var(--burgundy); margin-bottom: 0.75rem;">
-                Network or CORS error:
-              </p>
-              <pre style="text-align:left; white-space:pre-wrap; background:var(--parchment); padding:0.75rem; border-radius:8px; max-height:200px; overflow:auto;">
-${err.message || err}
-              </pre>
-              <button class="btn btn-primary mt-2" onclick="Views.fetchRecommendations()">Try Again</button>
-            </div>
-          `;
-        }
-      },
-
-      displayRecommendations(recommendations) {
-        const container = document.getElementById("recommendationsContainer");
-
-        if (!recommendations || recommendations.length === 0) {
-          container.innerHTML = "<p>No recommendations available. Please try refreshing.</p>";
-          return;
-        }
-
-        container.innerHTML = recommendations.map(book => `
-          <div class="book-card" onclick='Router.navigate("book-detail", {book: ${JSON.stringify(book).replace(/'/g, "&apos;")}})'>
-            <div class="book-card-inner">
-              <img src="${book.coverUrl}" alt="${book.title}" class="book-cover" onerror="this.src='https://via.placeholder.com/80x120?text=Book'">
-              <div class="book-meta">
-                <h3 style="font-size: 1.1rem; margin-bottom: 0.25rem; color: var(--burgundy); line-height: 1.3;">${book.title}</h3>
-                <p style="font-size: 0.9rem; opacity: 0.7; margin-bottom: 0.5rem;">by ${book.author}</p>
-                <p id="desc-${book.id}" class="book-desc truncate">${book.explanation}</p>
-                ${book.explanation && book.explanation.length > 180 ? `<button class="read-more btn-ghost" data-target="desc-${book.id}" aria-controls="desc-${book.id}" type="button" aria-expanded="false">Read more</button>` : ``}
-                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.5rem;">
-                  <span style="background: var(--parchment); padding: 0.25rem 0.5rem; border-radius: 12px; font-size: 0.8rem;">${book.moodAlignment}</span>
-                  ${book.tags.slice(0, 2).map(tag => `
-                    <span style="background: var(--parchment); padding: 0.25rem 0.5rem; border-radius: 12px; font-size: 0.8rem;">${tag}</span>
-                  `).join("")}
-                </div>
-              </div>
-            </div>
-          </div>
-        `).join("");
-      },
-
-      async refreshRecommendations() {
-        AppState.recommendations = [];
-        const container = document.getElementById("recommendationsContainer");
-        container.innerHTML = `
-          <div class="loading">
-            <div class="spinner"></div>
-            <p>Finding new books for you...</p>
-          </div>
-        `;
-        await Views.fetchRecommendations();
-      },
-
-      bookDetail(book) {
-        const isSaved = AppState.savedBooks.some(b => b.id === book.id);
-
-        return `
-          <div class="center-block">
-            <button class="btn btn-ghost mb-2" onclick="Router.navigate('recommendations')">← Back to Recommendations</button>
-
-            <div style="text-align: center; margin-bottom: 2rem;">
-              <img src="${book.coverUrl}" alt="${book.title}" class="book-detail-cover" onerror="this.src='https://via.placeholder.com/150x225?text=Book'">
-              <h2 class="responsive-heading" style="margin-bottom: 0.5rem; color: var(--burgundy);">${book.title}</h2>
-              <p class="responsive-text" style="opacity: 0.7; margin-bottom: 1rem;">by ${book.author}</p>
-              <div style="display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap; margin-bottom: 1.5rem;">
-                <span style="background: var(--parchment); padding: 0.4rem 1rem; border-radius: 16px; font-size: 0.9rem;">${book.genre}</span>
-                <span style="background: var(--burgundy); color: var(--cream); padding: 0.4rem 1rem; border-radius: 16px; font-size: 0.9rem;">${book.moodAlignment}</span>
-              </div>
-            </div>
-
-            <div style="background: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;" class="dark:bg-gray-800">
-              <h3 style="font-size: 1.25rem; margin-bottom: 0.75rem; color: var(--burgundy);">Why This Book for You</h3>
-              <p>${book.explanation}</p>
-            </div>
-
-            <div class="disclaimer mb-3">
-              <strong>📚 About This Book:</strong><br>
-              This book has been selected based on your current mood (${AppState.currentMoodCheckIn && Array.isArray(AppState.currentMoodCheckIn.moodTags) ? AppState.currentMoodCheckIn.moodTags.join(", ") : "your current mood"}) and your goals. The summary you'll read is AI-generated and designed to give you the core ideas in a focused, concise way.
-            </div>
-
-            <div style="display: flex; flex-direction: column; gap: 1rem;">
-              <button class="btn btn-primary" onclick='Router.navigate("summary", {book: ${JSON.stringify(book).replace(/'/g, "&apos;")}})'>
-                📖 Read Summary
-              </button>
-              <button class="btn btn-secondary" onclick="Views.saveBookToLibrary(${JSON.stringify(book).replace(/'/g, "&apos;")})">
-                ${isSaved ? "✓ Saved to Library" : "💾 Save to Library"}
-              </button>
-            </div>
-          </div>
-        `;
-      },
-
-      saveBookToLibrary(book) {
-        AppState.saveBook(book);
-        Views.showModal("Book Saved!", `"${book.title}" has been added to your library.`);
-        Router.navigate("book-detail", { book });
-      },
-
-      summary(book) {
-        return `
-          <div class="center-block">
-            <button class="btn btn-ghost mb-2" onclick='Router.navigate("book-detail", {book: ${JSON.stringify(book).replace(/'/g, "&apos;")}})'>← Back to Book</button>
-
-            <h2 class="responsive-heading" style="margin-bottom: 0.5rem; color: var(--burgundy);">${book.title}</h2>
-            <p style="font-size: 1rem; opacity: 0.7; margin-bottom: 1.5rem;">by ${book.author}</p>
-
-            <div class="progress-bar">
-              <div class="progress-fill" id="summaryProgress" style="width: 0%;"></div>
-            </div>
-
-            <div id="summaryContent" style="margin-top: 2rem;">
-              <div class="loading">
-                <div class="spinner"></div>
-                <p>Generating your personalized summary...</p>
-              </div>
-            </div>
-
-            <div id="summaryActions" class="hidden" style="margin-top: 2rem; display: flex; gap: 0.75rem; flex-direction: column;">
-              <div class="form-group">
-                <label class="form-label" for="voiceSelect">Voice</label>
-                <select id="voiceSelect" class="form-select">
-                  <optgroup label="American English">
-                    <option value="en-us|Mary">Mary (US)</option>
-                    <option value="en-us|John">John (US)</option>
-                    <option value="en-us|Linda">Linda (US)</option>
-                    <option value="en-us|Mike">Mike (US)</option>
-                  </optgroup>
-                  <optgroup label="British English">
-                    <option value="en-gb|Amy">Amy (UK)</option>
-                    <option value="en-gb|Emma">Emma (UK)</option>
-                    <option value="en-gb|Brian">Brian (UK)</option>
-                  </optgroup>
-                </select>
-              </div>
-
-              <button class="btn btn-secondary" onclick="Views.playBrowserTTS()">
-                🗣️ Listen in this browser
-              </button>
-
-              <button class="btn btn-secondary" onclick="Views.generateAudioSummary()">
-                🎧 Listen with selected voice
-              </button>
-
-              <button class="btn btn-ghost" onclick="Views.markSummaryComplete()">
-                ✓ Mark as Completed
-              </button>
-            </div>
-          </div>
-        `;
-      },
-
-      async initSummary(book) {
-        const summaryContent = document.getElementById("summaryContent");
-        const progressFill = document.getElementById("summaryProgress");
-
-        try {
-          const user = AppState.user;
-          const mood = AppState.currentMoodCheckIn;
-
-          if (!user || !mood) {
-            summaryContent.innerHTML = `
-              <div style="text-align: center; padding: 2rem;">
-                <p style="color: var(--burgundy);">Missing user or mood data. Please go back, complete onboarding and mood check-in again.</p>
-              </div>
-            `;
-            return;
-          }
-
-          summaryContent.innerHTML = `
-            <div class="loading">
-              <div class="spinner"></div>
-              <p>Generating your personalized summary...</p>
-            </div>
-          `;
-          progressFill.style.width = "25%";
-
-          const response = await fetch(\`\${BACKEND_BASE_URL}/api/summary\`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ user, mood, book })
-          });
-
-          const text = await response.text();
-
-          if (!response.ok) {
-            summaryContent.innerHTML = `
-              <div style="text-align: center; padding: 2rem;">
-                <p style="color: var(--burgundy); margin-bottom: 0.75rem;">
-                  Error generating summary: <strong>${response.status} ${response.statusText}</strong>
-                </p>
-                <pre style="text-align:left; white-space:pre-wrap; background:var(--parchment); padding:0.75rem; border-radius:8px; max-height:200px; overflow:auto;">
-${text || "(no error body)"}
-                </pre>
-                <button class="btn btn-primary mt-2" onclick='Views.initSummary(${JSON.stringify(book).replace(/'/g, "&apos;")})'>
-                  Try Again
-                </button>
-              </div>
-            `;
-            progressFill.style.width = "0%";
-            return;
-          }
-
-          let data;
-          try {
-            data = JSON.parse(text);
-          } catch (e) {
-            summaryContent.innerHTML = `
-              <div style="text-align: center; padding: 2rem;">
-                <p style="color: var(--burgundy); margin-bottom: 0.75rem;">
-                  Could not parse summary JSON from server.
-                </p>
-                <pre style="text-align:left; white-space:pre-wrap; background:var(--parchment); padding:0.75rem; border-radius:8px; max-height:200px; overflow:auto;">
-${text}
-                </pre>
-              </div>
-            `;
-            progressFill.style.width = "0%";
-            return;
-          }
-
-          const summary = data.summary || "";
-
-          if (!summary) {
-            summaryContent.innerHTML = `
-              <div style="text-align: center; padding: 2rem;">
-                <p style="color: var(--burgundy);">No summary returned from the server.</p>
-              </div>
-            `;
-            progressFill.style.width = "0%";
-            return;
-          }
-
-          AppState.currentSummary = summary;
-
-          summaryContent.innerHTML = `<div class="summary-content">${marked.parse(summary)}</div>`;
-          progressFill.style.width = "100%";
-          document.getElementById("summaryActions").classList.remove("hidden");
-        } catch (err) {
-          summaryContent.innerHTML = `
-            <div style="text-align: center; padding: 2rem;">
-              <p style="color: var(--burgundy); margin-bottom: 0.75rem;">
-                Error generating summary:
-              </p>
-              <pre style="text-align:left; white-space:pre-wrap; background:var(--parchment); padding:0.75rem; border-radius:8px; max-height:200px; overflow:auto;">
-${err.message || err}
-              </pre>
-              <button class="btn btn-primary mt-2" onclick='Views.initSummary(${JSON.stringify(book).replace(/'/g, "&apos;")})'>
-                Try Again
-              </button>
-            </div>
-          `;
-          progressFill.style.width = "0%";
-        }
-      },
-
-      _stripMarkdown(text) {
-        return (text || "")
-          .replace(/#{1,6}\s/g, "")                 // headers
-          .replace(/\*\*/g, "")                     // bold
-          .replace(/\*/g, "")                       // italics
-          .replace(/`/g, "")                        // code
-          .replace(/\[([^\]]+)\]\([^\)]+\)/g, "$1") // links
-          .replace(/>\s?/g, "")                     // blockquotes
-          .trim();
-      },
-
-      playBrowserTTS() {
-        if (!AppState.currentSummary) {
-          Views.showModal("No Summary Available", "Please wait for the summary to finish generating first.");
-          return;
-        }
-
-        if (!("speechSynthesis" in window)) {
-          Views.showModal(
-            "Not Supported",
-            "Your browser does not support text-to-speech. Try a modern browser like Chrome, Edge, Safari, or Firefox."
-          );
-          return;
-        }
-
-        const synth = window.speechSynthesis;
-
-        if (synth.speaking) {
-          synth.cancel();
-          Views.showModal("Stopped", "Stopped reading the summary aloud.");
-          return;
-        }
-
-        const plainText = Views._stripMarkdown(AppState.currentSummary);
-        const utterance = new SpeechSynthesisUtterance(plainText);
-        utterance.rate = 1.0;
-        utterance.pitch = 1.0;
-
-        synth.speak(utterance);
-
-        Views.showModal(
-          "Reading Started",
-          "Your browser is now reading the summary. You can tap the button again to stop it."
-        );
-      },
-
-      async generateAudioSummary() {
-        if (!AppState.currentSummary) {
-          Views.showModal("No Summary Available", "Please wait for the summary to finish generating first.");
-          return;
-        }
-
-        const existing = document.querySelector(".modal-overlay");
-        if (existing) existing.remove();
-
-        const modal = document.createElement("div");
-        modal.className = "modal-overlay";
-        modal.innerHTML = `
-          <div class="modal-content">
-            <h3 style="font-size: 1.5rem; margin-bottom: 1rem; color: var(--burgundy);">Audio</h3>
-            <p style="margin-bottom: 1rem;">
-              Creating an audio version of this summary.
-            </p>
-
-            <div id="audioPlayerContainer">
-              <div class="loading">
-                <div class="spinner"></div>
-                <p>Generating audio...</p>
-              </div>
-            </div>
-
-            <button class="btn btn-ghost mt-3" style="width: 100%;" data-action="close">
-              Close
-            </button>
-          </div>
-        `;
-        document.body.appendChild(modal);
-
-        const container = modal.querySelector("#audioPlayerContainer");
-        const closeBtn = modal.querySelector('[data-action="close"]');
-
-        closeBtn.addEventListener("click", () => {
-          modal.remove();
-        });
-
-        const plainText = Views._stripMarkdown(AppState.currentSummary);
-
-        // Voice selection
-        let hl = "en-us";
-        let voice = "Mary";
-        const select = document.getElementById("voiceSelect");
-        if (select && select.value) {
-          const parts = select.value.split("|");
-          if (parts.length === 2) {
-            hl = parts[0];
-            voice = parts[1];
-          }
-        }
-
-        try {
-          const res = await fetch(\`\${BACKEND_BASE_URL}/tts\`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ text: plainText, hl, voice })
-          });
-
-          if (!res.ok) {
-            const errText = await res.text();
-            container.innerHTML = `
-              <p style="color: var(--burgundy); margin-bottom: 0.75rem;">
-                Error generating audio: <strong>${res.status} ${res.statusText}</strong>
-              </p>
-              <pre style="text-align:left; white-space:pre-wrap; background:var(--parchment); padding:0.75rem; border-radius:8px; max-height:200px; overflow:auto;">
-${errText || "(no error body)"}
-              </pre>
-            `;
-            return;
-          }
-
-          const blob = await res.blob();
-          const url = URL.createObjectURL(blob);
-          AppState.audioUrl = url;
-
-          container.innerHTML = `
-            <div class="audio-player">
-              <audio controls style="width: 100%;" src="${url}">
-                Your browser does not support the audio element.
-              </audio>
-              <p style="margin-top: 1rem; font-size: 0.9rem; opacity: 0.7;">
-                You can change the voice and regenerate if you like a different tone.
-              </p>
-            </div>
-          `;
-        } catch (err) {
-          container.innerHTML = `
-            <p style="color: var(--burgundy); margin-bottom: 0.75rem;">
-              Network error while generating audio:
-            </p>
-            <pre style="text-align:left; white-space:pre-wrap; background:var(--parchment); padding:0.75rem; border-radius:8px; max-height:200px; overflow:auto;">
-${err.message || err}
-            </pre>
-          `;
-        }
-      },
-
-      markSummaryComplete() {
-        Views.showModal("Summary Completed! 🎉", "Great job finishing this summary! The insights you've gained are now part of your reading journey.");
-      },
-
-      library() {
-        const savedBooks = AppState.savedBooks;
-
-        if (savedBooks.length === 0) {
-          return `
-            <div style="text-align: center; padding: 3rem 1rem;">
-              <div style="font-size: 4rem; margin-bottom: 1rem;">📚</div>
-              <h2 class="responsive-heading" style="margin-bottom: 1rem; color: var(--burgundy);">Your Library is Empty</h2>
-              <p class="responsive-text" style="margin-bottom: 2rem; opacity: 0.8;">Save books from your recommendations to build your personal library.</p>
-              <button class="btn btn-primary" onclick="Router.navigate('recommendations')">
-                Discover Books
-              </button>
-            </div>
-          `;
-        }
-
-        return `
-          <div>
-            <h2 class="responsive-heading" style="margin-bottom: 1rem; color: var(--burgundy);">My Library</h2>
-            <p class="responsive-text" style="margin-bottom: 2rem; opacity: 0.8;">Books you've saved for later</p>
-
-            <div class="books-grid">
-              ${savedBooks.map(book => `
-                <div class="book-card" onclick='Router.navigate("book-detail", {book: ${JSON.stringify(book).replace(/'/g, "&apos;")}})'>
-                  <div class="book-card-inner">
-                    <img src="${book.coverUrl}" alt="${book.title}" class="book-cover" onerror="this.src='https://via.placeholder.com/80x120?text=Book'">
-                    <div class="book-meta">
-                      <h3 style="font-size: 1.1rem; margin-bottom: 0.25rem; color: var(--burgundy); line-height: 1.3;">${book.title}</h3>
-                      <p style="font-size: 0.9rem; opacity: 0.7; margin-bottom: 0.5rem;">by ${book.author}</p>
-                      <p id="desc-${book.id}" class="book-desc truncate">${book.explanation}</p>
-                      ${book.explanation && book.explanation.length > 180 ? `<button class="read-more btn-ghost" data-target="desc-${book.id}" aria-controls="desc-${book.id}" type="button" aria-expanded="false">Read more</button>` : ``}
-                    </div>
-                    <button class="btn-ghost" onclick="event.stopPropagation(); Views.removeFromLibrary('${book.id}')" style="padding: 0.5rem; font-size: 1.25rem; flex-shrink: 0;">
-                      🗑️
-                    </button>
-                  </div>
-                </div>
-              `).join("")}
-            </div>
-          </div>
-        `;
-      },
-
-      removeFromLibrary(bookId) {
-        AppState.removeBook(bookId);
-        Router.navigate("library");
-      },
-
-      settings() {
-        const user = AppState.user;
-        const moodHistoryCount = AppState.moodHistory.length;
-
-        return `
-          <div class="center-block">
-            <h2 class="responsive-heading" style="margin-bottom: 2rem; color: var(--burgundy);">Settings</h2>
-
-            <div style="background: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;" class="dark:bg-gray-800">
-              <h3 style="font-size: 1.25rem; margin-bottom: 1rem; color: var(--burgundy);">Your Profile</h3>
-              <div style="margin-bottom: 0.75rem;">
-                <strong>Age:</strong> ${user.age}
-              </div>
-              <div style="margin-bottom: 0.75rem;">
-                <strong>Gender:</strong> ${user.gender || "Not specified"}
-              </div>
-              <div style="margin-bottom: 0.75rem;">
-                <strong>Preferred Genres:</strong> ${user.preferredGenres.join(", ")}
-              </div>
-              <div>
-                <strong>Goals:</strong> ${user.goals.join(", ")}
-              </div>
-            </div>
-
-            <div style="background: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;" class="dark:bg-gray-800">
-              <h3 style="font-size: 1.25rem; margin-bottom: 1rem; color: var(--burgundy);">Reading History</h3>
-              <p style="margin-bottom: 0.5rem;">
-                <strong>Mood check-ins:</strong> ${moodHistoryCount}
-              </p>
-              <p>
-                <strong>Saved books:</strong> ${AppState.savedBooks.length}
-              </p>
-            </div>
-
-            <div class="disclaimer mb-3">
-              <strong>🔒 Privacy & Data:</strong><br>
-              All your data is stored locally on your device. We don't share your mood or personal information with third parties except as necessary for AI processing to generate recommendations.
-            </div>
-
-            <div class="disclaimer mb-3">
-              <strong>⚕️ Important Reminder:</strong><br>
-              Sentira provides reading suggestions, not medical or psychological diagnosis. If you're experiencing serious distress, please contact a qualified mental health professional.
-            </div>
-
-            <button class="btn btn-secondary" style="width: 100%; margin-bottom: 1rem;" onclick="Views.clearMoodHistory()">
-              Clear Mood History
-            </button>
-
-            <button class="btn btn-ghost" style="width: 100%; color: var(--burgundy);" onclick="Views.resetApp()">
-              Reset All Data & Start Over
-            </button>
-          </div>
-        `;
-      },
-
-      clearMoodHistory() {
-        Views.showConfirmDialog(
-          "Are you sure you want to clear your mood history? This action cannot be undone.",
-          () => {
-            AppState.moodHistory = [];
-            Storage.removeItem("mood_history");
-            Router.navigate("settings");
-            Views.showModal("History Cleared", "Your mood history has been cleared.");
-          }
-        );
-      },
-
-      resetApp() {
-        Views.showConfirmDialog(
-          "Are you sure you want to reset all data? This will delete your profile, saved books, and mood history. This action cannot be undone.",
-          () => {
-            AppState.reset();
-            Router.navigate("welcome");
-            Views.showModal("App Reset", "All your data has been cleared. You can start fresh with a new profile.");
-          }
-        );
-      },
-
-      showModal(title, message) {
-        const modal = document.createElement("div");
-        modal.className = "modal-overlay";
-        modal.innerHTML = `
-          <div class="modal-content">
-            <h3 style="font-size: 1.5rem; margin-bottom: 1rem; color: var(--burgundy);">${title}</h3>
-            <p style="margin-bottom: 1.5rem;">${message}</p>
-            <button class="btn btn-primary" style="width: 100%;" onclick="this.closest('.modal-overlay').remove()">
-              OK
-            </button>
-          </div>
-        `;
-        document.body.appendChild(modal);
-      },
-
-      showConfirmDialog(message, onConfirm) {
-        const modal = document.createElement("div");
-        modal.className = "modal-overlay";
-        modal.innerHTML = `
-          <div class="modal-content">
-            <h3 style="font-size: 1.5rem; margin-bottom: 1rem; color: var(--burgundy);">Confirm Action</h3>
-            <p style="margin-bottom: 1.5rem;">${message}</p>
-            <div style="display: flex; gap: 1rem;">
-              <button class="btn btn-secondary confirm-cancel" style="flex: 1;">
-                Cancel
-              </button>
-              <button class="btn btn-primary confirm-ok" style="flex: 1;">
-                Confirm
-              </button>
-            </div>
-          </div>
-        `;
-        document.body.appendChild(modal);
-
-        const cancelBtn = modal.querySelector(".confirm-cancel");
-        const okBtn = modal.querySelector(".confirm-ok");
-
-        const cleanup = () => {
-          if (modal && modal.parentNode) modal.parentNode.removeChild(modal);
-        };
-
-        cancelBtn.addEventListener("click", () => {
-          cleanup();
-        });
-
-        okBtn.addEventListener("click", () => {
-          try {
-            if (typeof onConfirm === "function") {
-              onConfirm();
+        window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", event => {
+            if (event.matches) {
+                document.documentElement.classList.add("dark");
+            } else {
+                document.documentElement.classList.remove("dark");
             }
-          } catch (e) {
-            console.error("Error executing confirm callback:", e);
-          } finally {
-            cleanup();
-          }
         });
-      }
-    };
 
-    // Single DOMContentLoaded for all bootstrapping
-    document.addEventListener("DOMContentLoaded", () => {
-      // Footer year
-      const yearEl = document.getElementById("year");
-      if (yearEl) yearEl.textContent = new Date().getFullYear();
+        // Enhanced Storage with localStorage fallback
+        const Storage = {
+            data: {},
+            useLocalStorage: false,
+            
+            init() {
+                // Check if localStorage is available
+                try {
+                    localStorage.setItem('sentira_test', 'test');
+                    localStorage.removeItem('sentira_test');
+                    this.useLocalStorage = true;
+                    console.log("Using localStorage for data persistence");
+                } catch (e) {
+                    console.log("Using in-memory storage (localStorage not available)");
+                    this.useLocalStorage = false;
+                }
+                
+                this.data = {
+                    user: null,
+                    savedBooks: [],
+                    moodHistory: []
+                };
+                
+                // Load existing data from localStorage if available
+                if (this.useLocalStorage) {
+                    this.loadFromLocalStorage();
+                }
+            },
+            
+            loadFromLocalStorage() {
+                try {
+                    this.data.user = JSON.parse(localStorage.getItem("sentira_user") || "null");
+                    this.data.savedBooks = JSON.parse(localStorage.getItem("sentira_saved_books") || "[]");
+                    this.data.moodHistory = JSON.parse(localStorage.getItem("sentira_mood_history") || "[]");
+                } catch (e) {
+                    console.error("Error loading from localStorage:", e);
+                    this.data = {
+                        user: null,
+                        savedBooks: [],
+                        moodHistory: []
+                    };
+                }
+            },
+            
+            getItem(key) {
+                return this.data[key] ? JSON.stringify(this.data[key]) : null;
+            },
+            
+            setItem(key, value) {
+                this.data[key] = JSON.parse(value);
+                if (this.useLocalStorage) {
+                    try {
+                        localStorage.setItem(`sentira_${key}`, value);
+                    } catch (e) {
+                        console.error("Error saving to localStorage:", e);
+                    }
+                }
+            },
+            
+            removeItem(key) {
+                delete this.data[key];
+                if (this.useLocalStorage) {
+                    try {
+                        localStorage.removeItem(`sentira_${key}`);
+                    } catch (e) {
+                        console.error("Error removing from localStorage:", e);
+                    }
+                }
+            },
+            
+            clear() {
+                this.data = {
+                    user: null,
+                    savedBooks: [],
+                    moodHistory: []
+                };
+                if (this.useLocalStorage) {
+                    try {
+                        localStorage.removeItem("sentira_user");
+                        localStorage.removeItem("sentira_saved_books");
+                        localStorage.removeItem("sentira_mood_history");
+                    } catch (e) {
+                        console.error("Error clearing localStorage:", e);
+                    }
+                }
+            }
+        };
+        Storage.init();
 
-      // Bottom nav
-      document.querySelectorAll(".nav-item").forEach(item => {
-        item.addEventListener("click", () => {
-          Router.navigate(item.dataset.view);
+        const AppState = {
+            user: null,
+            currentView: "welcome",
+            currentMoodCheckIn: null,
+            recommendations: [],
+            savedBooks: [],
+            currentBook: null,
+            currentSummary: null,
+            audioUrl: null,
+            moodHistory: [],
+
+            init() {
+                this.loadFromStorage();
+                if (this.user) {
+                    this.currentView = "check-in";
+                }
+            },
+
+            loadFromStorage() {
+                this.user = JSON.parse(Storage.getItem("user") || "null");
+                this.savedBooks = JSON.parse(Storage.getItem("saved_books") || "[]");
+                this.moodHistory = JSON.parse(Storage.getItem("mood_history") || "[]");
+            },
+
+            saveUser(userData) {
+                this.user = userData;
+                Storage.setItem("user", JSON.stringify(userData));
+            },
+
+            saveMoodCheckIn(moodData) {
+                this.currentMoodCheckIn = moodData;
+                this.moodHistory.push({
+                    ...moodData,
+                    timestamp: new Date().toISOString()
+                });
+                Storage.setItem("mood_history", JSON.stringify(this.moodHistory));
+            },
+
+            saveBook(book) {
+                if (!this.savedBooks.find(b => b.id === book.id)) {
+                    this.savedBooks.push(book);
+                    Storage.setItem("saved_books", JSON.stringify(this.savedBooks));
+                }
+            },
+
+            removeBook(bookId) {
+                this.savedBooks = this.savedBooks.filter(b => b.id !== bookId);
+                Storage.setItem("saved_books", JSON.stringify(this.savedBooks));
+            },
+
+            reset() {
+                Storage.clear();
+                this.user = null;
+                this.savedBooks = [];
+                this.moodHistory = [];
+                this.currentView = "welcome";
+                this.recommendations = [];
+                this.currentMoodCheckIn = null;
+                this.currentBook = null;
+                this.currentSummary = null;
+                this.audioUrl = null;
+            }
+        };
+
+        const Router = {
+            navigate(view, data = {}) {
+                AppState.currentView = view;
+
+                document.querySelectorAll(".nav-item").forEach(item => {
+                    item.classList.remove("active");
+                    if (item.dataset.view === view) {
+                        item.classList.add("active");
+                    }
+                });
+
+                this.render(view, data);
+            },
+
+            render(view, data) {
+                const mainContent = document.getElementById("mainContent");
+                const navBar = document.getElementById("navBar");
+
+                if (["welcome", "onboarding"].includes(view)) {
+                    navBar.style.display = "none";
+                } else {
+                    navBar.style.display = "flex";
+                }
+
+                switch (view) {
+                    case "welcome":
+                        mainContent.innerHTML = Views.welcome();
+                        break;
+                    case "onboarding":
+                        mainContent.innerHTML = Views.onboarding();
+                        Views.initOnboarding();
+                        break;
+                    case "check-in":
+                        mainContent.innerHTML = Views.checkIn();
+                        Views.initCheckIn();
+                        break;
+                    case "recommendations":
+                        mainContent.innerHTML = Views.recommendations();
+                        Views.initRecommendations();
+                        break;
+                    case "book-detail":
+                        mainContent.innerHTML = Views.bookDetail(data.book);
+                        break;
+                    case "summary":
+                        mainContent.innerHTML = Views.summary(data.book);
+                        Views.initSummary(data.book);
+                        break;
+                    case "library":
+                        mainContent.innerHTML = Views.library();
+                        break;
+                    case "settings":
+                        mainContent.innerHTML = Views.settings();
+                        break;
+                    default:
+                        mainContent.innerHTML = "<p>View not found</p>";
+                }
+
+                window.scrollTo(0, 0);
+            }
+        };
+
+        const Views = {
+            welcome() {
+                return `
+                    <div style="text-align: center; padding: 2rem 0;">
+                        <div style="font-size: 4rem; margin-bottom: 1rem; animation: fadeInUp 0.6s ease-out;">📚</div>
+                        <h1 class="responsive-heading" style="margin-bottom: 1rem; animation: fadeInUp 0.6s ease-out 0.1s; animation-fill-mode: both;">Welcome to Sentira</h1>
+                        <p class="responsive-text center-block" style="color: var(--burgundy); margin-bottom: 2rem; animation: fadeInUp 0.6s ease-out 0.2s; animation-fill-mode: both;">
+                            Discover books that meet you where you are—emotionally, mentally, and personally.
+                        </p>
+
+                        <div class="disclaimer" style="animation: fadeInUp 0.6s ease-out 0.3s; animation-fill-mode: both;">
+                            <strong>📌 Important Notice:</strong><br>
+                            Sentira provides reading suggestions based on your mood and goals. This app is <strong>not a substitute for professional mental health care or therapy</strong>. If you're experiencing a crisis or need professional support, please contact a qualified healthcare provider.
+                        </div>
+
+                        <button class="btn btn-primary" onclick="Router.navigate('onboarding')" style="animation: fadeInUp 0.6s ease-out 0.4s; animation-fill-mode: both;">
+                            Get Started
+                        </button>
+                    </div>
+                `;
+            },
+
+            onboarding() {
+                    return `
+                        <div class="center-block list-container">
+                        <h2 class="responsive-heading" style="margin-bottom: 1.5rem; color: var(--burgundy);">Let's Get to Know You</h2>
+
+                        <form id="onboardingForm" onsubmit="return false;">
+                            <div id="step1" class="onboarding-step">
+                                <h3 style="font-size: 1.5rem; margin-bottom: 1rem;">Basic Information</h3>
+
+                                <div class="form-group">
+                                    <label class="form-label">Your Age *</label>
+                                    <input type="number" class="form-input" id="age" min="13" max="120" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label">Gender (Optional)</label>
+                                    <select class="form-select" id="gender">
+                                        <option value="">Prefer not to say</option>
+                                        <option value="female">Female</option>
+                                        <option value="male">Male</option>
+                                        <option value="non-binary">Non-binary</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+
+                                <button type="button" class="btn btn-primary" style="width: 100%;" onclick="Views.nextOnboardingStep(2)">
+                                    Continue
+                                </button>
+                            </div>
+
+                            <div id="step2" class="onboarding-step hidden">
+                                <h3 style="font-size: 1.5rem; margin-bottom: 1rem;">Reading Preferences</h3>
+
+                                <div class="form-group">
+                                    <label class="form-label">What genres interest you? (Select all that apply)</label>
+                                    <div class="checkbox-group" id="genreCheckboxes">
+                                        <label class="checkbox-item">
+                                            <input type="checkbox" value="self-help"> Self-Help & Personal Development
+                                        </label>
+                                        <label class="checkbox-item">
+                                            <input type="checkbox" value="business"> Business & Career
+                                        </label>
+                                        <label class="checkbox-item">
+                                            <input type="checkbox" value="psychology"> Psychology
+                                        </label>
+                                        <label class="checkbox-item">
+                                            <input type="checkbox" value="fiction"> Fiction
+                                        </label>
+                                        <label class="checkbox-item">
+                                            <input type="checkbox" value="biography"> Biography & Memoir
+                                        </label>
+                                        <label class="checkbox-item">
+                                            <input type="checkbox" value="health"> Health & Wellness
+                                        </label>
+                                        <label class="checkbox-item">
+                                            <input type="checkbox" value="creativity"> Creativity & Arts
+                                        </label>
+                                        <label class="checkbox-item">
+                                            <input type="checkbox" value="philosophy"> Philosophy & Spirituality
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div style="display: flex; gap: 1rem;">
+                                    <button type="button" class="btn btn-secondary" style="flex: 1;" onclick="Views.nextOnboardingStep(1)">
+                                        Back
+                                    </button>
+                                    <button type="button" class="btn btn-primary" style="flex: 1;" onclick="Views.nextOnboardingStep(3)">
+                                        Continue
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div id="step3" class="onboarding-step hidden">
+                                <h3 style="font-size: 1.5rem; margin-bottom: 1rem;">Your Goals</h3>
+
+                                <div class="form-group">
+                                    <label class="form-label">What would you like to work on? (Select all that apply)</label>
+                                    <div class="checkbox-group" id="goalsCheckboxes">
+                                        <label class="checkbox-item">
+                                            <input type="checkbox" value="focus"> Improve focus and discipline
+                                        </label>
+                                        <label class="checkbox-item">
+                                            <input type="checkbox" value="confidence"> Boost confidence
+                                        </label>
+                                        <label class="checkbox-item">
+                                            <input type="checkbox" value="anxiety"> Reduce anxiety/stress
+                                        </label>
+                                        <label class="checkbox-item">
+                                            <input type="checkbox" value="academic"> Do better in school/studies
+                                        </label>
+                                        <label class="checkbox-item">
+                                            <input type="checkbox" value="social"> Develop social skills
+                                        </label>
+                                        <label class="checkbox-item">
+                                            <input type="checkbox" value="career"> Career and money
+                                        </label>
+                                        <label class="checkbox-item">
+                                            <input type="checkbox" value="creativity"> Creativity and passion
+                                        </label>
+                                        <label class="checkbox-item">
+                                            <input type="checkbox" value="relationships"> Improve relationships
+                                        </label>
+                                        <label class="checkbox-item">
+                                            <input type="checkbox" value="health"> Physical/mental health
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div style="display: flex; gap: 1rem;">
+                                    <button type="button" class="btn btn-secondary" style="flex: 1;" onclick="Views.nextOnboardingStep(2)">
+                                        Back
+                                    </button>
+                                    <button type="button" class="btn btn-primary" style="flex: 1;" onclick="Views.completeOnboarding()">
+                                        Complete Setup
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                `;
+            },
+
+            initOnboarding() {},
+
+            nextOnboardingStep(step) {
+                document.querySelectorAll(".onboarding-step").forEach(s => s.classList.add("hidden"));
+                document.getElementById(`step${step}`).classList.remove("hidden");
+            },
+
+            completeOnboarding() {
+                const age = document.getElementById("age").value;
+                const gender = document.getElementById("gender").value;
+
+                const genres = Array.from(document.querySelectorAll("#genreCheckboxes input:checked"))
+                    .map(cb => cb.value);
+
+                const goals = Array.from(document.querySelectorAll("#goalsCheckboxes input:checked"))
+                    .map(cb => cb.value);
+
+                if (!age || genres.length === 0 || goals.length === 0) {
+                    Views.showModal("Please Complete All Steps", "Please make sure to enter your age and select at least one genre and one goal.");
+                    return;
+                }
+
+                const userData = {
+                    age: parseInt(age),
+                    gender,
+                    preferredGenres: genres,
+                    goals,
+                    createdAt: new Date().toISOString()
+                };
+
+                AppState.saveUser(userData);
+                Router.navigate("check-in");
+            },
+
+            checkIn() {
+                return `
+                    <div class="center-block list-container">
+                        <h2 class="responsive-heading" style="margin-bottom: 1rem; color: var(--burgundy);">How are you feeling today?</h2>
+                        <p class="responsive-text" style="margin-bottom: 2rem; color: var(--charcoal); opacity: 0.8;">
+                            Let's check in with your current mood and state of mind. This will help us find books that resonate with you right now.
+                        </p>
+
+                        <div class="form-group">
+                            <label class="form-label">Mood Level</label>
+                            <input type="range" class="mood-slider" id="moodSlider" min="1" max="10" value="5">
+                            <div style="display: flex; justify-content: space-between; margin-top: 0.5rem; font-size: 0.85rem; opacity: 0.7;">
+                                <span>Very Low</span>
+                                <span id="moodValue">Neutral (5)</span>
+                                <span>Very High</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group mt-4">
+                            <label class="form-label">What are you feeling? (Select all that apply)</label>
+                            <div class="mood-tags" id="moodTags">
+                                <div class="mood-tag" data-tag="anxious">😰 Anxious</div>
+                                <div class="mood-tag" data-tag="motivated">💪 Motivated</div>
+                                <div class="mood-tag" data-tag="lonely">😔 Lonely</div>
+                                <div class="mood-tag" data-tag="burnout">🔥 Burned Out</div>
+                                <div class="mood-tag" data-tag="curious">🤔 Curious</div>
+                                <div class="mood-tag" data-tag="hopeful">🌟 Hopeful</div>
+                                <div class="mood-tag" data-tag="sad">😢 Sad</div>
+                                <div class="mood-tag" data-tag="angry">😠 Angry</div>
+                                <div class="mood-tag" data-tag="bored">😑 Bored</div>
+                                <div class="mood-tag" data-tag="excited">🎉 Excited</div>
+                                <div class="mood-tag" data-tag="overwhelmed">🌊 Overwhelmed</div>
+                                <div class="mood-tag" data-tag="peaceful">☮️ Peaceful</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group mt-4">
+                            <label class="form-label">What's on your mind? (Optional)</label>
+                            <textarea class="form-textarea" id="freeText" placeholder="Share what you're thinking or feeling..."></textarea>
+                        </div>
+
+                        <button class="btn btn-primary" style="width: 100%;" onclick="Views.submitCheckIn()">
+                            Get Book Recommendations
+                        </button>
+                    </div>
+                `;
+            },
+
+            initCheckIn() {
+                const slider = document.getElementById("moodSlider");
+                const moodValue = document.getElementById("moodValue");
+
+                const moodLabels = {
+                    1: "Very Low (1)",
+                    2: "Low (2)",
+                    3: "Somewhat Low (3)",
+                    4: "Below Neutral (4)",
+                    5: "Neutral (5)",
+                    6: "Above Neutral (6)",
+                    7: "Somewhat High (7)",
+                    8: "High (8)",
+                    9: "Very High (9)",
+                    10: "Excellent (10)"
+                };
+
+                slider.addEventListener("input", (e) => {
+                    moodValue.textContent = moodLabels[e.target.value];
+                });
+
+                const moodTags = document.querySelectorAll(".mood-tag");
+                moodTags.forEach(tag => {
+                    tag.addEventListener("click", () => {
+                        tag.classList.toggle("selected");
+                    });
+                });
+            },
+
+            async submitCheckIn() {
+                const moodScore = parseInt(document.getElementById("moodSlider").value);
+                const selectedTags = Array.from(document.querySelectorAll(".mood-tag.selected"))
+                    .map(tag => tag.dataset.tag);
+                const freeText = document.getElementById("freeText").value.trim();
+
+                if (selectedTags.length === 0) {
+                    Views.showModal("Select Your Mood", "Please select at least one mood tag to help us understand how you're feeling.");
+                    return;
+                }
+
+                const moodData = {
+                    moodScore,
+                    moodTags: selectedTags,
+                    freeText,
+                    timestamp: new Date().toISOString()
+                };
+
+                AppState.saveMoodCheckIn(moodData);
+                Router.navigate("recommendations");
+            },
+
+            recommendations() {
+                    return `
+                        <div class="center-block">
+                        <h2 class="responsive-heading" style="margin-bottom: 1rem; color: var(--burgundy);">Books for You</h2>
+                        <p class="responsive-text" style="margin-bottom: 2rem; color: var(--charcoal); opacity: 0.8;">
+                            Based on your mood and goals, here are some books that might resonate with you right now.
+                        </p>
+
+                        <div id="recommendationsContainer">
+                            <div class="loading">
+                                <div class="spinner"></div>
+                                <p>Finding perfect books for your current mood...</p>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-secondary" style="width: 100%; margin-top: 1rem;" onclick="Views.refreshRecommendations()">
+                            🔄 Get New Recommendations
+                        </button>
+                        </div>
+                    </div>
+                `;
+            },
+
+            async initRecommendations() {
+                if (AppState.recommendations.length > 0) {
+                    Views.displayRecommendations(AppState.recommendations);
+                } else {
+                    await Views.fetchRecommendations();
+                }
+            },
+
+            async fetchRecommendations() {
+                const container = document.getElementById("recommendationsContainer");
+
+                try {
+                    const user = AppState.user;
+                    const mood = AppState.currentMoodCheckIn;
+
+                    if (!user || !mood) {
+                        container.innerHTML = `
+                            <div style="text-align: center; padding: 2rem;">
+                                <p style="color: var(--burgundy);">Missing user or mood data. Please complete onboarding and a mood check-in first.</p>
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    const response = await fetch(`${BACKEND_BASE_URL}/api/recommendations`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ user, mood })
+                    });
+
+                    const text = await response.text();
+
+                    if (!response.ok) {
+                        container.innerHTML = `
+                            <div style="text-align: center; padding: 2rem;">
+                                <p style="color: var(--burgundy); margin-bottom: 0.75rem;">
+                                    Error fetching recommendations: <strong>${response.status} ${response.statusText}</strong>
+                                </p>
+                                <pre style="text-align:left; white-space:pre-wrap; background:var(--parchment); padding:0.75rem; border-radius:8px; max-height:200px; overflow:auto;">
+${text || "(no error body)"}
+                                </pre>
+                                <button class="btn btn-primary mt-2" onclick="Views.fetchRecommendations()">Try Again</button>
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    let recommendations;
+                    try {
+                        recommendations = JSON.parse(text);
+                    } catch (e) {
+                        container.innerHTML = `
+                            <div style="text-align: center; padding: 2rem;">
+                                <p style="color: var(--burgundy); margin-bottom: 0.75rem;">
+                                    Could not parse JSON from server.
+                                </p>
+                                <pre style="text-align:left; white-space:pre-wrap; background:var(--parchment); padding:0.75rem; border-radius:8px; max-height:200px; overflow:auto;">
+${text}
+                                </pre>
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    AppState.recommendations = recommendations;
+                    Views.displayRecommendations(recommendations);
+                } catch (err) {
+                    container.innerHTML = `
+                        <div style="text-align: center; padding: 2rem;">
+                            <p style="color: var(--burgundy); margin-bottom: 0.75rem;">
+                                Network or CORS error:
+                            </p>
+                            <pre style="text-align:left; white-space:pre-wrap; background:var(--parchment); padding:0.75rem; border-radius:8px; max-height:200px; overflow:auto;">
+${err.message || err}
+                            </pre>
+                            <button class="btn btn-primary mt-2" onclick="Views.fetchRecommendations()">Try Again</button>
+                        </div>
+                    `;
+                }
+            },
+
+            displayRecommendations(recommendations) {
+                const container = document.getElementById("recommendationsContainer");
+
+                if (!recommendations || recommendations.length === 0) {
+                    container.innerHTML = "<p>No recommendations available. Please try refreshing.</p>";
+                    return;
+                }
+
+                container.innerHTML = recommendations.map(book => `
+                    <div class="book-card" onclick='Router.navigate("book-detail", {book: ${JSON.stringify(book).replace(/'/g, "&apos;")}})'>
+                        <div class="book-card-inner">
+                            <img src="${book.coverUrl}" alt="${book.title}" class="book-cover" onerror="this.src='https://via.placeholder.com/80x120?text=Book'">
+                            <div class="book-meta">
+                                <h3 style="font-size: 1.1rem; margin-bottom: 0.25rem; color: var(--burgundy); line-height: 1.3;">${book.title}</h3>
+                                <p style="font-size: 0.9rem; opacity: 0.7; margin-bottom: 0.5rem;">by ${book.author}</p>
+                                <p class="book-desc">${book.explanation}</p>
+                                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.5rem;">
+                                    <span style="background: var(--parchment); padding: 0.25rem 0.5rem; border-radius: 12px; font-size: 0.8rem;">${book.moodAlignment}</span>
+                                    ${book.tags.slice(0, 2).map(tag => `
+                                        <span style="background: var(--parchment); padding: 0.25rem 0.5rem; border-radius: 12px; font-size: 0.8rem;">${tag}</span>
+                                    `).join("")}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `).join("");
+            },
+
+            async refreshRecommendations() {
+                AppState.recommendations = [];
+                const container = document.getElementById("recommendationsContainer");
+                container.innerHTML = `
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <p>Finding new books for you...</p>
+                    </div>
+                `;
+                await Views.fetchRecommendations();
+            },
+
+            bookDetail(book) {
+                const isSaved = AppState.savedBooks.some(b => b.id === book.id);
+
+                return `
+                    <div class="center-block list-container">
+                        <button class="btn btn-ghost mb-2" onclick="Router.navigate('recommendations')">← Back to Recommendations</button>
+
+                        <div style="text-align: center; margin-bottom: 2rem;">
+                            <img src="${book.coverUrl}" alt="${book.title}" class="book-detail-cover" onerror="this.src='https://via.placeholder.com/150x225?text=Book'">
+                            <h2 class="responsive-heading" style="margin-bottom: 0.5rem; color: var(--burgundy);">${book.title}</h2>
+                            <p class="responsive-text" style="opacity: 0.7; margin-bottom: 1rem;">by ${book.author}</p>
+                            <div style="display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap; margin-bottom: 1.5rem;">
+                                <span style="background: var(--parchment); padding: 0.4rem 1rem; border-radius: 16px; font-size: 0.9rem;">${book.genre}</span>
+                                <span style="background: var(--burgundy); color: var(--cream); padding: 0.4rem 1rem; border-radius: 16px; font-size: 0.9rem;">${book.moodAlignment}</span>
+                            </div>
+                        </div>
+
+                        <div style="background: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;" class="dark:bg-gray-800">
+                            <h3 style="font-size: 1.25rem; margin-bottom: 0.75rem; color: var(--burgundy);">Why This Book for You</h3>
+                            <p>${book.explanation}</p>
+                        </div>
+
+                        <div class="disclaimer mb-3">
+                            <strong>📚 About This Book:</strong><br>
+                            This book has been selected based on your current mood (${AppState.currentMoodCheckIn && Array.isArray(AppState.currentMoodCheckIn.moodTags) ? AppState.currentMoodCheckIn.moodTags.join(", ") : "your current mood"}) and your goals. The summary you'll read is AI-generated and designed to give you the core ideas in a focused, concise way.
+                        </div>
+
+                        <div style="display: flex; flex-direction: column; gap: 1rem;">
+                            <button class="btn btn-primary" onclick='Router.navigate("summary", {book: ${JSON.stringify(book).replace(/'/g, "&apos;")}})'>
+                                📖 Read Summary
+                            </button>
+                            <button class="btn btn-secondary" onclick="Views.saveBookToLibrary(${JSON.stringify(book).replace(/'/g, "&apos;")})">
+                                ${isSaved ? "✓ Saved to Library" : "💾 Save to Library"}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            },
+
+            saveBookToLibrary(book) {
+                AppState.saveBook(book);
+                Views.showModal("Book Saved!", `"${book.title}" has been added to your library.`);
+                Router.navigate("book-detail", { book });
+            },
+
+            summary(book) {
+                return `
+                    <div class="center-block">
+                        <button class="btn btn-ghost mb-2" onclick='Router.navigate("book-detail", {book: ${JSON.stringify(book).replace(/'/g, "&apos;")}})'>← Back to Book</button>
+
+                        <h2 class="responsive-heading" style="margin-bottom: 0.5rem; color: var(--burgundy);">${book.title}</h2>
+                        <p style="font-size: 1rem; opacity: 0.7; margin-bottom: 1.5rem;">by ${book.author}</p>
+
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="summaryProgress" style="width: 0%;"></div>
+                        </div>
+
+                        <div id="summaryContent" style="margin-top: 2rem;">
+                            <div class="loading">
+                                <div class="spinner"></div>
+                                <p>Generating your personalized summary...</p>
+                            </div>
+                        </div>
+
+                        <div id="summaryActions" class="hidden" style="margin-top: 2rem; display: flex; gap: 0.75rem; flex-direction: column;">
+                            <div class="form-group">
+                                <label class="form-label" for="voiceSelect">Voice</label>
+                                <select id="voiceSelect" class="form-select">
+                                    <optgroup label="American English">
+                                        <option value="en-us|Mary">Mary (US)</option>
+                                        <option value="en-us|John">John (US)</option>
+                                        <option value="en-us|Linda">Linda (US)</option>
+                                        <option value="en-us|Mike">Mike (US)</option>
+                                    </optgroup>
+                                    <optgroup label="British English">
+                                        <option value="en-gb|Amy">Amy (UK)</option>
+                                        <option value="en-gb|Emma">Emma (UK)</option>
+                                        <option value="en-gb|Brian">Brian (UK)</option>
+                                    </optgroup>
+                                </select>
+                            </div>
+
+                            <button class="btn btn-secondary" onclick="Views.playBrowserTTS()">
+                                🗣️ Listen in this browser
+                            </button>
+
+                            <button class="btn btn-secondary" onclick="Views.generateAudioSummary()">
+                                🎧 Listen with selected voice
+                            </button>
+
+                            <button class="btn btn-ghost" onclick="Views.markSummaryComplete()">
+                                ✓ Mark as Completed
+                            </button>
+                        </div>
+                    </div>
+                `;
+            },
+
+            async initSummary(book) {
+                const summaryContent = document.getElementById("summaryContent");
+                const progressFill = document.getElementById("summaryProgress");
+
+                try {
+                    const user = AppState.user;
+                    const mood = AppState.currentMoodCheckIn;
+
+                    if (!user || !mood) {
+                        summaryContent.innerHTML = `
+                            <div style="text-align: center; padding: 2rem;">
+                                <p style="color: var(--burgundy);">Missing user or mood data. Please go back, complete onboarding and mood check-in again.</p>
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    summaryContent.innerHTML = `
+                        <div class="loading">
+                            <div class="spinner"></div>
+                            <p>Generating your personalized summary...</p>
+                        </div>
+                    `;
+                    progressFill.style.width = "25%";
+
+                    const response = await fetch(`${BACKEND_BASE_URL}/api/summary`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ user, mood, book })
+                    });
+
+                    const text = await response.text();
+
+                    if (!response.ok) {
+                        summaryContent.innerHTML = `
+                            <div style="text-align: center; padding: 2rem;">
+                                <p style="color: var(--burgundy); margin-bottom: 0.75rem;">
+                                    Error generating summary: <strong>${response.status} ${response.statusText}</strong>
+                                </p>
+                                <pre style="text-align:left; white-space:pre-wrap; background:var(--parchment); padding:0.75rem; border-radius:8px; max-height:200px; overflow:auto;">
+${text || "(no error body)"}
+                                </pre>
+                                <button class="btn btn-primary mt-2" onclick='Views.initSummary(${JSON.stringify(book).replace(/'/g, "&apos;")})'>
+                                    Try Again
+                                </button>
+                            </div>
+                        `;
+                        progressFill.style.width = "0%";
+                        return;
+                    }
+
+                    let data;
+                    try {
+                        data = JSON.parse(text);
+                    } catch (e) {
+                        summaryContent.innerHTML = `
+                            <div style="text-align: center; padding: 2rem;">
+                                <p style="color: var(--burgundy); margin-bottom: 0.75rem;">
+                                    Could not parse summary JSON from server.
+                                </p>
+                                <pre style="text-align:left; white-space:pre-wrap; background:var(--parchment); padding:0.75rem; border-radius:8px; max-height:200px; overflow:auto;">
+${text}
+                                </pre>
+                            </div>
+                        `;
+                        progressFill.style.width = "0%";
+                        return;
+                    }
+
+                    const summary = data.summary || "";
+
+                    if (!summary) {
+                        summaryContent.innerHTML = `
+                            <div style="text-align: center; padding: 2rem;">
+                                <p style="color: var(--burgundy);">No summary returned from the server.</p>
+                            </div>
+                        `;
+                        progressFill.style.width = "0%";
+                        return;
+                    }
+
+                    AppState.currentSummary = summary;
+
+                    summaryContent.innerHTML = `<div class="summary-content">${marked.parse(summary)}</div>`;
+                    progressFill.style.width = "100%";
+                    document.getElementById("summaryActions").classList.remove("hidden");
+                } catch (err) {
+                    summaryContent.innerHTML = `
+                        <div style="text-align: center; padding: 2rem;">
+                            <p style="color: var(--burgundy); margin-bottom: 0.75rem;">
+                                Error generating summary:
+                            </p>
+                            <pre style="text-align:left; white-space:pre-wrap; background:var(--parchment); padding:0.75rem; border-radius:8px; max-height:200px; overflow:auto;">
+${err.message || err}
+                            </pre>
+                            <button class="btn btn-primary mt-2" onclick='Views.initSummary(${JSON.stringify(book).replace(/'/g, "&apos;")})'>
+                                Try Again
+                            </button>
+                        </div>
+                    `;
+                    progressFill.style.width = "0%";
+                }
+            },
+
+            _stripMarkdown(text) {
+                return (text || "")
+                    .replace(/#{1,6}\s/g, "")                 // headers
+                    .replace(/\*\*/g, "")                     // bold
+                    .replace(/\*/g, "")                       // italics
+                    .replace(/`/g, "")                        // code
+                    .replace(/\[([^\]]+)\]\([^\)]+\)/g, "$1") // links
+                    .replace(/>\s?/g, "")                     // blockquotes
+                    .trim();
+            },
+
+            // Full summary via browser TTS
+            playBrowserTTS() {
+                if (!AppState.currentSummary) {
+                    Views.showModal("No Summary Available", "Please wait for the summary to finish generating first.");
+                    return;
+                }
+
+                if (!("speechSynthesis" in window)) {
+                    Views.showModal(
+                        "Not Supported",
+                        "Your browser does not support text-to-speech. Try a modern browser like Chrome, Edge, Safari, or Firefox."
+                    );
+                    return;
+                }
+
+                const synth = window.speechSynthesis;
+
+                if (synth.speaking) {
+                    synth.cancel();
+                    Views.showModal("Stopped", "Stopped reading the summary aloud.");
+                    return;
+                }
+
+                const plainText = Views._stripMarkdown(AppState.currentSummary);
+                const utterance = new SpeechSynthesisUtterance(plainText);
+                utterance.rate = 1.0;
+                utterance.pitch = 1.0;
+
+                synth.speak(utterance);
+
+                Views.showModal(
+                    "Reading Started",
+                    "Your browser is now reading the summary. You can tap the button again to stop it."
+                );
+            },
+
+            // Full summary via backend TTS with selected voice
+            async generateAudioSummary() {
+                if (!AppState.currentSummary) {
+                    Views.showModal("No Summary Available", "Please wait for the summary to finish generating first.");
+                    return;
+                }
+
+                const existing = document.querySelector(".modal-overlay");
+                if (existing) existing.remove();
+
+                const modal = document.createElement("div");
+                modal.className = "modal-overlay";
+                modal.innerHTML = `
+                    <div class="modal-content">
+                        <h3 style="font-size: 1.5rem; margin-bottom: 1rem; color: var(--burgundy);">Audio</h3>
+                        <p style="margin-bottom: 1rem;">
+                            Creating an audio version of this summary.
+                        </p>
+
+                        <div id="audioPlayerContainer">
+                            <div class="loading">
+                                <div class="spinner"></div>
+                                <p>Generating audio...</p>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-ghost mt-3" style="width: 100%;" data-action="close">
+                            Close
+                        </button>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+
+                const container = modal.querySelector("#audioPlayerContainer");
+                const closeBtn = modal.querySelector('[data-action="close"]');
+
+                closeBtn.addEventListener("click", () => {
+                    modal.remove();
+                });
+
+                const plainText = Views._stripMarkdown(AppState.currentSummary);
+
+                // Voice selection
+                let hl = "en-us";
+                let voice = "Mary";
+                const select = document.getElementById("voiceSelect");
+                if (select && select.value) {
+                    const parts = select.value.split("|");
+                    if (parts.length === 2) {
+                        hl = parts[0];
+                        voice = parts[1];
+                    }
+                }
+
+                try {
+                    const res = await fetch(`${BACKEND_BASE_URL}/tts`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ text: plainText, hl, voice })
+                    });
+
+                    if (!res.ok) {
+                        const errText = await res.text();
+                        container.innerHTML = `
+                            <p style="color: var(--burgundy); margin-bottom: 0.75rem;">
+                                Error generating audio: <strong>${res.status} ${res.statusText}</strong>
+                            </p>
+                            <pre style="text-align:left; white-space:pre-wrap; background:var(--parchment); padding:0.75rem; border-radius:8px; max-height:200px; overflow:auto;">
+${errText || "(no error body)"}
+                            </pre>
+                        `;
+                        return;
+                    }
+
+                    const blob = await res.blob();
+                    const url = URL.createObjectURL(blob);
+                    AppState.audioUrl = url;
+
+                    container.innerHTML = `
+                        <div class="audio-player">
+                            <audio controls style="width: 100%;" src="${url}">
+                                Your browser does not support the audio element.
+                            </audio>
+                            <p style="margin-top: 1rem; font-size: 0.9rem; opacity: 0.7;">
+                                You can change the voice and regenerate if you like a different tone.
+                            </p>
+                        </div>
+                    `;
+                } catch (err) {
+                    container.innerHTML = `
+                        <p style="color: var(--burgundy); margin-bottom: 0.75rem;">
+                            Network error while generating audio:
+                        </p>
+                        <pre style="text-align:left; white-space:pre-wrap; background:var(--parchment); padding:0.75rem; border-radius:8px; max-height:200px; overflow:auto;">
+${err.message || err}
+                        </pre>
+                    `;
+                }
+            },
+
+            markSummaryComplete() {
+                Views.showModal("Summary Completed! 🎉", "Great job finishing this summary! The insights you've gained are now part of your reading journey.");
+            },
+
+            library() {
+                const savedBooks = AppState.savedBooks;
+
+                if (savedBooks.length === 0) {
+                    return `
+                        <div style="text-align: center; padding: 3rem 1rem;">
+                            <div style="font-size: 4rem; margin-bottom: 1rem;">📚</div>
+                            <h2 class="responsive-heading" style="margin-bottom: 1rem; color: var(--burgundy);">Your Library is Empty</h2>
+                            <p class="responsive-text" style="margin-bottom: 2rem; opacity: 0.8;">Save books from your recommendations to build your personal library.</p>
+                            <button class="btn btn-primary" onclick="Router.navigate('recommendations')">
+                                Discover Books
+                            </button>
+                        </div>
+                    `;
+                }
+
+                return `
+                    <div class="center-block list-container">
+                        <h2 class="responsive-heading" style="margin-bottom: 1rem; color: var(--burgundy);">My Library</h2>
+                        <p class="responsive-text" style="margin-bottom: 2rem; opacity: 0.8;">Books you've saved for later</p>
+
+                        <div class="books-grid">
+                            ${savedBooks.map(book => `
+                                <div class="book-card" onclick='Router.navigate("book-detail", {book: ${JSON.stringify(book).replace(/'/g, "&apos;")}})'>
+                                    <div class="book-card-inner">
+                                            <img src="${book.coverUrl}" alt="${book.title}" class="book-cover" onerror="this.src='https://via.placeholder.com/80x120?text=Book'">
+                                            <div class="book-meta">
+                                                <h3 style="font-size: 1.1rem; margin-bottom: 0.25rem; color: var(--burgundy); line-height: 1.3;">${book.title}</h3>
+                                                <p style="font-size: 0.9rem; opacity: 0.7; margin-bottom: 0.5rem;">by ${book.author}</p>
+                                                <p class="book-desc">${book.explanation}</p>
+                                        </div>
+                                        <button class="btn-ghost" onclick="event.stopPropagation(); Views.removeFromLibrary('${book.id}')" style="padding: 0.5rem; font-size: 1.25rem; flex-shrink: 0;">
+                                            🗑️
+                                        </button>
+                                    </div>
+                                </div>
+                            `).join("")}
+                        </div>
+                    </div>
+                `;
+            },
+
+            removeFromLibrary(bookId) {
+                AppState.removeBook(bookId);
+                Router.navigate("library");
+            },
+
+            settings() {
+                const user = AppState.user;
+                const moodHistoryCount = AppState.moodHistory.length;
+
+                return `
+                    <div class="center-block">
+                        <h2 class="responsive-heading" style="margin-bottom: 2rem; color: var(--burgundy);">Settings</h2>
+
+                        <div style="background: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;" class="dark:bg-gray-800">
+                            <h3 style="font-size: 1.25rem; margin-bottom: 1rem; color: var(--burgundy);">Your Profile</h3>
+                            <div style="margin-bottom: 0.75rem;">
+                                <strong>Age:</strong> ${user.age}
+                            </div>
+                            <div style="margin-bottom: 0.75rem;">
+                                <strong>Gender:</strong> ${user.gender || "Not specified"}
+                            </div>
+                            <div style="margin-bottom: 0.75rem;">
+                                <strong>Preferred Genres:</strong> ${user.preferredGenres.join(", ")}
+                            </div>
+                            <div>
+                                <strong>Goals:</strong> ${user.goals.join(", ")}
+                            </div>
+                        </div>
+
+                        <div style="background: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;" class="dark:bg-gray-800">
+                            <h3 style="font-size: 1.25rem; margin-bottom: 1rem; color: var(--burgundy);">Reading History</h3>
+                            <p style="margin-bottom: 0.5rem;">
+                                <strong>Mood check-ins:</strong> ${moodHistoryCount}
+                            </p>
+                            <p>
+                                <strong>Saved books:</strong> ${AppState.savedBooks.length}
+                            </p>
+                        </div>
+
+                        <div class="disclaimer mb-3">
+                            <strong>🔒 Privacy & Data:</strong><br>
+                            All your data is stored locally on your device. We don't share your mood or personal information with third parties except as necessary for AI processing to generate recommendations.
+                        </div>
+
+                        <div class="disclaimer mb-3">
+                            <strong>⚕️ Important Reminder:</strong><br>
+                            Sentira provides reading suggestions, not medical or psychological diagnosis. If you're experiencing serious distress, please contact a qualified mental health professional.
+                        </div>
+
+                        <button class="btn btn-secondary" style="width: 100%; margin-bottom: 1rem;" onclick="Views.clearMoodHistory()">
+                            Clear Mood History
+                        </button>
+
+                        <button class="btn btn-ghost" style="width: 100%; color: var(--burgundy);" onclick="Views.resetApp()">
+                            Reset All Data & Start Over
+                        </button>
+                    </div>
+                `;
+            },
+
+            clearMoodHistory() {
+                Views.showConfirmDialog(
+                    "Are you sure you want to clear your mood history? This action cannot be undone.",
+                    () => {
+                        AppState.moodHistory = [];
+                        Storage.removeItem("mood_history");
+                        Router.navigate("settings");
+                        Views.showModal("History Cleared", "Your mood history has been cleared.");
+                    }
+                );
+            },
+
+            resetApp() {
+                Views.showConfirmDialog(
+                    "Are you sure you want to reset all data? This will delete your profile, saved books, and mood history. This action cannot be undone.",
+                    () => {
+                        AppState.reset();
+                        Router.navigate("welcome");
+                        Views.showModal("App Reset", "All your data has been cleared. You can start fresh with a new profile.");
+                    }
+                );
+            },
+
+            showModal(title, message) {
+                const modal = document.createElement("div");
+                modal.className = "modal-overlay";
+                modal.innerHTML = `
+                    <div class="modal-content">
+                        <h3 style="font-size: 1.5rem; margin-bottom: 1rem; color: var(--burgundy);">${title}</h3>
+                        <p style="margin-bottom: 1.5rem;">${message}</p>
+                        <button class="btn btn-primary" style="width: 100%;" onclick="this.closest('.modal-overlay').remove()">
+                            OK
+                        </button>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+            },
+
+            showConfirmDialog(message, onConfirm) {
+                const modal = document.createElement("div");
+                modal.className = "modal-overlay";
+                modal.innerHTML = `
+                    <div class="modal-content">
+                        <h3 style="font-size: 1.5rem; margin-bottom: 1rem; color: var(--burgundy);">Confirm Action</h3>
+                        <p style="margin-bottom: 1.5rem;">${message}</p>
+                        <div style="display: flex; gap: 1rem;">
+                            <button class="btn btn-secondary confirm-cancel" style="flex: 1;">
+                                Cancel
+                            </button>
+                            <button class="btn btn-primary confirm-ok" style="flex: 1;">
+                                Confirm
+                            </button>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+
+                // Attach event listeners rather than serializing the function into an inline onclick
+                const cancelBtn = modal.querySelector('.confirm-cancel');
+                const okBtn = modal.querySelector('.confirm-ok');
+
+                const cleanup = () => {
+                    if (modal && modal.parentNode) modal.parentNode.removeChild(modal);
+                };
+
+                cancelBtn.addEventListener('click', () => {
+                    cleanup();
+                });
+
+                okBtn.addEventListener('click', () => {
+                    try {
+                        if (typeof onConfirm === 'function') {
+                            onConfirm();
+                        }
+                    } catch (e) {
+                        console.error('Error executing confirm callback:', e);
+                    } finally {
+                        cleanup();
+                    }
+                });
+            }
+        };
+
+        document.addEventListener("DOMContentLoaded", () => {
+            document.querySelectorAll(".nav-item").forEach(item => {
+                item.addEventListener("click", () => {
+                    Router.navigate(item.dataset.view);
+                });
+            });
+
+            AppState.init();
+            Router.navigate(AppState.currentView);
         });
-      });
 
-      // Read-more / show-less toggle (delegated)
-      document.addEventListener("click", (e) => {
-        const btn = e.target.closest(".read-more");
-        if (!btn) return;
-        e.stopPropagation();
-        const targetId = btn.getAttribute("data-target");
-        const desc = document.getElementById(targetId);
-        if (!desc) return;
-        const isExpanded = desc.classList.contains("expanded");
-        if (isExpanded) {
-          desc.classList.remove("expanded");
-          desc.classList.add("truncate");
-          btn.textContent = "Read more";
-          btn.setAttribute("aria-expanded", "false");
-        } else {
-          desc.classList.remove("truncate");
-          desc.classList.add("expanded");
-          btn.textContent = "Show less";
-          btn.setAttribute("aria-expanded", "true");
+        // PWA: service worker
+        if ("serviceWorker" in navigator) {
+            window.addEventListener("load", () => {
+                navigator.serviceWorker
+                    .register("./service-worker.js")
+                    .then(reg => {
+                        console.log("Service worker registered:", reg.scope);
+                    })
+                    .catch(err => {
+                        console.error("Service worker registration failed:", err);
+                    });
+            });
         }
-      });
-
-      AppState.init();
-      Router.navigate(AppState.currentView);
-    });
-
-    // PWA: service worker
-    if ("serviceWorker" in navigator) {
-      window.addEventListener("load", () => {
-        navigator.serviceWorker
-          .register("./service-worker.js")
-          .then(reg => {
-            console.log("Service worker registered:", reg.scope);
-          })
-          .catch(err => {
-            console.error("Service worker registration failed:", err);
-          });
-      });
-    }
-  </script>
+    </script>
 </body>
 </html>

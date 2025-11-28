@@ -471,6 +471,17 @@
           flex: 0 0 auto; /* don't allow the cover to shrink & push content out */
       }
 
+      /* Completed badge */
+      .badge-completed {
+          background: var(--gold);
+          color: var(--burgundy);
+          padding: 0.25rem 0.75rem;
+          border-radius: 12px;
+          font-size: 0.85rem;
+          font-weight: 600;
+          margin-left: 0.5rem;
+      }
+
       /* larger cover used in detailed book view */
       .book-detail-cover {
           width: 100%;
@@ -1167,10 +1178,17 @@
             },
 
             saveBook(book) {
-                if (!this.savedBooks.find(b => b.id === book.id)) {
-                    this.savedBooks.push(book);
-                    Storage.setItem("saved_books", JSON.stringify(this.savedBooks));
+                const idx = this.savedBooks.findIndex(b => b.id === book.id);
+                const saved = { ...book };
+                // normalize completion flag
+                if (saved.completed === undefined) saved.completed = !!saved.completed;
+                if (idx === -1) {
+                    this.savedBooks.push(saved);
+                } else {
+                    // merge properties to preserve previous data
+                    this.savedBooks[idx] = { ...this.savedBooks[idx], ...saved };
                 }
+                Storage.setItem("saved_books", JSON.stringify(this.savedBooks));
             },
 
             removeBook(bookId) {
@@ -1648,7 +1666,10 @@ ${err.message || err}
                         <div class="book-card-inner">
                             <img src="${book.coverUrl}" alt="${book.title}" class="book-cover" onerror="this.src='https://via.placeholder.com/80x120?text=Book'">
                             <div class="book-meta">
-                                <h3 style="font-size: 1.1rem; margin-bottom: 0.25rem; color: var(--burgundy); line-height: 1.3;">${book.title}</h3>
+                                <div style="display:flex; align-items:center; gap:0.5rem; justify-content:flex-start;">
+                                    <h3 style="font-size: 1.1rem; margin-bottom: 0.25rem; color: var(--burgundy); line-height: 1.3;">${book.title}</h3>
+                                    ${((AppState.savedBooks.find(b => b.id === book.id) || {}).completed) ? `<span class="badge-completed">Completed</span>` : ``}
+                                </div>
                                 <p style="font-size: 0.9rem; opacity: 0.7; margin-bottom: 0.5rem;">by ${book.author}</p>
                                 <p class="book-desc">${book.explanation}</p>
                                 <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.5rem;">
@@ -1676,7 +1697,9 @@ ${err.message || err}
             },
 
             bookDetail(book) {
-                const isSaved = AppState.savedBooks.some(b => b.id === book.id);
+                const savedEntry = AppState.savedBooks.find(b => b.id === book.id) || null;
+                const isSaved = !!savedEntry;
+                const isCompleted = savedEntry && savedEntry.completed;
 
                 return `
                     <div class="center-block list-container">
@@ -1684,7 +1707,7 @@ ${err.message || err}
 
                         <div style="text-align: center; margin-bottom: 2rem;">
                             <img src="${book.coverUrl}" alt="${book.title}" class="book-detail-cover" onerror="this.src='https://via.placeholder.com/150x225?text=Book'">
-                            <h2 class="responsive-heading" style="margin-bottom: 0.5rem; color: var(--burgundy);">${book.title}</h2>
+                            <h2 class="responsive-heading" style="margin-bottom: 0.5rem; color: var(--burgundy);">${book.title} ${isSaved && isCompleted ? `<span class="badge-completed">Completed</span>` : ``}</h2>
                             <p class="responsive-text" style="opacity: 0.7; margin-bottom: 1rem;">by ${book.author}</p>
                             <div style="display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap; margin-bottom: 1.5rem;">
                                 <span style="background: var(--parchment); padding: 0.4rem 1rem; border-radius: 16px; font-size: 0.9rem;">${book.genre}</span>
@@ -1707,7 +1730,7 @@ ${err.message || err}
                                 📖 Read Summary
                             </button>
                             <button class="btn btn-secondary" onclick="Views.saveBookToLibrary(${JSON.stringify(book).replace(/'/g, "&apos;")})">
-                                ${isSaved ? "✓ Saved to Library" : "💾 Save to Library"}
+                                ${isSaved ? (isCompleted ? "✓ Completed" : "✓ Saved to Library") : "💾 Save to Library"}
                             </button>
                         </div>
                     </div>
@@ -1717,7 +1740,12 @@ ${err.message || err}
             saveBookToLibrary(book) {
                 AppState.saveBook(book);
                 Views.showModal("Book Saved!", `"${book.title}" has been added to your library.`);
-                Router.navigate("book-detail", { book });
+                // Re-render current view so the 'saved' state is reflected in the UI
+                if (AppState.currentView === 'book-detail') {
+                    Router.navigate('book-detail', { book });
+                } else {
+                    Router.navigate(AppState.currentView);
+                }
             },
 
             summary(book) {
@@ -1774,6 +1802,8 @@ ${err.message || err}
             },
 
             async initSummary(book) {
+                // keep a reference to the current book for summary actions
+                AppState.currentBook = book;
                 const summaryContent = document.getElementById("summaryContent");
                 const progressFill = document.getElementById("summaryProgress");
 
@@ -2025,7 +2055,17 @@ ${err.message || err}
             },
 
             markSummaryComplete() {
-                Views.showModal("Summary Completed! 🎉", "Great job finishing this summary! The insights you've gained are now part of your reading journey.");
+                const book = AppState.currentBook;
+                if (!book) {
+                    Views.showModal("No Book Selected", "Please open a summary from a book and then mark it as completed.");
+                    return;
+                }
+
+                const completedBook = { ...book, completed: true, completedAt: new Date().toISOString() };
+                AppState.saveBook(completedBook);
+                Views.showModal("Summary Completed! 🎉", "Great job finishing this summary for \"" + book.title + "\"! The insights you've gained are now part of your reading journey.");
+                // re-render to update UI state
+                Router.navigate('library');
             },
 
             library() {
@@ -2055,7 +2095,10 @@ ${err.message || err}
                                     <div class="book-card-inner">
                                             <img src="${book.coverUrl}" alt="${book.title}" class="book-cover" onerror="this.src='https://via.placeholder.com/80x120?text=Book'">
                                             <div class="book-meta">
-                                                <h3 style="font-size: 1.1rem; margin-bottom: 0.25rem; color: var(--burgundy); line-height: 1.3;">${book.title}</h3>
+                                                <div style="display:flex; align-items:center; gap:0.5rem; justify-content:flex-start;">
+                                                    <h3 style="font-size: 1.1rem; margin-bottom: 0.25rem; color: var(--burgundy); line-height: 1.3;">${book.title}</h3>
+                                                    ${book.completed ? `<span class="badge-completed">Completed</span>` : ``}
+                                                </div>
                                                 <p style="font-size: 0.9rem; opacity: 0.7; margin-bottom: 0.5rem;">by ${book.author}</p>
                                                 <p class="book-desc">${book.explanation}</p>
                                         </div>

@@ -1050,7 +1050,7 @@
             }
         });
 
-        // Enhanced Storage with localStorage fallback - FIXED VERSION
+        // Enhanced Storage with localStorage - PROPERLY FIXED VERSION
 const Storage = {
     data: {},
     useLocalStorage: false,
@@ -1067,10 +1067,11 @@ const Storage = {
             this.useLocalStorage = false;
         }
         
+        // Initialize with defaults
         this.data = {
             user: null,
-            savedBooks: [],
-            moodHistory: []
+            saved_books: [],
+            mood_history: []
         };
         
         // Load existing data from localStorage if available
@@ -1085,17 +1086,23 @@ const Storage = {
             const savedBooksData = localStorage.getItem("sentira_saved_books");
             const moodHistoryData = localStorage.getItem("sentira_mood_history");
             
-            this.data.user = userData ? JSON.parse(userData) : null;
-            this.data.savedBooks = savedBooksData ? JSON.parse(savedBooksData) : [];
-            this.data.moodHistory = moodHistoryData ? JSON.parse(moodHistoryData) : [];
+            if (userData) {
+                this.data.user = JSON.parse(userData);
+            }
+            if (savedBooksData) {
+                this.data.saved_books = JSON.parse(savedBooksData);
+            }
+            if (moodHistoryData) {
+                this.data.mood_history = JSON.parse(moodHistoryData);
+            }
+            
+            console.log("Loaded from localStorage:", {
+                user: !!this.data.user,
+                savedBooks: this.data.saved_books.length,
+                moodHistory: this.data.mood_history.length
+            });
         } catch (e) {
             console.error("Error loading from localStorage:", e);
-            // Reset to defaults if there's an error
-            this.data = {
-                user: null,
-                savedBooks: [],
-                moodHistory: []
-            };
         }
     },
     
@@ -1108,6 +1115,7 @@ const Storage = {
         if (this.useLocalStorage) {
             try {
                 localStorage.setItem(`sentira_${key}`, JSON.stringify(value));
+                console.log(`Saved ${key} to localStorage:`, value);
             } catch (e) {
                 console.error("Error saving to localStorage:", e);
             }
@@ -1128,8 +1136,8 @@ const Storage = {
     clear() {
         this.data = {
             user: null,
-            savedBooks: [],
-            moodHistory: []
+            saved_books: [],
+            mood_history: []
         };
         if (this.useLocalStorage) {
             try {

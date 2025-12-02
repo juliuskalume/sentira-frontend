@@ -879,21 +879,20 @@
       }
 
     .install-btn {
-    padding: 0.7rem 1.4rem;
+    padding: 0.6rem 1.2rem;
     border: 1px solid var(--parchment);
     background: var(--cream);
     color: var(--burgundy);
     border-radius: 8px;
     font-family: 'Crimson Pro', serif;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
+    font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
-    width: auto;
-    box-shadow: 0 4px 12px rgba(107, 39, 55, 0.15);
-    margin-top: 0.4rem;
+    box-shadow: 0 3px 10px rgba(107, 39, 55, 0.15);
 }
 
 .install-btn:hover {
@@ -901,7 +900,7 @@
     background: var(--burgundy);
     color: var(--cream);
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(107, 39, 55, 0.3);
+    box-shadow: 0 5px 15px rgba(107, 39, 55, 0.25);
 }
 
 .install-btn.hidden {
@@ -992,10 +991,9 @@
                   <p class="footer-tagline">Your mood-based reading companion.</p>
                 </div>
 
-                <!-- Install button (initially hidden) -->
-    <button id="installPwaBtn" class="install-btn hidden">
-        📥 Install Sentira
-    </button>
+                <button id="installPwaBtn" class="install-btn hidden" style="margin-top: 0.5rem;">
+          📥 Install Sentira
+      </button>
 
                 <nav class="footer-nav">
                   <div class="footer-column">

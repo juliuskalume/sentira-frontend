@@ -962,6 +962,10 @@
                   <p class="footer-tagline">Your mood-based reading companion.</p>
                 </div>
 
+                <button class="install-btn" onclick="Views.installApp()">
+    📥 Install Sentira
+</button>
+
                 <nav class="footer-nav">
                   <div class="footer-column">
                     <h3>Product</h3>
@@ -1462,6 +1466,28 @@ Storage.init();
     Router.navigate("check-in");
 },
 
+         
+installApp() {
+    // For PWA installation
+    if (window.deferredPrompt) {
+        window.deferredPrompt.prompt();
+        window.deferredPrompt.userChoice.then((choiceResult) => {
+            if (choiceResult.outcome === 'accepted') {
+                console.log('User accepted the install prompt');
+            } else {
+                console.log('User dismissed the install prompt');
+            }
+            window.deferredPrompt = null;
+        });
+    } else {
+        this.showModal(
+            "Install Sentira",
+            "You can install Sentira as a PWA (Progressive Web App) for a better experience.<br><br>" +
+            "On mobile: Tap the share button, then 'Add to Home Screen'.<br>" +
+            "On desktop: Look for an install icon in your browser's address bar."
+        );
+    }
+},
             checkIn() {
                 return `
                     <div class="center-block list-container">
@@ -2288,6 +2314,14 @@ ${err.message || err}
                     });
             });
         }
+
+      // Handle PWA installation prompt
+let deferredPrompt;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+});
     </script>
 </body>
 </html>

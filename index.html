@@ -699,7 +699,22 @@
           background: var(--parchment);
       }
 
-     
+      .nav-bar {
+          position: sticky;
+          bottom: 0;
+          background: white;
+          border-top: 2px solid var(--parchment);
+          display: flex;
+          justify-content: space-around;
+          padding: 0.5rem;
+          box-shadow: 0 -2px 12px rgba(0,0,0,0.08);
+      }
+
+      @media (min-width: 640px) {
+          .nav-bar {
+              padding: 0.75rem;
+          }
+      }
 
       .dark .nav-bar {
           background: var(--parchment);
@@ -1000,7 +1015,7 @@
 
 .nav-bar {
     position: fixed;
-    bottom: 0; /* Always visible by default on mobile */
+    bottom: 0;
     left: 0;
     right: 0;
     background: white;
@@ -1009,10 +1024,7 @@
     justify-content: space-around;
     padding: 0.5rem;
     box-shadow: 0 -2px 12px rgba(0,0,0,0.08);
-    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
     z-index: 1000;
-    opacity: 1;
-    transform: translateY(0);
 }
 
 @media (min-width: 640px) {
@@ -1021,67 +1033,29 @@
     }
 }
 
-/* Desktop-specific centering and hiding */
+/* Desktop-specific styles (auto-hide) */
 @media (min-width: 900px) {
     .nav-bar {
+        bottom: -100px; /* Start hidden off-screen */
         max-width: 600px;
         margin: 0 auto;
         left: 50%;
-        transform: translateX(-50%) translateY(100%);
-        border-radius: 20px 20px 0 0;
-        padding: 0.75rem 2rem;
-        opacity: 0;
-        bottom: 0; /* Start at bottom but hidden */
-    }
-    
-    .nav-bar.show {
-        opacity: 1;
-        transform: translateX(-50%) translateY(0);
-    }
-    
-    .nav-bar.hide {
-        opacity: 0;
-        transform: translateX(-50%) translateY(100%);
-        pointer-events: none; /* Prevent interaction when hidden */
-    }
-}
-
-/* Mobile: Use transform for hiding/showing */
-@media (max-width: 899px) {
-    .nav-bar.show {
-        opacity: 1;
-        transform: translateY(0);
-    }
-    
-    .nav-bar.hide {
-        opacity: 0;
-        transform: translateY(100%);
-        pointer-events: none; /* Prevent interaction when hidden */
-    }
-}
-
-/* Add a small handle/indicator for mobile users to swipe up */
-.nav-handle {
-    display: none;
-}
-
-@media (max-width: 899px) {
-    .nav-handle {
-        display: block;
-        position: absolute;
-        top: -8px;
-        left: 50%;
         transform: translateX(-50%);
-        width: 40px;
-        height: 4px;
-        background: var(--parchment);
-        border-radius: 2px;
-        cursor: pointer;
+        border-radius: 20px 20px 0 0;
+        transition: bottom 0.3s ease-in-out;
+        padding: 0.75rem 2rem;
     }
     
-    .nav-bar:hover .nav-handle,
-    .nav-bar.show .nav-handle {
-        background: var(--burgundy);
+    .nav-bar.show {
+        bottom: 0; /* Slide in when shown */
+    }
+    
+    .nav-bar.hide {
+        bottom: -100px; /* Slide out when hidden */
+    }
+    
+    .nav-item {
+        margin: 0 0.5rem;
     }
 }
 
@@ -1193,25 +1167,24 @@
               </div>
             </footer>
 
-<nav class="nav-bar" id="navBar" style="display: none;">
-    <div class="nav-handle" id="navHandle"></div>
-    <div class="nav-item" data-view="check-in">
-        <span style="font-size: 1.25rem;">🌙</span>
-        <span>Check-in</span>
-    </div>
-    <div class="nav-item" data-view="recommendations">
-        <span style="font-size: 1.25rem;">✨</span>
-        <span>Discover</span>
-    </div>
-    <div class="nav-item" data-view="library">
-        <span style="font-size: 1.25rem;">📖</span>
-        <span>My Shelf</span>
-    </div>
-    <div class="nav-item" data-view="settings">
-        <span style="font-size: 1.25rem;">⚙️</span>
-        <span>Settings</span>
-    </div>
-</nav>
+            <nav class="nav-bar" id="navBar" style="display: none;">
+                <div class="nav-item" data-view="check-in">
+                    <span style="font-size: 1.25rem;">🌙</span>
+                    <span>Check-in</span>
+                </div>
+                <div class="nav-item" data-view="recommendations">
+                    <span style="font-size: 1.25rem;">✨</span>
+                    <span>Discover</span>
+                </div>
+                <div class="nav-item" data-view="library">
+                    <span style="font-size: 1.25rem;">📖</span>
+                    <span>My Shelf</span>
+                </div>
+                <div class="nav-item" data-view="settings">
+                    <span style="font-size: 1.25rem;">⚙️</span>
+                    <span>Settings</span>
+                </div>
+            </nav>
         </div>
     </div>
 
@@ -1425,9 +1398,8 @@ Storage.init();
 };
 
         const Router = {
-    // Navigation timer for auto-hide
+    // Navigation timer for desktop auto-hide
     navHideTimeout: null,
-    isMobile: window.innerWidth < 900,
     
     navigate(view, data = {}) {
         AppState.currentView = view;
@@ -1442,8 +1414,10 @@ Storage.init();
 
         this.render(view, data);
         
-        // Always show nav briefly when navigating
-        this.showNavTemporarily();
+        // Only handle desktop nav visibility on desktop
+        if (window.innerWidth >= 900) {
+            this.handleDesktopNavVisibility();
+        }
     },
 
     render(view, data) {
@@ -1455,22 +1429,16 @@ Storage.init();
         } else {
             navBar.style.display = "flex";
             
-            // Always show nav when first displaying (mobile users need to see it)
-            navBar.classList.remove("hide");
-            navBar.classList.add("show");
-            
-            // Then hide after delay (only auto-hide after initial show)
-            if (this.navHideTimeout) {
-                clearTimeout(this.navHideTimeout);
+            // Handle mobile vs desktop nav behavior
+            if (window.innerWidth >= 900) {
+                // Desktop: start hidden, will show on interaction
+                navBar.classList.add("hide");
+                navBar.classList.remove("show");
+            } else {
+                // Mobile: always visible at bottom, full width
+                navBar.classList.remove("hide", "show");
+                navBar.style.bottom = "0";
             }
-            
-            this.navHideTimeout = setTimeout(() => {
-                if (window.innerWidth >= 900) {
-                    navBar.classList.remove("show");
-                    navBar.classList.add("hide");
-                }
-                // On mobile, keep it visible unless user explicitly hides it
-            }, 3000);
         }
 
         // Render the appropriate view
@@ -1516,9 +1484,9 @@ Storage.init();
         window.scrollTo(0, 0);
     },
     
-    showNavTemporarily() {
+    handleDesktopNavVisibility() {
         const navBar = document.getElementById("navBar");
-        if (!navBar || navBar.style.display === "none") return;
+        if (!navBar || window.innerWidth < 900 || navBar.style.display === "none") return;
         
         // Reset timer for auto-hide
         if (this.navHideTimeout) {
@@ -1529,154 +1497,39 @@ Storage.init();
         navBar.classList.remove("hide");
         navBar.classList.add("show");
         
-        // Only auto-hide on desktop after 3 seconds
-        if (window.innerWidth >= 900) {
-            this.navHideTimeout = setTimeout(() => {
-                navBar.classList.remove("show");
-                navBar.classList.add("hide");
-            }, 3000);
-        }
-    }
-};
-
-// Mobile-specific: Toggle nav with handle
-document.getElementById("navHandle")?.addEventListener("click", (e) => {
-    e.stopPropagation();
-    const navBar = document.getElementById("navBar");
-    if (navBar) {
-        if (navBar.classList.contains("show")) {
-            navBar.classList.remove("show");
-            navBar.classList.add("hide");
-        } else {
-            navBar.classList.remove("hide");
-            navBar.classList.add("show");
-            
-            // Auto-hide after 5 seconds on mobile
-            setTimeout(() => {
-                if (navBar.classList.contains("show")) {
-                    navBar.classList.remove("show");
-                    navBar.classList.add("hide");
-                }
-            }, 5000);
-        }
-    }
-});
-
-// Show nav on tap anywhere near bottom (mobile)
-let lastTapTime = 0;
-document.addEventListener("touchend", (e) => {
-    // Check if tap is near bottom (last 100px)
-    const tapY = e.changedTouches[0].clientY;
-    const screenHeight = window.innerHeight;
-    
-    if (screenHeight - tapY < 100) {
-        const navBar = document.getElementById("navBar");
-        if (navBar && navBar.style.display !== "none") {
-            // Double tap detection for toggling
-            const currentTime = new Date().getTime();
-            const tapLength = currentTime - lastTapTime;
-            
-            if (tapLength < 300 && tapLength > 0) {
-                // Double tap: toggle nav
-                if (navBar.classList.contains("show")) {
-                    navBar.classList.remove("show");
-                    navBar.classList.add("hide");
-                } else {
-                    navBar.classList.remove("hide");
-                    navBar.classList.add("show");
-                }
-            } else {
-                // Single tap: show nav temporarily
-                navBar.classList.remove("hide");
-                navBar.classList.add("show");
-                
-                // Auto-hide after 5 seconds
-                setTimeout(() => {
-                    if (navBar.classList.contains("show")) {
-                        navBar.classList.remove("show");
-                        navBar.classList.add("hide");
-                    }
-                }, 5000);
-            }
-            
-            lastTapTime = currentTime;
-            e.preventDefault();
-        }
-    }
-}, { passive: false });
-
-// Show nav on scroll (all devices)
-let scrollTimer;
-window.addEventListener('scroll', () => {
-    const navBar = document.getElementById("navBar");
-    if (!navBar || navBar.style.display === "none") return;
-    
-    navBar.classList.remove("hide");
-    navBar.classList.add("show");
-    
-    // Clear previous timer
-    if (scrollTimer) {
-        clearTimeout(scrollTimer);
-    }
-    
-    // Hide after scrolling stops (longer delay on mobile)
-    const hideDelay = window.innerWidth < 900 ? 3000 : 1500;
-    scrollTimer = setTimeout(() => {
-        if (window.innerWidth >= 900) {
-            navBar.classList.remove("show");
-            navBar.classList.add("hide");
-        }
-        // On mobile, keep it visible
-    }, hideDelay);
-}, { passive: true });
-
-// Show nav on any click/tap (except on nav items themselves)
-document.addEventListener('click', (e) => {
-    const navBar = document.getElementById("navBar");
-    if (!navBar || navBar.style.display === "none") return;
-    
-    // Don't trigger if clicking on nav or its children
-    if (e.target.closest('.nav-bar')) return;
-    
-    // Show nav on any click
-    navBar.classList.remove("hide");
-    navBar.classList.add("show");
-    
-    // Clear any existing timers
-    if (Router.navHideTimeout) clearTimeout(Router.navHideTimeout);
-    if (scrollTimer) clearTimeout(scrollTimer);
-    
-    // Auto-hide after delay (only on desktop)
-    if (window.innerWidth >= 900) {
-        Router.navHideTimeout = setTimeout(() => {
+        // Set timeout to hide after 3 seconds
+        this.navHideTimeout = setTimeout(() => {
             navBar.classList.remove("show");
             navBar.classList.add("hide");
         }, 3000);
     }
-}, true);
+};
 
-// Handle window resize
-window.addEventListener('resize', () => {
-    Router.isMobile = window.innerWidth < 900;
-    const navBar = document.getElementById("navBar");
-    if (!navBar) return;
-    
-    // On mobile, ensure nav is visible by default
-    if (window.innerWidth < 900 && navBar.style.display !== "none") {
-        navBar.classList.remove("hide");
-        navBar.classList.add("show");
-    }
-});
+// Desktop nav auto-hide functionality
+let navInteractionTimer;
+let scrollTimer;
 
-// Initialize nav on page load
-document.addEventListener("DOMContentLoaded", () => {
-    const navBar = document.getElementById("navBar");
-    if (navBar) {
-        // On mobile, show by default; on desktop, hide by default
-        if (window.innerWidth >= 900) {
-            navBar.classList.add("hide");
-        } else {
+// Show nav on mouse move (desktop only)
+document.addEventListener('mousemove', (e) => {
+    if (window.innerWidth >= 900) {
+        const navBar = document.getElementById("navBar");
+        if (!navBar || navBar.style.display === "none") return;
+        
+        // Check if mouse is near bottom of screen (last 100px)
+        if (window.innerHeight - e.clientY < 100) {
+            navBar.classList.remove("hide");
             navBar.classList.add("show");
+            
+            // Clear previous timer
+            if (navInteractionTimer) {
+                clearTimeout(navInteractionTimer);
+            }
+            
+            // Set timer to hide after 3 seconds of inactivity
+            navInteractionTimer = setTimeout(() => {
+                navBar.classList.remove("show");
+                navBar.classList.add("hide");
+            }, 3000);
         }
     }
 });
@@ -1761,6 +1614,13 @@ window.addEventListener('resize', () => {
     }
 });
 
+// Initialize nav on page load
+document.addEventListener("DOMContentLoaded", () => {
+    const navBar = document.getElementById("navBar");
+    if (navBar && window.innerWidth >= 900) {
+        navBar.classList.add("hide");
+    }
+});
 
       // Add to your main JavaScript section (after the AppState/Router definitions)
 let deferredInstallPrompt = null;
@@ -2927,4 +2787,4 @@ window.addEventListener('resize', () => {
 });
     </script>
 </body>
-</html>
+      </html>

@@ -2684,8 +2684,13 @@ ${err.message || err}
         }
 
       // Handle PWA installation prompt
+      let deferredPrompt;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+});
 // Desktop nav auto-hide functionality (only for desktop)
-//let navInteractionTimer;
 
 // Show nav on mouse move (desktop only)
 document.addEventListener('mousemove', (e) => {
@@ -2743,7 +2748,6 @@ document.getElementById("navBar")?.addEventListener('mouseleave', () => {
 });
 
 // Also show nav on scroll (for touch devices on desktop)
-//let scrollTimer;
 window.addEventListener('scroll', () => {
     if (window.innerWidth >= 900) {
         const navBar = document.getElementById("navBar");

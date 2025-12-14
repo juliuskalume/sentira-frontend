@@ -57,6 +57,3 @@ Feedback and suggestions are welcome. If you have ideas on how mood influences r
 ## License
 
 MIT License
-
-
-Just tell me.

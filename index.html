@@ -171,17 +171,63 @@
       }
 
       .app-header {
-          background: linear-gradient(135deg, var(--burgundy), var(--deep-wine));
-          color: var(--cream);
-          padding: 1rem 1.5rem;
-          box-shadow: 0 4px 20px rgba(107, 39, 55, 0.15);
-      }
+    background: linear-gradient(135deg, var(--burgundy), var(--deep-wine));
+    color: var(--cream);
+    padding: 1rem 0; /* Remove horizontal padding */
+    box-shadow: 0 4px 20px rgba(107, 39, 55, 0.15);
+    width: 100vw; /* Use viewport width */
+    margin-left: calc(-50vw + 50%); /* Center it properly */
+    position: relative;
+    left: 0;
+    right: 0;
+}
 
-      @media (min-width: 640px) {
-          .app-header {
-              padding: 1.5rem;
-          }
-      }
+.app-header .logo,
+.app-header p {
+    max-width: 100%;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+}
+
+@media (min-width: 640px) {
+    .app-header .logo,
+    .app-header p {
+        max-width: 600px;
+        margin: 0 auto;
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+    }
+}
+
+    .header-content {
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+@media (min-width: 640px) {
+    .header-content {
+        max-width: 600px;
+    }
+}
+
+@media (min-width: 900px) {
+    .header-content {
+        max-width: 900px;
+    }
+}
+
+@media (min-width: 1280px) {
+    .header-content {
+        max-width: 1400px;
+    }
+}
+
+@media (min-width: 1600px) {
+    .header-content {
+        max-width: 1600px;
+    }
+}
+
 
       .logo {
           font-family: 'Playfair Display', serif;
@@ -1020,12 +1066,14 @@
     <div class="app-container">
         <div class="content">
             <header class="app-header" id="appHeader">
-                <div class="logo">
-                    <span>📚</span>
-                    <span>Sentira</span>
-                </div>
-                <p style="font-size: 0.9rem; margin-top: 0.25rem; opacity: 0.9;">Your mood-based reading companion</p>
-            </header>
+    <div class="header-content">
+        <div class="logo">
+            <span>📚</span>
+            <span>Sentira</span>
+        </div>
+        <p style="font-size: 0.9rem; margin-top: 0.25rem; opacity: 0.9;">Your mood-based reading companion</p>
+    </div>
+</header>
 
             <main id="mainContent" class="responsive-padding" style="min-height: calc(100vh - 200px);">
                 <!-- Content injected by JS -->

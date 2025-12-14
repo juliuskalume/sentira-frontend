@@ -5,6 +5,7 @@
   <url>
     <loc>https://sentira.vercel.app/</loc>
     <changefreq>daily</changefreq>
+    <lastmod>2025-12-14</lastmod>
     <priority>1.0</priority>
   </url>
 
@@ -12,24 +13,28 @@
   <url>
     <loc>https://sentira.vercel.app/about.html</loc>
     <changefreq>monthly</changefreq>
+    <lastmod>2025-12-14</lastmod>
     <priority>0.7</priority>
   </url>
 
   <url>
     <loc>https://sentira.vercel.app/privacy.html</loc>
     <changefreq>yearly</changefreq>
+    <lastmod>2025-12-14</lastmod>
     <priority>0.5</priority>
   </url>
 
   <url>
     <loc>https://sentira.vercel.app/terms.html</loc>
     <changefreq>yearly</changefreq>
+    <lastmod>2025-12-14</lastmod>
     <priority>0.5</priority>
   </url>
 
   <url>
     <loc>https://sentira.vercel.app/contact.html</loc>
     <changefreq>yearly</changefreq>
+    <lastmod>2025-12-14</lastmod>
     <priority>0.4</priority>
   </url>
 
@@ -37,12 +42,14 @@
   <url>
     <loc>https://sentira.vercel.app/guides/mood-reading.html</loc>
     <changefreq>monthly</changefreq>
+    <lastmod>2025-12-14</lastmod>
     <priority>0.8</priority>
   </url>
 
   <url>
     <loc>https://sentira.vercel.app/guides/book-recommendation-ai.html</loc>
     <changefreq>monthly</changefreq>
+    <lastmod>2025-12-14</lastmod>
     <priority>0.8</priority>
   </url>
 
@@ -50,6 +57,7 @@
   <url>
     <loc>https://sentira.vercel.app/blog/mood-based-reading-routines.html</loc>
     <changefreq>monthly</changefreq>
+    <lastmod>2025-12-14</lastmod>
     <priority>0.8</priority>
   </url>
 

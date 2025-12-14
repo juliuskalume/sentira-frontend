@@ -965,6 +965,54 @@
       /* Wider list container used on pages that show many tiles */
       .list-container { max-width: 1100px; }
       @media (min-width: 1280px) { .list-container { max-width: 1300px; } }
+
+    /* Add these styles to your existing CSS */
+
+/* Desktop-specific nav-bar styles */
+@media (min-width: 900px) {
+    .nav-bar {
+        position: fixed;
+        bottom: -100px; /* Start hidden off-screen */
+        left: 0;
+        right: 0;
+        background: white;
+        border-top: 2px solid var(--parchment);
+        display: flex;
+        justify-content: space-around;
+        padding: 0.75rem;
+        box-shadow: 0 -2px 12px rgba(0,0,0,0.08);
+        transition: bottom 0.3s ease-in-out;
+        z-index: 1000;
+        max-width: 600px;
+        margin: 0 auto;
+        border-radius: 20px 20px 0 0;
+    }
+    
+    .nav-bar.show {
+        bottom: 0; /* Slide in when shown */
+    }
+    
+    .nav-bar.hide {
+        bottom: -100px; /* Slide out when hidden */
+    }
+    
+    .dark .nav-bar {
+        background: var(--parchment);
+        border-top-color: #3a3a45;
+    }
+}
+
+/* Add cursor pointer for desktop hover */
+.nav-item {
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+@media (min-width: 900px) {
+    .nav-item:hover {
+        transform: translateY(-2px);
+    }
+}
   </style>
 </head>
 <body>
@@ -1256,65 +1304,94 @@ Storage.init();
 };
 
         const Router = {
-            navigate(view, data = {}) {
-                AppState.currentView = view;
+    navigate(view, data = {}) {
+        AppState.currentView = view;
 
-                document.querySelectorAll(".nav-item").forEach(item => {
-                    item.classList.remove("active");
-                    if (item.dataset.view === view) {
-                        item.classList.add("active");
-                    }
-                });
-
-                this.render(view, data);
-            },
-
-            render(view, data) {
-                const mainContent = document.getElementById("mainContent");
-                const navBar = document.getElementById("navBar");
-
-                if (["welcome", "onboarding"].includes(view)) {
-                    navBar.style.display = "none";
-                } else {
-                    navBar.style.display = "flex";
-                }
-
-                switch (view) {
-                    case "welcome":
-                        mainContent.innerHTML = Views.welcome();
-                        break;
-                    case "onboarding":
-                        mainContent.innerHTML = Views.onboarding();
-                        Views.initOnboarding();
-                        break;
-                    case "check-in":
-                        mainContent.innerHTML = Views.checkIn();
-                        Views.initCheckIn();
-                        break;
-                    case "recommendations":
-                        mainContent.innerHTML = Views.recommendations();
-                        Views.initRecommendations();
-                        break;
-                    case "book-detail":
-                        mainContent.innerHTML = Views.bookDetail(data.book);
-                        break;
-                    case "summary":
-                        mainContent.innerHTML = Views.summary(data.book);
-                        Views.initSummary(data.book);
-                        break;
-                    case "library":
-                        mainContent.innerHTML = Views.library();
-                        break;
-                    case "settings":
-                        mainContent.innerHTML = Views.settings();
-                        break;
-                    default:
-                        mainContent.innerHTML = "<p>View not found</p>";
-                }
-
-                window.scrollTo(0, 0);
+        document.querySelectorAll(".nav-item").forEach(item => {
+            item.classList.remove("active");
+            if (item.dataset.view === view) {
+                item.classList.add("active");
             }
-        };
+        });
+
+        this.render(view, data);
+        
+        // Hide nav bar on desktop initially (will show on mouse move)
+        this.handleDesktopNavVisibility();
+    },
+
+    render(view, data) {
+        const mainContent = document.getElementById("mainContent");
+        const navBar = document.getElementById("navBar");
+
+        if (["welcome", "onboarding"].includes(view)) {
+            navBar.style.display = "none";
+        } else {
+            navBar.style.display = "flex";
+            
+            // For desktop, we'll handle visibility through CSS classes
+            if (window.innerWidth >= 900) {
+                navBar.classList.add("hide");
+                navBar.classList.remove("show");
+            }
+        }
+
+        switch (view) {
+            case "welcome":
+                mainContent.innerHTML = Views.welcome();
+                break;
+            case "onboarding":
+                mainContent.innerHTML = Views.onboarding();
+                Views.initOnboarding();
+                break;
+            case "check-in":
+                mainContent.innerHTML = Views.checkIn();
+                Views.initCheckIn();
+                break;
+            case "recommendations":
+                mainContent.innerHTML = Views.recommendations();
+                Views.initRecommendations();
+                break;
+            case "book-detail":
+                mainContent.innerHTML = Views.bookDetail(data.book);
+                break;
+            case "summary":
+                mainContent.innerHTML = Views.summary(data.book);
+                Views.initSummary(data.book);
+                break;
+            case "library":
+                mainContent.innerHTML = Views.library();
+                break;
+            case "settings":
+                mainContent.innerHTML = Views.settings();
+                break;
+            default:
+                mainContent.innerHTML = "<p>View not found</p>";
+        }
+
+        window.scrollTo(0, 0);
+    },
+    
+    handleDesktopNavVisibility() {
+        const navBar = document.getElementById("navBar");
+        if (!navBar || window.innerWidth < 900) return;
+        
+        // Reset timer for auto-hide
+        if (this.navHideTimeout) {
+            clearTimeout(this.navHideTimeout);
+        }
+        
+        // Show nav bar
+        navBar.classList.remove("hide");
+        navBar.classList.add("show");
+        
+        // Set timeout to hide after 3 seconds
+        this.navHideTimeout = setTimeout(() => {
+            navBar.classList.remove("show");
+            navBar.classList.add("hide");
+        }, 3000);
+    }
+};
 
       // Add to your main JavaScript section (after the AppState/Router definitions)
 let deferredInstallPrompt = null;
@@ -2384,6 +2461,87 @@ window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
 });
+
+      // Desktop nav auto-hide functionality
+let navInteractionTimer;
+
+// Show nav on mouse move (desktop only)
+document.addEventListener('mousemove', (e) => {
+    if (window.innerWidth >= 900) {
+        const navBar = document.getElementById("navBar");
+        if (!navBar || navBar.style.display === "none") return;
+        
+        // Check if mouse is near bottom of screen (last 100px)
+        if (window.innerHeight - e.clientY < 100) {
+            navBar.classList.remove("hide");
+            navBar.classList.add("show");
+            
+            // Clear previous timer
+            if (navInteractionTimer) {
+                clearTimeout(navInteractionTimer);
+            }
+            
+            // Set timer to hide after 3 seconds of inactivity
+            navInteractionTimer = setTimeout(() => {
+                navBar.classList.remove("show");
+                navBar.classList.add("hide");
+            }, 3000);
+        }
+    }
+});
+
+// Keep nav visible when hovering over it
+document.addEventListener('mouseover', (e) => {
+    if (window.innerWidth >= 900 && e.target.closest('.nav-bar')) {
+        const navBar = document.getElementById("nav-bar");
+        if (navBar) {
+            navBar.classList.remove("hide");
+            navBar.classList.add("show");
+            
+            // Clear hide timer while hovering
+            if (navInteractionTimer) {
+                clearTimeout(navInteractionTimer);
+            }
+        }
+    }
+});
+
+// Hide on mouse leave from nav area
+document.getElementById("navBar")?.addEventListener('mouseleave', () => {
+    if (window.innerWidth >= 900) {
+        const navBar = document.getElementById("navBar");
+        if (navBar) {
+            // Set timer to hide after leaving
+            navInteractionTimer = setTimeout(() => {
+                navBar.classList.remove("show");
+                navBar.classList.add("hide");
+            }, 1000);
+        }
+    }
+});
+
+// Also show nav on scroll (for touch devices on desktop)
+let scrollTimer;
+window.addEventListener('scroll', () => {
+    if (window.innerWidth >= 900) {
+        const navBar = document.getElementById("navBar");
+        if (!navBar || navBar.style.display === "none") return;
+        
+        navBar.classList.remove("hide");
+        navBar.classList.add("show");
+        
+        // Clear previous timer
+        if (scrollTimer) {
+            clearTimeout(scrollTimer);
+        }
+        
+        // Hide after scrolling stops
+        scrollTimer = setTimeout(() => {
+            navBar.classList.remove("show");
+            navBar.classList.add("hide");
+        }, 1500);
+    }
+}, { passive: true });
     </script>
 </body>
 </html>

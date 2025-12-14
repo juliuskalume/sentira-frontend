@@ -10,45 +10,45 @@
 
   <!-- Static Pages -->
   <url>
-    <loc>https://sentira.vercel.app/about</loc>
+    <loc>https://sentira.vercel.app/about.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
 
   <url>
-    <loc>https://sentira.vercel.app/privacy</loc>
+    <loc>https://sentira.vercel.app/privacy.html</loc>
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>
   </url>
 
   <url>
-    <loc>https://sentira.vercel.app/terms</loc>
+    <loc>https://sentira.vercel.app/terms.ml</loc>
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>
   </url>
 
   <url>
-    <loc>https://sentira.vercel.app/contact</loc>
+    <loc>https://sentira.vercel.app/contact.html</loc>
     <changefreq>yearly</changefreq>
     <priority>0.4</priority>
   </url>
 
   <!-- SEO Guides -->
   <url>
-    <loc>https://sentira.vercel.app/guides/mood-reading</loc>
+    <loc>https://sentira.vercel.app/guides/mood-reading.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://sentira.vercel.app/guides/book-recommendation-ai</loc>
+    <loc>https://sentira.vercel.app/guides/book-recommendation-ai.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <!-- Blog -->
   <url>
-    <loc>https://sentira.vercel.app/blog/mood-based-reading-routines</loc>
+    <loc>https://sentira.vercel.app/blog/mood-based-reading-routines.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>

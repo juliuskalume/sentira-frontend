@@ -1,4 +1,4 @@
-# Sentira
+# Sentira by sentirax
 
 Sentira is a mood based book recommendation web app that helps readers choose what to read based on how they feel, not just genres, ratings, or trends.
 

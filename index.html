@@ -242,6 +242,38 @@
           gap: 0.5rem;
       }
 
+      .app-icon {
+          display: inline-block;
+          width: 1.4em;
+          height: 1.4em;
+          object-fit: contain;
+          vertical-align: -0.25em;
+      }
+
+      .logo-icon {
+          width: 2rem;
+          height: 2rem;
+          border-radius: 7px;
+      }
+
+      .nav-icon {
+          width: 1.35rem;
+          height: 1.35rem;
+          border-radius: 5px;
+      }
+
+      .hero-icon {
+          width: 4rem;
+          height: 4rem;
+          border-radius: 14px;
+      }
+
+      .button-icon {
+          width: 1.2rem;
+          height: 1.2rem;
+          margin-right: 0.35rem;
+      }
+
       @media (min-width: 640px) {
           .logo {
               font-size: 1.75rem;
@@ -1111,11 +1143,11 @@
     <div class="app-container">
         <div class="content">
             <header class="app-header" id="appHeader">
-    <div class="header-content">
-        <div class="logo">
-            <span>📚</span>
-            <span>Sentira</span>
-        </div>
+	    <div class="header-content">
+	        <div class="logo">
+	            <img src="icons/icon-192.png" alt="Sentira" class="app-icon logo-icon">
+	            <span>Sentira</span>
+	        </div>
         <p style="font-size: 0.9rem; margin-top: 0.25rem; opacity: 0.9;">Your mood-based reading companion</p>
     </div>
 </header>
@@ -1178,11 +1210,11 @@
                 <div class="nav-item" data-view="recommendations">
                     <span style="font-size: 1.25rem;">✨</span>
                     <span>Discover</span>
-                </div>
-                <div class="nav-item" data-view="library">
-                    <span style="font-size: 1.25rem;">📖</span>
-                    <span>My Shelf</span>
-                </div>
+	                </div>
+	                <div class="nav-item" data-view="library">
+	                    <img src="icons/icon-192.png" alt="" class="app-icon nav-icon">
+	                    <span>My Shelf</span>
+	                </div>
                 <div class="nav-item" data-view="settings">
                     <span style="font-size: 1.25rem;">⚙️</span>
                     <span>Settings</span>
@@ -1710,10 +1742,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const Views = {
             welcome() {
-                return `
-                    <div style="text-align: center; padding: 2rem 0;">
-                        <div style="font-size: 4rem; margin-bottom: 1rem; animation: fadeInUp 0.6s ease-out;">📚</div>
-                        <h1 class="responsive-heading" style="margin-bottom: 1rem; animation: fadeInUp 0.6s ease-out 0.1s; animation-fill-mode: both;">Welcome to Sentira</h1>
+	                return `
+	                    <div style="text-align: center; padding: 2rem 0;">
+	                        <img src="icons/icon-192.png" alt="Sentira" class="app-icon hero-icon" style="margin-bottom: 1rem; animation: fadeInUp 0.6s ease-out;">
+	                        <h1 class="responsive-heading" style="margin-bottom: 1rem; animation: fadeInUp 0.6s ease-out 0.1s; animation-fill-mode: both;">Welcome to Sentira</h1>
                         <p class="responsive-text center-block" style="color: var(--burgundy); margin-bottom: 2rem; animation: fadeInUp 0.6s ease-out 0.2s; animation-fill-mode: both;">
                             Discover books that meet you where you are—emotionally, mentally, and personally.
                         </p>
@@ -2213,20 +2245,20 @@ ${err.message || err}
             <div style="background: gray; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;" class="dark:bg-gray-800">
                 <h3 style="font-size: 1.25rem; margin-bottom: 0.75rem; color: var(--burgundy);">Why This Book for You</h3>
                 <p>${book.explanation}</p>
-            </div>
+	            </div>
 
-            <div class="disclaimer mb-3">
-                <strong>📚 About This Book:</strong><br>
-                This book has been selected based on your current ${AppState.currentMoodCheckIn && Array.isArray(AppState.currentMoodCheckIn.moodTags) ? AppState.currentMoodCheckIn.moodTags.join(", ") : "your current mood"} mood and your goals. The summary you'll read is AI-generated and designed to give you the core ideas in a focused, concise way.
-            </div>
+	            <div class="disclaimer mb-3">
+	                <strong><img src="icons/icon-192.png" alt="" class="app-icon button-icon">About This Book:</strong><br>
+	                This book has been selected based on your current ${AppState.currentMoodCheckIn && Array.isArray(AppState.currentMoodCheckIn.moodTags) ? AppState.currentMoodCheckIn.moodTags.join(", ") : "your current mood"} mood and your goals. The summary you'll read is AI-generated and designed to give you the core ideas in a focused, concise way.
+	            </div>
 
             <div style="display: flex; flex-direction: column; gap: 1rem;">
                 <button class="btn ${isSaved ? "btn-ghost" : "btn-secondary"}" onclick='Views.addToShelf(${JSON.stringify(book).replace(/'/g, "&apos;")}, "book-detail")'>
                     ${isSaved ? "On Shelf" : "Add to Shelf"}
                 </button>
-                <button class="btn btn-primary" onclick='Router.navigate("summary", {book: ${JSON.stringify(book).replace(/'/g, "&apos;")}})'>
-                    📖 Read Summary
-                </button>
+	                <button class="btn btn-primary" onclick='Router.navigate("summary", {book: ${JSON.stringify(book).replace(/'/g, "&apos;")}})'>
+	                    <img src="icons/icon-192.png" alt="" class="app-icon button-icon">Read Summary
+	                </button>
             </div>
         </div>
     `;
@@ -2581,11 +2613,11 @@ ${err.message || err}
             library() {
     const savedBooks = AppState.savedBooks;
 
-    if (savedBooks.length === 0) {
-        return `
-            <div style="text-align: center; padding: 3rem 1rem;">
-                <div style="font-size: 4rem; margin-bottom: 1rem;">📚</div>
-                <h2 class="responsive-heading" style="margin-bottom: 1rem; color: var(--burgundy);">Your Shelf is Empty</h2>
+	    if (savedBooks.length === 0) {
+	        return `
+	            <div style="text-align: center; padding: 3rem 1rem;">
+	                <img src="icons/icon-192.png" alt="Sentira" class="app-icon hero-icon" style="margin-bottom: 1rem;">
+	                <h2 class="responsive-heading" style="margin-bottom: 1rem; color: var(--burgundy);">Your Shelf is Empty</h2>
                 <p class="responsive-text" style="margin-bottom: 2rem; opacity: 0.8;">Add books from your recommendations to build your personal shelf.</p>
                 <button class="btn btn-primary" onclick="Router.navigate('recommendations')">
                     Discover Books

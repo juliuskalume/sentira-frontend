@@ -1329,6 +1329,49 @@ const Storage = {
     }
 };
 Storage.init();
+
+        const BookIdentity = {
+    normalizePart(value) {
+        return String(value || "")
+            .trim()
+            .toLowerCase()
+            .normalize("NFKD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .replace(/&/g, "and")
+            .replace(/[^a-z0-9]+/g, "-")
+            .replace(/^-+|-+$/g, "");
+    },
+
+    key(book) {
+        const title = this.normalizePart(book && book.title);
+        const author = this.normalizePart(book && book.author);
+
+        if (title && author) return `${title}::${author}`;
+        if (title) return title;
+        return this.normalizePart(book && book.id);
+    },
+
+    normalize(book) {
+        const key = this.key(book);
+        return { ...book, id: key || (book && book.id) || "book" };
+    },
+
+    dedupe(books) {
+        const byKey = new Map();
+        (books || []).forEach(book => {
+            const normalized = this.normalize(book);
+            const key = this.key(normalized);
+            if (!key) return;
+
+            if (byKey.has(key)) {
+                byKey.set(key, { ...normalized, ...byKey.get(key) });
+            } else {
+                byKey.set(key, normalized);
+            }
+        });
+        return Array.from(byKey.values());
+    }
+};
         const AppState = {
     user: null,
     currentView: "welcome",
@@ -1349,7 +1392,8 @@ Storage.init();
 
     loadFromStorage() {
         this.user = Storage.getItem("user");
-        this.savedBooks = Storage.getItem("saved_books") || [];
+        this.savedBooks = BookIdentity.dedupe(Storage.getItem("saved_books") || []);
+        Storage.setItem("saved_books", this.savedBooks);
         this.moodHistory = Storage.getItem("mood_history") || [];
     },
 
@@ -1368,8 +1412,9 @@ Storage.init();
     },
 
     saveBook(book) {
-        const idx = this.savedBooks.findIndex(b => b.id === book.id);
-        const saved = { ...book };
+        const saved = BookIdentity.normalize(book);
+        const key = BookIdentity.key(saved);
+        const idx = this.savedBooks.findIndex(b => BookIdentity.key(b) === key);
         // normalize completion flag
         if (saved.completed === undefined) saved.completed = !!saved.completed;
         if (idx === -1) {
@@ -1382,7 +1427,12 @@ Storage.init();
     },
 
     removeBook(bookId) {
-        this.savedBooks = this.savedBooks.filter(b => b.id !== bookId);
+        const normalizedId = BookIdentity.normalizePart(bookId);
+        this.savedBooks = this.savedBooks.filter(b => (
+            b.id !== bookId &&
+            BookIdentity.key(b) !== bookId &&
+            BookIdentity.normalizePart(b.id) !== normalizedId
+        ));
         Storage.setItem("saved_books", this.savedBooks);
     },
 
@@ -2001,7 +2051,7 @@ installApp() {
                 }
             },
 
-            async fetchRecommendations() {
+            async fetchRecommendations(options = {}) {
                 const container = document.getElementById("recommendationsContainer");
 
                 try {
@@ -2017,10 +2067,18 @@ installApp() {
                         return;
                     }
 
+                    const excludeBooks = [
+                        ...AppState.savedBooks,
+                        ...(options.excludeCurrent ? AppState.recommendations : [])
+                    ].map(book => ({
+                        title: book.title,
+                        author: book.author
+                    })).filter(book => book.title || book.author);
+
                     const response = await fetch(`${BACKEND_BASE_URL}/api/recommendations`, {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ user, mood })
+                        body: JSON.stringify({ user, mood, excludeBooks })
                     });
 
                     const text = await response.text();
@@ -2057,8 +2115,12 @@ ${text}
                         return;
                     }
 
-                    AppState.recommendations = recommendations;
-                    Views.displayRecommendations(recommendations);
+                    const savedKeys = new Set(AppState.savedBooks.map(book => BookIdentity.key(book)));
+                    const normalizedRecommendations = BookIdentity.dedupe(recommendations)
+                        .filter(book => !savedKeys.has(BookIdentity.key(book)));
+
+                    AppState.recommendations = normalizedRecommendations;
+                    Views.displayRecommendations(normalizedRecommendations);
                 } catch (err) {
                     container.innerHTML = `
                         <div style="text-align: center; padding: 2rem;">
@@ -2082,14 +2144,21 @@ ${err.message || err}
                     return;
                 }
 
-                container.innerHTML = recommendations.map(book => `
-                    <div class="book-card" onclick='Router.navigate("book-detail", {book: ${JSON.stringify(book).replace(/'/g, "&apos;")}})'>
+                container.innerHTML = recommendations.map(book => {
+                    const bookKey = BookIdentity.key(book);
+                    const savedEntry = AppState.savedBooks.find(b => BookIdentity.key(b) === bookKey) || null;
+                    const isSaved = !!savedEntry;
+                    const isCompleted = savedEntry && savedEntry.completed;
+                    const bookPayload = JSON.stringify(book).replace(/'/g, "&apos;");
+
+                    return `
+                    <div class="book-card" onclick='Router.navigate("book-detail", {book: ${bookPayload}})'>
                         <div class="book-card-inner">
                             <img src="${book.coverUrl}" alt="${book.title}" class="book-cover" onerror="this.src='https://via.placeholder.com/80x120?text=Book'">
                             <div class="book-meta">
                                 <div style="display:flex; align-items:center; gap:0.5rem; justify-content:flex-start;">
                                     <h3 style="font-size: 1.1rem; margin-bottom: 0.25rem; color: var(--burgundy); line-height: 1.3;">${book.title}</h3>
-                                    ${((AppState.savedBooks.find(b => b.id === book.id) || {}).completed) ? `<span class="badge-completed">Completed</span>` : ``}
+                                    ${isCompleted ? `<span class="badge-completed">Completed</span>` : ``}
                                 </div>
                                 <p style="font-size: 0.9rem; opacity: 0.7; margin-bottom: 0.5rem;">by ${book.author}</p>
                                 <p class="book-desc">${book.explanation}</p>
@@ -2100,13 +2169,16 @@ ${err.message || err}
                                     `).join("")}
                                 </div>
                             </div>
+                            <button class="btn ${isSaved ? "btn-ghost" : "btn-secondary"}" onclick='event.stopPropagation(); Views.addToShelf(${bookPayload}, "recommendations")' style="flex-shrink: 0; width: auto; padding: 0.6rem 1rem; white-space: nowrap;">
+                                ${isSaved ? "On Shelf" : "Add to Shelf"}
+                            </button>
                         </div>
                     </div>
-                `).join("");
+                    `;
+                }).join("");
             },
 
             async refreshRecommendations() {
-                AppState.recommendations = [];
                 const container = document.getElementById("recommendationsContainer");
                 container.innerHTML = `
                     <div class="loading">
@@ -2114,11 +2186,13 @@ ${err.message || err}
                         <p>Finding new books for you...</p>
                     </div>
                 `;
-                await Views.fetchRecommendations();
+                await Views.fetchRecommendations({ excludeCurrent: true });
             },
 
             bookDetail(book) {
-    const savedEntry = AppState.savedBooks.find(b => b.id === book.id) || null;
+    book = BookIdentity.normalize(book);
+    const bookKey = BookIdentity.key(book);
+    const savedEntry = AppState.savedBooks.find(b => BookIdentity.key(b) === bookKey) || null;
     const isSaved = !!savedEntry;
     const isCompleted = savedEntry && savedEntry.completed;
 
@@ -2147,6 +2221,9 @@ ${err.message || err}
             </div>
 
             <div style="display: flex; flex-direction: column; gap: 1rem;">
+                <button class="btn ${isSaved ? "btn-ghost" : "btn-secondary"}" onclick='Views.addToShelf(${JSON.stringify(book).replace(/'/g, "&apos;")}, "book-detail")'>
+                    ${isSaved ? "On Shelf" : "Add to Shelf"}
+                </button>
                 <button class="btn btn-primary" onclick='Router.navigate("summary", {book: ${JSON.stringify(book).replace(/'/g, "&apos;")}})'>
                     📖 Read Summary
                 </button>
@@ -2474,6 +2551,31 @@ ${err.message || err}
                 Views.showModal("Summary Completed! 🎉", "Great job finishing this summary for \"" + book.title + "\"! The insights you've gained are now part of your reading journey.");
                 // re-render to update UI state
                 Router.navigate('library');
+            },
+
+            addToShelf(book, sourceView = null) {
+                book = BookIdentity.normalize(book);
+                const bookKey = BookIdentity.key(book);
+                const existingBook = AppState.savedBooks.find(b => BookIdentity.key(b) === bookKey);
+                const savedBook = {
+                    ...book,
+                    completed: existingBook ? !!existingBook.completed : false,
+                    savedAt: existingBook && existingBook.savedAt ? existingBook.savedAt : new Date().toISOString()
+                };
+
+                AppState.saveBook(savedBook);
+
+                if (existingBook) {
+                    Views.showModal("Already on Shelf", "\"" + book.title + "\" is already in your shelf.");
+                } else {
+                    Views.showModal("Added to Shelf", "\"" + book.title + "\" has been added to your shelf.");
+                }
+
+                if (sourceView === "recommendations") {
+                    Views.displayRecommendations(AppState.recommendations);
+                } else if (sourceView === "book-detail") {
+                    Router.navigate("book-detail", { book: savedBook });
+                }
             },
 
             library() {

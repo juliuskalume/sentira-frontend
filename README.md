@@ -13,6 +13,7 @@ The goal is to make reading feel intentional, personal, and calm.
 ## Features
 
 * Mood based book recommendations
+* Direct book search by title, author, or keywords, with details and Add to Shelf
 * AI powered suggestion logic
 * Simple and distraction free interface
 * Fast client side experience
@@ -45,6 +46,8 @@ cd sentira-frontend
 ```
 
 Open `index.html` in your browser or serve it using a local server.
+
+The Search tab uses the backend's `/api/book-search` endpoint (Open Library) and does not require a mood check-in. Deploy the matching backend before deploying this frontend. Search results remain available while navigating to book details and back; saved books use the existing local shelf. AI summaries still require Groq, and use a general reading context when a searched book has no mood check-in.
 
 ## Project Status
 

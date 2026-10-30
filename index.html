@@ -2407,8 +2407,8 @@ ${err.message || err}
                 </div>
             </div>
 
-            <div style="background: gray; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;" class="dark:bg-gray-800">
-                <h3 style="font-size: 1.25rem; margin-bottom: 0.75rem; color: var(--burgundy);">${book.source === 'openlibrary' ? 'About This Book' : 'Why This Book for You'}</h3>
+            <div class="settings-card book-description">
+                <h3>${book.source === 'openlibrary' ? 'About This Book' : 'Why This Book for You'}</h3>
                 <p>${escapeHtml(book.explanation)}</p>
 	            </div>
 

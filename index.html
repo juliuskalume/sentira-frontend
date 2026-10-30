@@ -477,6 +477,28 @@
           box-shadow: 0 2px 12px rgba(0,0,0,0.2);
       }
 
+      .settings-card {
+          background: white;
+          color: var(--charcoal);
+          padding: 1.5rem;
+          border-radius: 12px;
+          margin-bottom: 1.5rem;
+      }
+
+      .settings-card h3 {
+          font-size: 1.25rem;
+          margin-bottom: 1rem;
+          color: var(--burgundy);
+      }
+
+      .dark .settings-card {
+          background: var(--parchment);
+      }
+
+      .dark .settings-card h3 {
+          color: #E1A2AF;
+      }
+
       .book-card:hover {
           transform: translateY(-4px);
           box-shadow: 0 6px 24px rgba(107, 39, 55, 0.15);
@@ -2668,8 +2690,8 @@ ${err.message || err}
                     <div class="center-block">
                         <h2 class="responsive-heading" style="margin-bottom: 2rem; color: var(--burgundy);">Settings</h2>
 
-                        <div style="background: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;" class="dark:bg-gray-800">
-                            <h3 style="font-size: 1.25rem; margin-bottom: 1rem; color: var(--burgundy);">Your Profile</h3>
+                        <div class="settings-card">
+                            <h3>Your Profile</h3>
                             <div style="margin-bottom: 0.75rem;">
                                 <strong>Age:</strong> ${user.age}
                             </div>
@@ -2684,8 +2706,8 @@ ${err.message || err}
                             </div>
                         </div>
 
-                        <div style="background: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;" class="dark:bg-gray-800">
-                            <h3 style="font-size: 1.25rem; margin-bottom: 1rem; color: var(--burgundy);">Reading History</h3>
+                        <div class="settings-card">
+                            <h3>Reading History</h3>
                             <p style="margin-bottom: 0.5rem;">
                                 <strong>Mood check-ins:</strong> ${moodHistoryCount}
                             </p>
